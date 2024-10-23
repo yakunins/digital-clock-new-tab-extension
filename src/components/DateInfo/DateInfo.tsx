@@ -2,12 +2,13 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Blinker } from "react-led-digit";
 import { getDateString } from "../utils";
 import "./date-info.css";
+import "./work-sans-100.css";
+import "./work-sans-200.css";
 
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
 type DateInfo = DivProps & {};
 
 const blinker = new Blinker(); // singleton
-const initialDate = "Wednesday 28 September 2022";
 
 export const DateInfo = ({ ...rest }: DateInfo) => {
     const [dateString, setDateString] = useState(getDateString());

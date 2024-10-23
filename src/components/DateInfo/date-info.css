@@ -1,14 +1,14 @@
 .date-info {
     --size: calc(1.5rem * var(--scale));
-    font-family: "Work Sans", "Segoe UI", Segoe, sans-serif;
+    font-family: "Work Sans", WorkSansEmbedded, "Segoe UI", Segoe, sans-serif;
     font-size: var(--size);
 
     color: var(--color);
     display: flex;
-    gap: var(--gap);
+    gap: calc(var(--gap) * 0.65);
     align-items: center;
     justify-content: center;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.035rem;
     opacity: 0.6;
     margin-top: calc(var(--size) * 2);
     margin-top: calc(var(--size) + 2.5vmin);
@@ -21,5 +21,6 @@
 
 .date-info .day {
     font-size: 135%;
+    line-height: 100%;
     font-weight: 100;
 }
