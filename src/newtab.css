@@ -1,0 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@100;200;300&display=swap");
+
+:root {
+    --scale: 1; /* ~40% percent of a screen width at default zoom level 100% */
+    --color: rgba(150, 250, 220, 1);
+    --gap: 0.75rem;
+}
+
+html,
+body {
+    margin: 0;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+}

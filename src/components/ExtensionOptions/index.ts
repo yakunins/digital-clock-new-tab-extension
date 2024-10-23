@@ -1,0 +1,1 @@
+export { ExtensionOptions } from "./ExtensionOptions";

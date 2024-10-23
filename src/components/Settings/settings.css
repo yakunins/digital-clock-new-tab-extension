@@ -1,0 +1,26 @@
+.settings {
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    & button.icon {
+        display: flex;
+        place-content: center;
+        place-items: center;
+        position: relative;
+
+        border: none;
+        border-radius: 100rem;
+        background: none;
+        cursor: pointer;
+        height: 2.75rem;
+        width: 2.75rem;
+
+        & svg {
+            display: block;
+            fill: currentColor;
+            height: 65%;
+            width: 65%;
+        }
+    }
+}

@@ -1,0 +1,58 @@
+.background-fill {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & .layer {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    & .content {
+        display: flex;
+        flex-direction: column;
+        place-items: center;
+        place-content: center;
+    }
+
+    & .darken {
+        background: linear-gradient(-5deg, rgba(0, 0, 0, 0.25), transparent);
+    }
+    & .blur {
+        backdrop-filter: blur(20vh);
+    }
+
+    & .strips {
+        filter: brightness(95%);
+
+        & > * {
+            width: 100%;
+        }
+    }
+
+    & .s1 {
+        background-color: var(--bg-color-1);
+        height: 36vh;
+    }
+    & .s2 {
+        background-color: var(--bg-color-2);
+        height: 28vh;
+    }
+    & .s3 {
+        background-color: var(--bg-color-3);
+        height: 20vh;
+        box-shadow: inset 100vw 100vh rgba(0, 0, 0, 0.025);
+    }
+    & .s4 {
+        background-color: var(--bg-color-4);
+        height: 16vh;
+        box-shadow: inset 100vw 100vh rgba(0, 0, 0, 0.05);
+    }
+}

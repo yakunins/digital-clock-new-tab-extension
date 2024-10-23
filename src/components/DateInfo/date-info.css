@@ -1,0 +1,25 @@
+.date-info {
+    --size: calc(1.5rem * var(--scale));
+    font-family: "Work Sans", "Segoe UI", Segoe, sans-serif;
+    font-size: var(--size);
+
+    color: var(--color);
+    display: flex;
+    gap: var(--gap);
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.04em;
+    opacity: 0.6;
+    margin-top: calc(var(--size) * 2);
+    margin-top: calc(var(--size) + 2.5vmin);
+}
+
+.date-info .weekday,
+.date-info .month {
+    font-weight: 200;
+}
+
+.date-info .day {
+    font-size: 135%;
+    font-weight: 100;
+}

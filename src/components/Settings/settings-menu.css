@@ -1,0 +1,69 @@
+.settings-menu {
+    --bg: #fff;
+    --glow-size: 0.5rem;
+    --corner-radius: 0.25rem;
+    --padding: 1rem;
+
+    font-size: 125%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: var(--bg);
+    border-radius: 0 0 0 calc(var(--corner-radius) * 1.35);
+    padding: var(--padding);
+    padding-top: 0;
+    width: 10rem;
+    z-index: 4;
+
+    .inline.radio {
+        width: 100%;
+
+        & .options {
+            box-shadow: 0 0 0 calc(0.125rem * 0.5)
+                color-mix(in srgb, var(--bg-color-1), transparent 75%);
+        }
+        & .caret {
+            background-color: var(--bg-color-1);
+            opacity: 0.25;
+        }
+    }
+    & div.close {
+        display: flex;
+        place-content: flex-end;
+        & button {
+            margin-right: calc(var(--padding) * -1);
+        }
+    }
+    & .side {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+
+        &.left {
+            top: 0;
+            left: -100%;
+            height: calc(100% - var(--corner-radius));
+            background: conic-gradient(
+                from 0deg at 100% 100%,
+                transparent,
+                transparent 270deg,
+                transparent 315deg,
+                transparent 328deg,
+                var(--bg) calc(360deg - 6deg)
+            );
+        }
+        &.bottom {
+            height: 40%;
+            bottom: -40%;
+            right: 0;
+            width: calc(100% - var(--corner-radius));
+            background: conic-gradient(
+                from 0deg at 0% 0%,
+                var(--bg),
+                var(--bg) calc(90deg + 6deg),
+                transparent 112deg,
+                transparent 360deg
+            );
+        }
+    }
+}

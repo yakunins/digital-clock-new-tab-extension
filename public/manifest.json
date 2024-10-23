@@ -1,0 +1,26 @@
+{
+    "manifest_version": 3,
+
+    "name": "Digital Clock in New Tab (Chrome Extension)",
+    "description": "Chrome Extension",
+    "version": "1.0.0",
+
+    "options_ui": {
+        "page": "options.html"
+    },
+    "icons": {
+        "48": "icon-48.png",
+        "128": "icon-128.png"
+    },
+    "action": {
+        "default_icon": { "16": "icon-16.png" },
+        "default_popup": "popup.html"
+    },
+
+    "chrome_url_overrides": {
+        "newtab": "newtab.html"
+    },
+
+    "permissions": ["storage"],
+    "host_permissions": []
+}

@@ -1,0 +1,65 @@
+.inline.radio {
+    --padding: 0.2rem;
+    --radius: 0.35rem;
+    --border-width: calc(0.125rem * 0.5);
+    all: unset;
+    padding-top: var(--padding);
+    padding-bottom: var(--padding);
+
+    legend {
+        padding: var(--padding) 0;
+    }
+    .options {
+        border-radius: calc(var(--radius));
+        display: flex;
+        position: relative;
+        box-shadow: 0 0 0 var(--border-width) currentColor;
+
+        & .option {
+            flex-grow: 1;
+        }
+    }
+    label {
+        cursor: pointer;
+        display: block;
+        padding: var(--padding) calc(var(--padding) * 2);
+        padding-bottom: calc(var(--padding) * 1.5);
+        position: relative;
+        text-align: center;
+        user-select: none;
+        z-index: 1;
+    }
+    input:focus-visible + label {
+        border-radius: var(--radius);
+        box-shadow: 0 0 0 0.125rem currentColor; /* focus ring */
+    }
+    .caret {
+        background-color: currentColor;
+        opacity: 0.125;
+        border-radius: var(--radius);
+        position: absolute;
+        height: 100%;
+        left: var(--caret-left);
+        right: var(--caret-right);
+        z-index: 0;
+        pointer-events: none;
+        transition-property: left, right;
+        transition-duration: 0.2s;
+    }
+    input {
+        /* visually hidden */
+        border: none;
+        display: table-cell;
+        float: left;
+        height: 1px;
+        width: 1px;
+        max-width: 1px;
+        min-width: 1px;
+        margin: -0.5em -1px -0.5em 0;
+        opacity: 0;
+        overflow: hidden;
+        padding: 0;
+        pointer-events: none;
+        position: absolute;
+    }
+}
