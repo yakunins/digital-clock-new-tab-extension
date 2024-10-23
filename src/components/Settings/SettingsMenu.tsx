@@ -30,7 +30,6 @@ export const MainSettings = observer(() => {
     };
     const handleColorSchemaChange: InlineRadio["onChange"] = (next) => {
         SettingsStore.setColorSchema(next as SettingsStore["colorSchema"]);
-        console.log(SettingsStore.status);
     };
 
     return (
