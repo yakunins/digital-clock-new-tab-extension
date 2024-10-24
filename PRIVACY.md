@@ -8,9 +8,9 @@ This extension **do not collect any data**. Since none of your data is collected
 
 ## Chrome Storage API
 
-This extension internally makes use of [Google Chrome's Storage API](https://developers.chrome.com/extensions/storage) to locally store internal state data and user preferences, like current date, preferred time format or colors. This is similar to a [cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies).
+This extension uses [Google Chrome's Storage API](https://developers.chrome.com/extensions/storage) to store internal data and user preferences locally, like preferred time format or colors. This is similar to a [cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies).
 
-Google Chrome's Storage syncs this data across your various Chrome instances. However, this extensions only access your data locally, and on your machine, thus **do not transmit or collect it**.
+Google Chrome's Storage syncs this data across your various Chrome instances. However, this extension only accesses your data locally on your machine. It does not transmit or collect any of your data..
 
 ## Third-Party APIs
 
