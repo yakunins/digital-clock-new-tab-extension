@@ -4,7 +4,7 @@ This is a privacy policy of `Digital Clock New Tab Extension`.
 
 ## Data Collection
 
-This extension **do not collect any data**. Since none of your data is collected, no data can be sent or sold to third parties.
+This extension do not collect any data. Since none of your data is collected, no data can be sent or sold to third parties.
 
 ## Chrome Storage API
 
@@ -14,7 +14,7 @@ Google Chrome's Storage syncs this data across your various Chrome instances. Ho
 
 ## Third-Party APIs
 
-This extension do not access third party APIs, except **[Google Chrome's Storage API](https://developers.chrome.com/extensions/storage)**.
+This extension do not access third party APIs, except [Google Chrome's Storage API](https://developers.chrome.com/extensions/storage).
 
 ## Feedback
 
