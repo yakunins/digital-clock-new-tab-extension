@@ -1,7 +1,7 @@
 {
     "name": "digital-clock-new-tab-extension",
     "version": "1.0.0",
-    "description": "Digital Clock in a New Tab of your browser (Chrome)",
+    "description": "Digital Clock in a New Tab of your browser",
     "scripts": {
         "watch": "webpack --config webpack/webpack.dev.js --watch",
         "build": "webpack --config webpack/webpack.prod.js",
