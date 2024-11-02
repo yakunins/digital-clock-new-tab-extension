@@ -6,7 +6,7 @@ type FieldSetProps = React.HTMLAttributes<HTMLFieldSetElement>;
 export type InlineRadio = Omit<FieldSetProps, "onChange"> & {
     options: InlineRadioOption[];
     defaultValue?: InlineRadioOption["value"];
-    onChange?: (next: string, prev: string) => void;
+    onChange?: (next?: string, prev?: string) => void;
     legend?: string;
     name?: string;
 };
@@ -23,10 +23,9 @@ export const InlineRadio = ({
         defaultValue || getValue(options)
     );
 
-    const nano = name || getId();
-    const parent = useRef<HTMLElement | null>(null);
-    const setRef = (node: HTMLFieldSetElement) => (parent.current = node);
-    const selector = ":checked + label"; // "div:has(:checked)";
+    const id = name || getId();
+    const container = useRef<HTMLElement | null>(null);
+    const setRef = (node: HTMLFieldSetElement) => (container.current = node);
 
     const handleChange = (e: React.FormEvent<HTMLFieldSetElement>) => {
         const prev = value;
@@ -35,38 +34,41 @@ export const InlineRadio = ({
         onChange?.(next, prev);
     };
 
-    // calculate caret left and right position
+    // calculate checked-indicator (caret) left and right position
     useEffect(() => {
-        if (!parent.current) return;
-        const checkedEl = parent.current.querySelector(selector) as HTMLElement;
-        const parentWidth = parent.current?.offsetWidth;
+        if (!container.current) return;
+        const selector = ":checked + label"; // "div:has(:checked)";
+        const checkedEl = container.current.querySelector(
+            selector
+        ) as HTMLElement;
+        const parentWidth = container.current?.offsetWidth;
         const left = checkedEl?.offsetLeft;
         const right = parentWidth - left - checkedEl?.offsetWidth;
-        parent.current.style.setProperty("--caret-left", `${left}px`);
-        parent.current.style.setProperty("--caret-right", `${right}px`);
+        container.current.style.setProperty("--caret-left", `${left}px`);
+        container.current.style.setProperty("--caret-right", `${right}px`);
     }, [value]);
 
     useEffect(() => {
-        typeof defaultValue === "string" && setValue(defaultValue);
+        setValue(defaultValue || getValue(options));
     }, [defaultValue]);
 
     return (
         <fieldset
-            ref={setRef}
             {...rest}
-            onChange={handleChange}
             className="radio inline"
+            onChange={handleChange}
+            ref={setRef}
         >
             {legend && <legend>{legend}</legend>}
             <div className="options">
-                <div className="caret"></div>
+                <div className="checked-indicator"></div>
                 {options
                     .map((i, idx) => {
                         return {
                             ...i,
-                            id: `${nano}_id_${idx}`,
+                            id: `${id}_id_${idx}`,
                             key: idx,
-                            name: nano,
+                            name: id,
                             checked: i.value === value,
                         };
                     })
@@ -108,6 +110,7 @@ const InlineRadioItem = ({
         </div>
     );
 };
+
 const getValue = (opts: InlineRadioOption[]): InlineRadioOption["value"] => {
     const checked = opts.find((i) => i.checked);
     if (checked) return checked.value;

@@ -1,5 +1,6 @@
-export { BackgroundFill } from "./BackgroundFill";
-export { Clock } from "./Clock";
-export { DateInfo } from "./DateInfo";
-export { ExtensionOptions } from "./ExtensionOptions";
-export { Settings, SettingsStore } from "./Settings";
+export * from "./BackgroundFill";
+export * from "./Clock";
+export * from "./DateInfo";
+export * from "./ExtensionOptions";
+export * from "./Settings";
+export * from "./CustomStyle";

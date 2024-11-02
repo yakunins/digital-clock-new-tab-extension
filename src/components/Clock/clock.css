@@ -3,18 +3,18 @@
     --clock-frame-offset: calc(var(--clock-font-size) * -1);
     --glow-size: 2em;
 
-    color: var(--color);
+    color: var(--clock-color);
     display: flex;
     font-size: var(--clock-font-size);
-    gap: var(--gap);
+    gap: var(--clock-gap);
     margin-bottom: calc(-1 * var(--clock-frame-offset));
     position: relative;
     transform: skew(-2deg, -1deg);
 
     & .clock-frame {
-        border: 1px solid var(--color);
+        border: 1px solid var(--clock-color);
         border-radius: calc(-1 * var(--clock-frame-offset) + 0.5rem);
-        opacity: 0.2;
+        opacity: var(--clock-frame-opacity, 0.2);
         position: absolute;
         top: calc(var(--clock-frame-offset) * 0.92);
         bottom: calc(var(--clock-frame-offset) * 0.92);
@@ -23,8 +23,8 @@
         transition: all 1s;
     }
     & .digit {
-        filter: drop-shadow(0 0 calc(var(--glow-size) * 1) var(--color))
-            drop-shadow(0 0 calc(var(--glow-size) * 2) var(--color))
+        filter: drop-shadow(0 0 calc(var(--glow-size) * 1) var(--clock-color))
+            drop-shadow(0 0 calc(var(--glow-size) * 2) var(--clock-color))
             blur(0.75px);
     }
     & .digit.ampm,

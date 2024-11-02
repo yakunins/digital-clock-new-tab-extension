@@ -1,12 +1,13 @@
-type Troyka = [number, number, number];
-type Color = {
+export type FourHex = [string, string, string, string];
+export type Troyka = [number, number, number];
+export type Color = {
     hex: string;
     rgb: Troyka;
     hsb: Troyka;
     luma: number;
 };
 
-const hexArray = [
+export const hexArray = [
     "0",
     "1",
     "2",
@@ -25,31 +26,7 @@ const hexArray = [
     "f",
 ];
 
-export const randomColor = (): Color => {
-    let hex = "#";
-    for (let x = 0; x < 6; x++) {
-        let index = Math.floor(Math.random() * 16);
-        let value = hexArray[index];
-        hex += value;
-    }
-    const rgb = hexToRGB(hex);
-    const luma = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]; // percived luminosity
-
-    return {
-        hex,
-        rgb,
-        hsb: hexToHsb(hex),
-        luma,
-    };
-};
-
-export const randomHexColors = () =>
-    [1, 2, 3, 4]
-        .map(randomColor)
-        .sort((i, k) => k.luma - i.luma) // sort by luminosity
-        .map((i) => i.hex);
-
-function hexToRGB(h: string): Troyka {
+export function hexToRgb(h: string): Troyka {
     let [r, g, b] = [0, 0, 0];
     if (h.length == 4) {
         r = parseInt("0x" + h[1] + h[1]);
@@ -63,8 +40,8 @@ function hexToRGB(h: string): Troyka {
     return [r, g, b];
 }
 
-function hexToHsb(hex: string): Troyka {
-    let [r, g, b] = hexToRGB(hex);
+export function hexToHsb(hex: string): Troyka {
+    let [r, g, b] = hexToRgb(hex);
 
     // Calculate HSB values
     let max = Math.max(r, g, b);
@@ -91,4 +68,30 @@ function hexToHsb(hex: string): Troyka {
     br = max;
 
     return [h, s, br];
+}
+
+export function rgbToHex(r: number, g: number, b: number) {
+    r = Math.max(0, Math.min(255, r));
+    g = Math.max(0, Math.min(255, g));
+    b = Math.max(0, Math.min(255, b));
+
+    const hexR = r.toString(16).padStart(2, "0");
+    const hexG = g.toString(16).padStart(2, "0");
+    const hexB = b.toString(16).padStart(2, "0");
+
+    return `#${hexR}${hexG}${hexB}`;
+}
+
+const mix = (n1: number, n2: number, weight = 0.5) =>
+    Math.round(n1 * (1 - weight) + n2 * weight);
+
+export function mixHexColors(c1: string, c2: string, weight = 0.5) {
+    const rgb1 = hexToRgb(c1);
+    const rgb2 = hexToRgb(c2);
+
+    const r = mix(rgb1[0], rgb2[0], weight);
+    const g = mix(rgb1[1], rgb2[1], weight);
+    const b = mix(rgb1[2], rgb2[2], weight);
+
+    return rgbToHex(r, g, b);
 }

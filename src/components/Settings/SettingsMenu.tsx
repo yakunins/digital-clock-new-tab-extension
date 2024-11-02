@@ -1,71 +1,68 @@
-import React from "react";
-import { observer } from "mobx-react";
-import { SettingsStore } from "./settings.store";
-import { InlineRadio } from "../InlineRadio";
+import React, { useState, useEffect, useCallback } from "react";
+import { SettingsForm } from "./SettingsForm";
+import { Innout } from "../Innout";
 import "./settings-menu.css";
 
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
-type SettingsMenu = DivProps & {
-    close?: () => void;
-};
 
-export const SettingsMenu = ({ close, ...rest }: SettingsMenu) => {
+const sessionStorageItem = "digital_clock_newtab_extension_settings_opened";
+const initialOpened = sessionStorage.getItem(sessionStorageItem) === "opened";
+
+export const SettingsMenu = ({ ...rest }: DivProps) => {
+    const [opened, setOpened] = useState(initialOpened);
+    const toggle = () => {
+        setOpened(!opened);
+    };
+    const close = useCallback(() => setOpened(false), []);
+
+    useEffect(() => {
+        sessionStorage.setItem(
+            sessionStorageItem,
+            opened ? "opened" : "closed"
+        );
+    }, [opened]);
+
     return (
-        <div {...rest} className="settings-menu">
-            <div className="left side"></div>
-            <div className="bottom side"></div>
-            {close && (
-                <div className="close">
-                    <CloseButton onClick={close} />
+        <div className="settings" {...rest}>
+            <SettingsButton onClick={toggle} />
+            <Innout unmount={!opened}>
+                <div {...rest} className="settings-overlay">
+                    <div className="left side"></div>
+                    <div className="bottom side"></div>
+                    <div className="close">
+                        <CloseSettingsButton onClick={close} />
+                    </div>
+                    <SettingsForm />
                 </div>
-            )}
-            <MainSettings />
+            </Innout>
         </div>
     );
 };
 
-export const MainSettings = observer(() => {
-    const handleAmpmChange: InlineRadio["onChange"] = (next) => {
-        SettingsStore.setAmpm(next as SettingsStore["ampm"]);
-    };
-    const handleColorSchemaChange: InlineRadio["onChange"] = (next) => {
-        SettingsStore.setColorSchema(next as SettingsStore["colorSchema"]);
-    };
-
-    return (
-        <>
-            <InlineRadio
-                legend="Time Format"
-                defaultValue={SettingsStore.ampm}
-                options={[
-                    { value: "24-hour", text: "24-Hour" },
-                    { value: "ampm", text: "AM-PM" },
-                ]}
-                onChange={handleAmpmChange}
-            />
-            <br />
-            <br />
-            <InlineRadio
-                legend="Background Colors"
-                defaultValue={SettingsStore.colorSchema}
-                options={[
-                    { value: "random", text: "Random" },
-                    { value: "fixed", text: "Current" },
-                ]}
-                onChange={handleColorSchemaChange}
-            />
-            <br />
-            <br />
-        </>
-    );
-});
-
 type ButtonProps = React.HTMLAttributes<HTMLButtonElement>;
-type CloseButton = ButtonProps & {
+type SettingsButton = ButtonProps & {
     onClick: () => void;
 };
+export const SettingsButton = ({ onClick, ...rest }: SettingsButton) => {
+    return (
+        <button
+            {...rest}
+            className="open-settings button dots icon"
+            onClick={onClick}
+            aria-label="Settings"
+        >
+            <span className="hover-layer"></span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
+            </svg>
+        </button>
+    );
+};
 
-const CloseButton = ({ onClick, ...rest }: CloseButton) => {
+type CloseSettingsButton = ButtonProps & {
+    onClick: () => void;
+};
+const CloseSettingsButton = ({ onClick, ...rest }: CloseSettingsButton) => {
     const closeIconStroke1px = (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -77,11 +74,7 @@ const CloseButton = ({ onClick, ...rest }: CloseButton) => {
             <path d="M256-227.69 227.69-256l224-224-224-224L256-732.31l224 224 224-224L732.31-704l-224 224 224 224L704-227.69l-224-224-224 224Z" />
         </svg>
     );
-    const closeIconStroke2px = (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
-        </svg>
-    );
+
     return (
         <button
             {...rest}

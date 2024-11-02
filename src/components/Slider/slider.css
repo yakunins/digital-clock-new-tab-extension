@@ -1,0 +1,72 @@
+.react-aria-Slider {
+    display: grid;
+    grid-template-areas:
+        "label output"
+        "track track";
+    grid-template-columns: 1fr auto;
+    max-width: 300px;
+    color: currentColor;
+
+    .react-aria-Label {
+        grid-area: label;
+        margin-bottom: 0.125rem;
+    }
+
+    .react-aria-SliderOutput {
+        grid-area: output;
+    }
+
+    .react-aria-SliderTrack {
+        grid-area: track;
+        position: relative;
+
+        /* track line */
+        &:before {
+            content: "";
+            display: block;
+            position: absolute;
+            background: var(--bg-color-1, black);
+        }
+    }
+
+    .react-aria-SliderThumb {
+        --outline-color: rgba(255, 255, 255, 0.75);
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: var(--radius);
+        background: transparent;
+        border: calc(0.125rem * 0.5) solid var(--bg-color-1, black);
+        cursor: pointer;
+        forced-color-adjust: none;
+
+        &[data-dragging] {
+            background: var(--highlight-background-pressed);
+        }
+
+        &[data-focus-visible] {
+            outline: 0.125rem solid var(--bg-color-1, black);
+        }
+    }
+
+    &[data-orientation="horizontal"] {
+        flex-direction: column;
+        width: 100%;
+
+        .react-aria-SliderTrack {
+            height: calc(0.125rem * 10);
+            width: 100%;
+
+            &:before {
+                opacity: 0.35;
+                height: 0.25rem;
+                width: 100%;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+
+        .react-aria-SliderThumb {
+            top: 50%;
+        }
+    }
+}

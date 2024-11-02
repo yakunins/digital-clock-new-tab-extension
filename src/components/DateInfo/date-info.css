@@ -3,9 +3,9 @@
     font-family: "Work Sans", WorkSansEmbedded, "Segoe UI", Segoe, sans-serif;
     font-size: var(--size);
 
-    color: var(--color);
+    color: var(--clock-color);
     display: flex;
-    gap: calc(var(--gap) * 0.65);
+    gap: calc(var(--clock-gap) * 0.65);
     align-items: center;
     justify-content: center;
     letter-spacing: 0.035rem;

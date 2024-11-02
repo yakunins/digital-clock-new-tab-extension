@@ -1,4 +1,61 @@
-.settings-menu {
+.settings {
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    & button.icon {
+        display: flex;
+        place-content: center;
+        place-items: center;
+        position: relative;
+
+        border: none;
+        border-radius: 100rem;
+        background: none;
+        cursor: pointer;
+        height: 2.75rem;
+        width: 2.75rem;
+
+        & svg {
+            display: block;
+            fill: currentColor;
+            height: 65%;
+            width: 65%;
+        }
+    }
+}
+
+button.open-settings.button {
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    svg {
+        z-index: 0;
+        fill: var(--clock-color);
+    }
+    .hover-layer {
+        background-color: var(--bg-color-4);
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 100rem;
+        filter: blur(0.5rem);
+        transition-property: opacity;
+        transition-duration: 0.5s;
+        z-index: 0;
+    }
+    &:hover {
+        & .hover-layer {
+            opacity: 0.25;
+        }
+    }
+}
+
+.settings-overlay {
     --bg: #fff;
     --glow-size: 0.5rem;
     --corner-radius: 0.25rem;
@@ -12,29 +69,28 @@
     border-radius: 0 0 0 calc(var(--corner-radius) * 1.35);
     padding: var(--padding);
     padding-top: 0;
-    width: 10rem;
     z-index: 4;
 
     .inline.radio {
         width: 100%;
 
         & .options {
-            box-shadow: 0 0 0 calc(0.125rem * 0.5)
+            box-shadow: inset 0 0 0 calc(0.125rem * 0.5)
                 color-mix(in srgb, var(--bg-color-1), transparent 75%);
         }
-        & .caret {
+        & .checked-indicator {
             background-color: var(--bg-color-1);
             opacity: 0.25;
         }
     }
-    & div.close {
+    div.close {
         display: flex;
         place-content: flex-end;
         & button {
             margin-right: calc(var(--padding) * -1);
         }
     }
-    & .side {
+    .side {
         position: absolute;
         height: 100%;
         width: 100%;
@@ -53,8 +109,8 @@
             );
         }
         &.bottom {
-            height: 40%;
-            bottom: -40%;
+            height: 50%;
+            bottom: -50%;
             right: 0;
             width: calc(100% - var(--corner-radius));
             background: conic-gradient(
@@ -65,5 +121,34 @@
                 transparent 360deg
             );
         }
+    }
+}
+
+.custom-style-editor {
+    margin-top: var(--padding);
+
+    textarea {
+        border-radius: var(--radius);
+        box-sizing: border-box;
+        width: 100%;
+        margin: var(--padding) 0;
+        padding: calc(var(--padding) * 0.5) var(--padding);
+    }
+}
+.settings .reset-to-defaults,
+.settings .custom-style-editor {
+    display: none;
+}
+
+.reset-to-defaults {
+    button {
+        background-color: tan;
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        border: none;
+        padding: var(--padding) calc(var(--padding) * 2)
+            calc(var(--padding) * 1.5);
+        border-radius: var(--radius);
+        line-height: 100%;
+        cursor: pointer;
     }
 }

@@ -1,1 +1,1 @@
-export { ExtensionOptions } from "./ExtensionOptions";
+export * from "./ExtensionOptions";

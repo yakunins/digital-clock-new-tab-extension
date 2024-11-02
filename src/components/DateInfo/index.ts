@@ -1,1 +1,1 @@
-export { DateInfo } from "./DateInfo";
+export * from "./DateInfo";
