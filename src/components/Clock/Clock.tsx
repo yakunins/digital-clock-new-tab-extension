@@ -29,7 +29,7 @@ export const Clock = observer(
         }, [SettingsStore.clockType]);
 
         const thickness = (SettingsStore.segmentThickness / 100) * 1.5;
-        const length = (SettingsStore.segmentLength / 100) * 3 + thickness;
+        const length = (SettingsStore.segmentLength / 100) * 4 + thickness;
 
         const style = {
             segmentStyle: {

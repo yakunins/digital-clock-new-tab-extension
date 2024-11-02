@@ -25,7 +25,7 @@ export type SettingsStore = Settings & {
 const css = `:root {
     --clock-color: rgba(160, 255, 230, 1);
     --clock-gap: 0.75rem;
-    --clock-frame-opacity: .1;
+    --clock-frame-opacity: 0;
 }`;
 
 const defaults: Settings = {

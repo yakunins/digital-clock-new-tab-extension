@@ -10,8 +10,7 @@
     justify-content: center;
     letter-spacing: 0.035rem;
     opacity: 0.6;
-    margin-top: calc(var(--size) * 2);
-    margin-top: calc(var(--size) + 2.5vmin);
+    margin-top: calc(var(--size) + 1.5vmin);
 }
 
 .date-info .weekday,

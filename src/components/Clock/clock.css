@@ -1,6 +1,7 @@
 .clock {
     --clock-font-size: calc(2.5rem * var(--scale));
     --clock-frame-offset: calc(var(--clock-font-size) * -1);
+    --clock-frame-opacity: 0.1;
     --glow-size: 2em;
 
     color: var(--clock-color);
