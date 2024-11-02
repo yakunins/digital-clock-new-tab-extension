@@ -32,7 +32,7 @@ button.open-settings.button {
 
     svg {
         z-index: 0;
-        fill: var(--clock-color);
+        fill: var(--color);
     }
     .hover-layer {
         background-color: var(--bg-color-4);
@@ -130,9 +130,12 @@ button.open-settings.button {
     textarea {
         border-radius: var(--radius);
         box-sizing: border-box;
+        font-size: 120%;
         width: 100%;
         margin: var(--padding) 0;
         padding: calc(var(--padding) * 0.5) var(--padding);
+        scrollbar-width: thin;
+        scrollbar-color: rgba(127, 127, 127, 0.5) transparent;
     }
 }
 .settings .reset-to-defaults,
@@ -142,13 +145,19 @@ button.open-settings.button {
 
 .reset-to-defaults {
     button {
-        background-color: tan;
+        background-color: transparent;
         font-family: "Segoe UI", Tahoma, sans-serif;
+        font-size: 100%;
         border: none;
-        padding: var(--padding) calc(var(--padding) * 2)
-            calc(var(--padding) * 1.5);
+        padding: 0;
+        padding-bottom: calc(var(--padding) * 0.5);
         border-radius: var(--radius);
         line-height: 100%;
         cursor: pointer;
+        color: salmon;
+
+        &:hover {
+            opacity: 0.8;
+        }
     }
 }

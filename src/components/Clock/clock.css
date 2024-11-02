@@ -1,4 +1,6 @@
 .clock {
+    --clock-color: var(--color, rgba(150, 250, 220, 1));
+    --clock-gap: 0.75rem;
     --clock-font-size: calc(2.5rem * var(--scale));
     --clock-frame-offset: calc(var(--clock-font-size) * -1);
     --clock-frame-opacity: 0.1;

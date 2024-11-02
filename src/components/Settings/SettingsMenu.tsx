@@ -14,12 +14,16 @@ export const SettingsMenu = ({ ...rest }: DivProps) => {
         setOpened(!opened);
     };
     const close = useCallback(() => setOpened(false), []);
+    const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === "Escape") close();
+    };
 
     useEffect(() => {
         sessionStorage.setItem(
             sessionStorageItem,
             opened ? "opened" : "closed"
         );
+        document.addEventListener("keydown", handleEscape);
     }, [opened]);
 
     return (

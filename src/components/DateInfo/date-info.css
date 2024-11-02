@@ -1,11 +1,12 @@
 .date-info {
+    --date-info-color: var(--color, rgba(150, 250, 220, 1));
     --size: calc(1.5rem * var(--scale));
     font-family: "Work Sans", WorkSansEmbedded, "Segoe UI", Segoe, sans-serif;
     font-size: var(--size);
 
-    color: var(--clock-color);
+    color: var(--date-info-color);
     display: flex;
-    gap: calc(var(--clock-gap) * 0.65);
+    gap: 0.5rem;
     align-items: center;
     justify-content: center;
     letter-spacing: 0.035rem;

@@ -23,7 +23,9 @@ export type SettingsStore = Settings & {
 };
 
 const css = `:root {
-    --clock-color: rgba(160, 255, 230, 1);
+    --color: rgba(160, 255, 230, 1);
+}
+.clock {
     --clock-gap: 0.75rem;
     --clock-frame-opacity: 0;
 }`;
@@ -64,7 +66,11 @@ class ExtensionSettingsStore implements SettingsStore {
             setTime: action,
             reset: action,
         });
-        setInterval(() => this.setTime(), this.backgroundUpdatePeriod);
+
+        setInterval(() => {
+            this.setTime();
+        }, this.backgroundUpdatePeriod);
+
         chrome.storage.sync.get(
             {
                 clockType: this.clockType,
@@ -74,7 +80,6 @@ class ExtensionSettingsStore implements SettingsStore {
                 css: this.css,
             },
             (items) => {
-                //console.log("chrome.storage.sync.get()", items);
                 this.setClockType(items.clockType, true);
                 this.setColorSchema(items.colorSchema, true);
                 this.setLength(items.segmentLength, true);
@@ -82,11 +87,11 @@ class ExtensionSettingsStore implements SettingsStore {
                 this.setCss(items.css, true);
             }
         );
+
         chrome.storage.onChanged.addListener((changes, namespace) => {
             // namespace === "sync" here
             for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
                 if (oldValue === newValue) return;
-                //console.log("chrome.storage.onChanged()", key);
                 if (key === "clockType") this.setClockType(newValue, true);
                 if (key === "colorSchema") this.setColorSchema(newValue, true);
                 if (key === "segmentLength") this.setLength(newValue, true);
@@ -169,11 +174,13 @@ class ExtensionSettingsStore implements SettingsStore {
     }
 
     reset() {
-        this.setClockType(defaults.clockType);
-        this.setColorSchema(defaults.colorSchema);
-        this.setLength(defaults.segmentLength);
-        this.setThickness(defaults.segmentThickness);
-        this.setCss(defaults.css);
+        throttledStorageSet({
+            clockType: defaults.clockType,
+            colorSchema: defaults.colorSchema,
+            segmentLength: defaults.segmentLength,
+            segmentThickness: defaults.segmentThickness,
+            css: defaults.css,
+        });
     }
 }
 

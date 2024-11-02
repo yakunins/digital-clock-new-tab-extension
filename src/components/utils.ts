@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 
-export const getId = (): string => nanoid();
+export const getId = (size = 4): string => nanoid(size);
 
 export const getLocale = () => Intl.DateTimeFormat().resolvedOptions().locale;
 export const getLocaleAmpm = () =>

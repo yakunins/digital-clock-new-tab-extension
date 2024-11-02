@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler } from "react";
+import React, { ChangeEventHandler, useCallback } from "react";
 import { observer } from "mobx-react";
 import { SettingsStore } from "./settings.store";
 import { InlineRadio } from "../InlineRadio";
@@ -7,18 +7,20 @@ import { SliderControlled, Slider } from "../Slider";
 import "./settings-form.css";
 
 export const SettingsForm = observer(() => {
-    const handleClockChange: InlineRadio["onChange"] = (next) => {
+    const handleClockChange = useCallback<InlineRadio["onChange"]>((next) => {
         SettingsStore.setClockType(next as SettingsStore["clockType"]);
-    };
-    const handleColorSchemaChange: InlineRadio["onChange"] = (next) => {
+    }, []);
+    const handleSchemaChange = useCallback<InlineRadio["onChange"]>((next) => {
         SettingsStore.setColorSchema(next as SettingsStore["colorSchema"]);
-    };
+    }, []);
+
     const handleLengthChange: Slider["onChange"] = (next) => {
         SettingsStore.setLength(next as SettingsStore["segmentLength"]);
     };
     const handleThicknessChange: Slider["onChange"] = (next) => {
         SettingsStore.setThickness(next as SettingsStore["segmentThickness"]);
     };
+
     const handleCssChange = (val?: string) => {
         SettingsStore.setCss(val);
     };
@@ -62,14 +64,14 @@ export const SettingsForm = observer(() => {
                         text: "Current",
                     },
                 ]}
-                onChange={handleColorSchemaChange}
+                onChange={handleSchemaChange}
             />
             <CssEditor
                 onChange={handleCssChange}
                 defaultValue={SettingsStore.css}
             />
             <div className="reset-to-defaults">
-                <button onClick={handleReset}>Reset</button>
+                <button onClick={handleReset}>Reset to defaults</button>
             </div>
         </div>
     );

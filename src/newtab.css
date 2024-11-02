@@ -1,7 +1,6 @@
 :root {
     --scale: 1; /* ~40% percent of a screen width at default zoom level 100% */
-    --clock-color: rgba(150, 250, 220, 1);
-    --clock-gap: 0.75rem;
+    --color: rgba(150, 250, 220, 1);
     --controls-radius: 0.35rem;
 }
 
