@@ -1,41 +1,60 @@
 .settings {
+    --primary-pre-color: color-mix(
+        in srgb,
+        var(--bg-color-1),
+        var(--bg-color-2) 35%
+    );
+    --primary-color: color-mix(in srgb, var(--primary-pre-color), black 20%);
+    --button-size: 2.75rem;
+    --icon-size: 1.35rem;
+    --padding: 0.5rem;
+    --radius: 0.35rem;
+
     position: absolute;
     right: 0;
     top: 0;
 
-    & button.icon {
-        display: flex;
-        place-content: center;
-        place-items: center;
-        position: relative;
+    .settings-form {
+        --padding-x: calc(var(--padding) * 2.5);
+        --padding-y: calc(var(--padding) * 2);
 
-        border: none;
-        border-radius: 100rem;
-        background: none;
-        cursor: pointer;
-        height: 2.75rem;
-        width: 2.75rem;
-
-        & svg {
-            display: block;
-            fill: currentColor;
-            height: 65%;
-            width: 65%;
-        }
+        margin: var(--padding-y) var(--padding-x)
+            calc(var(--padding-y) + 0.5rem);
     }
 }
 
-button.open-settings.button {
+.settings.button {
+    display: flex;
+    place-content: center;
+    place-items: center;
+    border: none;
+    border-radius: 100rem;
+    background: none;
+    cursor: pointer;
+    height: var(--button-size);
+    width: var(--button-size);
+
     position: absolute;
     right: 0;
     top: 0;
 
-    svg {
-        z-index: 0;
-        fill: var(--color);
+    .icon {
+        display: block;
+        position: absolute;
+        width: var(--icon-size);
+        height: var(--icon-size);
+        top: calc((var(--button-size) - var(--icon-size)) / 2);
+        left: calc((var(--button-size) - var(--icon-size)) / 2);
     }
+
+    svg {
+        fill: var(--color);
+        width: 100%;
+        height: 100%;
+    }
+
     .hover-layer {
-        background-color: var(--bg-color-4);
+        background-color: var(--color);
         opacity: 0;
         position: absolute;
         top: 0;
@@ -50,76 +69,40 @@ button.open-settings.button {
     }
     &:hover {
         & .hover-layer {
-            opacity: 0.25;
+            opacity: 0.1;
         }
     }
 }
 
 .settings-overlay {
-    --bg: #fff;
-    --glow-size: 0.5rem;
-    --corner-radius: 0.25rem;
-    --padding: 1rem;
+    position: absolute;
+    top: calc(var(--button-size) * 0.9);
+    right: calc(var(--button-size) * 0.9);
 
     font-size: 125%;
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: var(--bg);
-    border-radius: 0 0 0 calc(var(--corner-radius) * 1.35);
-    padding: var(--padding);
-    padding-top: 0;
-    z-index: 4;
+    --mix-1: rgba(255, 255, 255, 1);
+    --gradient-01: color-mix(in srgb, var(--bg-color-1), var(--mix-1) 50%);
+    --gradient-02: color-mix(in srgb, var(--bg-color-2), var(--mix-1) 65%);
+    --mix-2: transparent;
+    --gradient-11: color-mix(in srgb, var(--gradient-01), var(--mix-2) 10%);
+    --gradient-12: color-mix(in srgb, var(--gradient-02), var(--mix-2) 10%);
+    --shadow-border: 0 0 0.125rem rgba(0, 0, 0, 0.05);
+    --shadow-dark-s: 0 0.2rem 2rem rgba(0, 0, 0, 0.05);
+    --shadow-dark-l: 0 0.6rem 6rem rgba(0, 0, 0, 0.05);
 
-    .inline.radio {
-        width: 100%;
+    backdrop-filter: sepia(90%);
+    background: linear-gradient(-10deg, var(--gradient-12), var(--gradient-11));
+    border-radius: calc(var(--radius) * 1.5);
+    box-shadow: var(--shadow-border), var(--shadow-dark-s), var(--shadow-dark-l);
 
-        & .options {
-            box-shadow: inset 0 0 0 calc(0.125rem * 0.5)
-                color-mix(in srgb, var(--bg-color-1), transparent 75%);
-        }
-        & .checked-indicator {
-            background-color: var(--bg-color-1);
-            opacity: 0.25;
-        }
+    .inline.radio .checked-indicator {
+        opacity: 0.25;
     }
     div.close {
         display: flex;
         place-content: flex-end;
         & button {
             margin-right: calc(var(--padding) * -1);
-        }
-    }
-    .side {
-        position: absolute;
-        height: 100%;
-        width: 100%;
-
-        &.left {
-            top: 0;
-            left: -100%;
-            height: calc(100% - var(--corner-radius));
-            background: conic-gradient(
-                from 0deg at 100% 100%,
-                transparent,
-                transparent 270deg,
-                transparent 315deg,
-                transparent 328deg,
-                var(--bg) calc(360deg - 6deg)
-            );
-        }
-        &.bottom {
-            height: 50%;
-            bottom: -50%;
-            right: 0;
-            width: calc(100% - var(--corner-radius));
-            background: conic-gradient(
-                from 0deg at 0% 0%,
-                var(--bg),
-                var(--bg) calc(90deg + 6deg),
-                transparent 112deg,
-                transparent 360deg
-            );
         }
     }
 }
@@ -130,6 +113,7 @@ button.open-settings.button {
     textarea {
         border-radius: var(--radius);
         box-sizing: border-box;
+        display: block;
         font-size: 120%;
         width: 100%;
         margin: var(--padding) 0;
@@ -143,21 +127,40 @@ button.open-settings.button {
     display: none;
 }
 
+.extension-options-modal,
+.extension-popup {
+    .all-settings {
+        display: none;
+    }
+}
+.all-settings,
 .reset-to-defaults {
     button {
+        color: var(--primary-color);
         background-color: transparent;
         font-family: "Segoe UI", Tahoma, sans-serif;
         font-size: 100%;
         border: none;
         padding: 0;
-        padding-bottom: calc(var(--padding) * 0.5);
         border-radius: var(--radius);
         line-height: 100%;
+        text-decoration: underline;
+        text-decoration-color: color-mix(
+            in srgb,
+            currentColor,
+            transparent 65%
+        );
+        text-decoration-thickness: calc(0.125rem * 0.5);
+        text-underline-offset: 0.125rem;
         cursor: pointer;
-        color: salmon;
 
         &:hover {
             opacity: 0.8;
         }
+    }
+}
+.reset-to-defaults {
+    button {
+        color: salmon;
     }
 }

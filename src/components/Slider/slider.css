@@ -5,7 +5,6 @@
         "track track";
     grid-template-columns: 1fr auto;
     max-width: 300px;
-    color: currentColor;
 
     .react-aria-Label {
         grid-area: label;
@@ -25,26 +24,26 @@
             content: "";
             display: block;
             position: absolute;
-            background: var(--bg-color-1, black);
+            background: var(--primary-color, currentColor);
         }
     }
 
     .react-aria-SliderThumb {
-        --outline-color: rgba(255, 255, 255, 0.75);
         width: 1.25rem;
         height: 1.25rem;
         border-radius: var(--radius);
         background: transparent;
-        border: calc(0.125rem * 0.5) solid var(--bg-color-1, black);
+        border: calc(0.125rem * 0.5) solid var(--primary-color, currentColor);
         cursor: pointer;
         forced-color-adjust: none;
 
         &[data-dragging] {
-            background: var(--highlight-background-pressed);
+            background-color: var(--primary-color, currentColor);
+            opacity: 0.5;
         }
 
         &[data-focus-visible] {
-            outline: 0.125rem solid var(--bg-color-1, black);
+            outline: 0.125rem solid var(--primary-color, currentColor);
         }
     }
 

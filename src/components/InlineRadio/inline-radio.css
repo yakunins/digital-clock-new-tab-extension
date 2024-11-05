@@ -1,4 +1,5 @@
 .inline.radio {
+    --accent-color: var(--primary-color, currentColor);
     --padding: 0.3rem;
     --radius: var(--controls-radius, 0.35rem);
     --border-width: calc(0.125rem * 0.5);
@@ -11,7 +12,7 @@
     }
     .options {
         border-radius: var(--radius);
-        box-shadow: 0 0 0 var(--border-width) currentColor;
+        box-shadow: 0 0 0 var(--border-width) var(--accent-color);
         display: flex;
         position: relative;
 
@@ -31,10 +32,10 @@
     }
     input:focus-visible + label {
         border-radius: var(--radius);
-        box-shadow: 0 0 0 0.125rem currentColor; /* focus ring */
+        box-shadow: 0 0 0 0.125rem var(--accent-color); /* focus ring */
     }
     .checked-indicator {
-        background-color: currentColor;
+        background-color: var(--accent-color);
         opacity: 0.125;
         border-radius: calc(var(--radius) * 1);
         position: absolute;

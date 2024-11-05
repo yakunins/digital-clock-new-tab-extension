@@ -3,22 +3,12 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const srcDir = path.join(__dirname, "..", "src");
 
-const tsLoaderOptions = {
-    getCustomTransformers: () => ({
-        before: [require("typescript-plugin-css-modules").default()],
-    }),
-};
-const cssLoaderOptions = {
-    modules: {
-        localIdentName: "[name]__[local]___[hash:base64:5]",
-    },
-};
-
 module.exports = {
     entry: {
+        background: path.join(srcDir, "background.ts"),
+        newtab: path.join(srcDir, "newtab.tsx"),
         popup: path.join(srcDir, "popup.tsx"),
         options: path.join(srcDir, "options.tsx"),
-        newtab: path.join(srcDir, "newtab.tsx"),
     },
     output: {
         path: path.join(__dirname, "../dist/js"),

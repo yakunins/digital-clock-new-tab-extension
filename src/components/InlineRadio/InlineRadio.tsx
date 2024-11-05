@@ -20,14 +20,11 @@ export const InlineRadio = memo(
         name,
         ...rest
     }: InlineRadio) => {
+        const id = useRef(name || getId());
+        const parentRef = useRef<HTMLDivElement>(null);
         const [value, setValue] = useState<InlineRadioOption["value"]>(
             defaultValue || getValue(options)
         );
-
-        const id = name || getId();
-        const container = useRef<HTMLElement | null>(null);
-        const setRef = (node: HTMLFieldSetElement) =>
-            (container.current = node);
 
         const handleChange = (e: React.FormEvent<HTMLFieldSetElement>) => {
             const prev = value;
@@ -38,16 +35,19 @@ export const InlineRadio = memo(
 
         // calculate checked-indicator (caret) left and right position
         useEffect(() => {
-            if (!container.current) return;
+            if (!parentRef.current) return;
             const selector = ":checked + label"; // "div:has(:checked)";
-            const checkedEl = container.current.querySelector(
+            const checkedEl = parentRef.current.querySelector(
                 selector
             ) as HTMLElement;
-            const parentWidth = container.current?.offsetWidth;
+            const parentWidth = parentRef.current?.offsetWidth;
             const left = checkedEl?.offsetLeft;
             const right = parentWidth - left - checkedEl?.offsetWidth;
-            container.current.style.setProperty("--caret-left", `${left}px`);
-            container.current.style.setProperty("--caret-right", `${right}px`);
+            parentRef.current.style.setProperty("--caret-left", `${left}px`);
+            parentRef.current.style.setProperty(
+                "--caret-right",
+                `${right - 0.5}px`
+            );
         }, [value]);
 
         useEffect(() => {
@@ -59,17 +59,16 @@ export const InlineRadio = memo(
                 {...rest}
                 className="radio inline"
                 onChange={handleChange}
-                ref={setRef}
             >
                 {legend && <legend>{legend}</legend>}
-                <div className="options">
+                <div className="options" ref={parentRef}>
                     <div className="checked-indicator"></div>
                     {options
                         .map((i, idx) => {
                             return {
                                 ...i,
-                                id: `id_${id}_${idx}`,
-                                name: id,
+                                id: `id_${id.current}_${idx}`,
+                                name: id.current,
                                 checked: i.value === value,
                             };
                         })

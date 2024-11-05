@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { SettingsForm } from "./SettingsForm";
 import { Innout } from "../Innout";
 import "./settings-menu.css";
@@ -9,13 +9,16 @@ const sessionStorageItem = "digital_clock_newtab_extension_settings_opened";
 const initialOpened = sessionStorage.getItem(sessionStorageItem) === "opened";
 
 export const SettingsMenu = ({ ...rest }: DivProps) => {
+    const settingsRef = useRef<HTMLDivElement>(null);
     const [opened, setOpened] = useState(initialOpened);
-    const toggle = () => {
-        setOpened(!opened);
-    };
+
+    const toggle = () => setOpened(!opened);
     const close = useCallback(() => setOpened(false), []);
-    const handleEscape = (e: KeyboardEvent) => {
-        if (e.key === "Escape") close();
+    const handleEscape = (e: KeyboardEvent) => e.key === "Escape" && toggle();
+    const handleClickOutside = (e: MouseEvent) => {
+        if (!settingsRef.current?.contains(e.target as any)) {
+            close();
+        }
     };
 
     useEffect(() => {
@@ -24,19 +27,19 @@ export const SettingsMenu = ({ ...rest }: DivProps) => {
             opened ? "opened" : "closed"
         );
         document.addEventListener("keydown", handleEscape);
+        document.addEventListener("click", handleClickOutside);
+        return () => {
+            document.removeEventListener("keydown", handleEscape);
+            document.removeEventListener("click", handleClickOutside);
+        };
     }, [opened]);
 
     return (
-        <div className="settings" {...rest}>
-            <SettingsButton onClick={toggle} />
+        <div {...rest} className="settings" ref={settingsRef}>
+            <SettingsButton onClick={toggle} opened={opened} />
             <Innout unmount={!opened}>
-                <div {...rest} className="settings-overlay">
-                    <div className="left side"></div>
-                    <div className="bottom side"></div>
-                    <div className="close">
-                        <CloseSettingsButton onClick={close} />
-                    </div>
-                    <SettingsForm />
+                <div className="settings-overlay">
+                    <SettingsForm close={close} />
                 </div>
             </Innout>
         </div>
@@ -46,28 +49,29 @@ export const SettingsMenu = ({ ...rest }: DivProps) => {
 type ButtonProps = React.HTMLAttributes<HTMLButtonElement>;
 type SettingsButton = ButtonProps & {
     onClick: () => void;
+    opened: boolean;
 };
-export const SettingsButton = ({ onClick, ...rest }: SettingsButton) => {
+export const SettingsButton = ({
+    onClick,
+    opened,
+    ...rest
+}: SettingsButton) => {
     return (
         <button
             {...rest}
-            className="open-settings button dots icon"
+            className="settings button"
             onClick={onClick}
             aria-label="Settings"
         >
             <span className="hover-layer"></span>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
-            </svg>
+            <Innout unmount={!opened}>{closeIcon}</Innout>
+            <Innout unmount={opened}>{menuIcon}</Innout>
         </button>
     );
 };
 
-type CloseSettingsButton = ButtonProps & {
-    onClick: () => void;
-};
-const CloseSettingsButton = ({ onClick, ...rest }: CloseSettingsButton) => {
-    const closeIconStroke1px = (
+const closeIcon = (
+    <span className="icon">
         <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24px"
@@ -77,16 +81,12 @@ const CloseSettingsButton = ({ onClick, ...rest }: CloseSettingsButton) => {
         >
             <path d="M256-227.69 227.69-256l224-224-224-224L256-732.31l224 224 224-224L732.31-704l-224 224 224 224L704-227.69l-224-224-224 224Z" />
         </svg>
-    );
-
-    return (
-        <button
-            {...rest}
-            aria-label="Close"
-            className="close button icon"
-            onClick={onClick}
-        >
-            {closeIconStroke1px}
-        </button>
-    );
-};
+    </span>
+);
+const menuIcon = (
+    <span className="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
+        </svg>
+    </span>
+);

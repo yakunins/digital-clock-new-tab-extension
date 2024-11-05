@@ -6,7 +6,11 @@ import { SliderControlled, Slider } from "../Slider";
 
 import "./settings-form.css";
 
-export const SettingsForm = observer(() => {
+type DivProps = React.HTMLAttributes<HTMLDivElement>;
+type SettingsForm = DivProps & {
+    close?: () => void;
+};
+export const SettingsForm = observer(({ close, ...rest }: SettingsForm) => {
     const handleClockChange = useCallback<InlineRadio["onChange"]>((next) => {
         SettingsStore.setClockType(next as SettingsStore["clockType"]);
     }, []);
@@ -24,12 +28,29 @@ export const SettingsForm = observer(() => {
     const handleCssChange = (val?: string) => {
         SettingsStore.setCss(val);
     };
+    const handleAllSettings = () => {
+        chrome.runtime.sendMessage("openPopup");
+        close?.();
+    };
     const handleReset = () => {
         SettingsStore.reset();
     };
 
     return (
-        <div className="settings-form">
+        <div className="settings-form" {...rest}>
+            <InlineRadio
+                legend="Background"
+                defaultValue={SettingsStore.colorSchema}
+                options={[
+                    { value: "natural", text: "Sky" },
+                    { value: "random", text: "Random" },
+                    {
+                        value: JSON.stringify(SettingsStore.colors),
+                        text: "This",
+                    },
+                ]}
+                onChange={handleSchemaChange}
+            />
             <InlineRadio
                 legend="Clock"
                 defaultValue={SettingsStore.clockType}
@@ -53,19 +74,9 @@ export const SettingsForm = observer(() => {
                 minValue={10}
                 maxValue={100}
             />
-            <InlineRadio
-                legend="Background"
-                defaultValue={SettingsStore.colorSchema}
-                options={[
-                    { value: "natural", text: "Sky" },
-                    { value: "random", text: "Random" },
-                    {
-                        value: JSON.stringify(SettingsStore.colors),
-                        text: "Current",
-                    },
-                ]}
-                onChange={handleSchemaChange}
-            />
+            <div className="all-settings">
+                <button onClick={handleAllSettings}>More Settings</button>
+            </div>
             <CssEditor
                 onChange={handleCssChange}
                 defaultValue={SettingsStore.css}

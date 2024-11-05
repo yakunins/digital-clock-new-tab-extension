@@ -20,3 +20,11 @@ body {
 
     overflow: hidden;
 }
+
+button:focus-visible {
+    outline-color: var(--primary-color, currentColor);
+    outline-style: solid;
+    outline-width: 0.125rem;
+    outline-offset: 0.25rem;
+    text-decoration: none;
+}
