@@ -1,5 +1,5 @@
 .settings-form {
-    --radius: var(--controls-radius, 0.35rem);
+    --radius: 0.35rem;
     --padding: 0.35rem;
 
     display: flex;

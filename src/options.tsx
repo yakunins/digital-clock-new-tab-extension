@@ -6,6 +6,6 @@ const root = createRoot(document.getElementById("root")!);
 root.render(
     <React.StrictMode>
         <style>{`div.extension-options {margin-top: 0rem;}`}</style>
-        <ExtensionOptions />
+        <ExtensionOptions origin="options" />
     </React.StrictMode>
 );

@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { observer } from "mobx-react";
 import { Digit, BlinkingDigit, Blinker } from "react-led-digit";
-import { SettingsStore } from "../";
+import { SettingsStore as Settings } from "../";
 import { getTimeString, getLocale } from "../utils";
 import "./clock.css";
 
@@ -10,11 +10,11 @@ const blinker = new Blinker(); // singleton
 export const Clock = observer(
     ({ ...rest }: React.HTMLAttributes<HTMLTimeElement>) => {
         const [timeString, setTimeString] = useState(
-            getTimeString(locale(SettingsStore.clockType))
+            getTimeString(locale(Settings.clockType))
         );
 
         const handleBlink = useCallback(() => {
-            const time = getTimeString(locale(SettingsStore.clockType));
+            const time = getTimeString(locale(Settings.clockType));
             setTimeString(time);
         }, []);
 
@@ -26,10 +26,10 @@ export const Clock = observer(
 
         useEffect(() => {
             handleBlink();
-        }, [SettingsStore.clockType]);
+        }, [Settings.clockType]);
 
-        const thickness = (SettingsStore.segmentThickness / 100) * 1.5;
-        const length = (SettingsStore.segmentLength / 100) * 4 + thickness;
+        const thickness = (Settings.segmentThickness / 100) * 2;
+        const length = (Settings.segmentLength / 100) * 4 + thickness;
 
         const style = {
             segmentStyle: {
@@ -62,7 +62,7 @@ export const Clock = observer(
     }
 );
 
-function locale(clockFormat: SettingsStore["clockType"]) {
+function locale(clockFormat: Settings["clockType"]) {
     switch (clockFormat) {
         case "24-hour":
             return "en-GB";

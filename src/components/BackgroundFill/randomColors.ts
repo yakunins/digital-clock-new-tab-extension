@@ -1,7 +1,7 @@
 import {
     hexArray,
-    hexToHsb,
-    hexToRgb,
+    hex2hsb,
+    hex2rgb,
     type Color,
     type FourHex,
 } from "./colorUtils";
@@ -13,13 +13,13 @@ export const randomColor = (): Color => {
         let value = hexArray[index];
         hex += value;
     }
-    const rgb = hexToRgb(hex);
+    const rgb = hex2rgb(hex);
     const luma = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]; // percived luminosity
 
     return {
         hex,
         rgb,
-        hsb: hexToHsb(hex),
+        hsb: hex2hsb(hex),
         luma,
     };
 };

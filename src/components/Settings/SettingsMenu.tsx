@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { SettingsForm } from "./SettingsForm";
+import { SettingsStore as Settings } from "./settings.store";
 import { Innout } from "../Innout";
 import "./settings-menu.css";
 
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
 
-const sessionStorageItem = "digital_clock_newtab_extension_settings_opened";
-const initialOpened = sessionStorage.getItem(sessionStorageItem) === "opened";
+const sessionStorageItem = "digital_clock_newtab__settings_opened";
+const initialOpened = sessionStorage.getItem(sessionStorageItem) === "true";
 
 export const SettingsMenu = ({ ...rest }: DivProps) => {
     const settingsRef = useRef<HTMLDivElement>(null);
@@ -20,12 +21,11 @@ export const SettingsMenu = ({ ...rest }: DivProps) => {
             close();
         }
     };
+    const handleActivity = () => {};
 
     useEffect(() => {
-        sessionStorage.setItem(
-            sessionStorageItem,
-            opened ? "opened" : "closed"
-        );
+        sessionStorage.setItem(sessionStorageItem, opened.toString());
+        document.addEventListener("focus", handleActivity);
         document.addEventListener("keydown", handleEscape);
         document.addEventListener("click", handleClickOutside);
         return () => {
@@ -36,10 +36,11 @@ export const SettingsMenu = ({ ...rest }: DivProps) => {
 
     return (
         <div {...rest} className="settings" ref={settingsRef}>
+            <SetActiveStore origin="tab" />
             <SettingsButton onClick={toggle} opened={opened} />
             <Innout unmount={!opened}>
                 <div className="settings-overlay">
-                    <SettingsForm close={close} />
+                    <SettingsForm close={close} origin="tab" />
                 </div>
             </Innout>
         </div>
@@ -70,6 +71,27 @@ export const SettingsButton = ({
     );
 };
 
+// taking care of proper value of Settings.isLastActive
+const SetActiveStore = ({ origin }: { origin: Settings["origin"] }) => {
+    origin && Settings.setOrigin(origin);
+    const handleActive = (e?: Event) => {
+        const visible = document.visibilityState === "visible";
+        if (visible) {
+            Settings.setActiveStore(Settings.storeId);
+        }
+    };
+
+    React.useEffect(() => {
+        handleActive();
+        document.addEventListener("visibilitychange", handleActive);
+        return () => {
+            document.removeEventListener("visibilitychange", handleActive);
+        };
+    }, []);
+
+    return null;
+};
+
 const closeIcon = (
     <span className="icon">
         <svg
@@ -83,6 +105,7 @@ const closeIcon = (
         </svg>
     </span>
 );
+
 const menuIcon = (
     <span className="icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

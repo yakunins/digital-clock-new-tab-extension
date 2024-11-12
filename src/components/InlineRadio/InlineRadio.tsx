@@ -57,7 +57,7 @@ export const InlineRadio = memo(
         return (
             <fieldset
                 {...rest}
-                className="radio inline"
+                className={`inline radio ${rest.className}`}
                 onChange={handleChange}
             >
                 {legend && <legend>{legend}</legend>}

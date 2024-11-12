@@ -1,7 +1,8 @@
-import React, { CSSProperties } from "react";
+import React from "react";
 import { observer } from "mobx-react";
-import { SettingsStore } from "../Settings/settings.store";
-
+import { SettingsStore as Settings } from "../Settings/settings.store";
+import { randomColors } from "./randomColors";
+import { naturalColors } from "./naturalColors";
 import "./background-fill.css";
 
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
@@ -25,12 +26,26 @@ export const BackgroundFill = ({ children, ...rest }: BackgroundFill) => {
 };
 
 const BackgroundFillStyle = observer(() => {
-    const strips = SettingsStore.colors;
-    const sx = `:root {
-        --bg-color-1: ${strips[0]};
-        --bg-color-2: ${strips[1]};
-        --bg-color-3: ${strips[2]};
-        --bg-color-4: ${strips[3]};
+    let colors = JSON.parse(Settings.fixedColors);
+
+    switch (Settings.colorSchema) {
+        case "sky":
+            colors = naturalColors(Settings.backgroundRepaintTimer);
+            Settings.setFixedColors(JSON.stringify(colors), true);
+            break;
+        case "random":
+            colors = randomColors();
+            Settings.setFixedColors(JSON.stringify(colors), true);
+            break;
+    }
+
+    const cssVariables = `:root {
+        --theme: ${Settings.colorSchema};
+        --bg-color-1: ${colors[0]};
+        --bg-color-2: ${colors[1]};
+        --bg-color-3: ${colors[2]};
+        --bg-color-4: ${colors[3]};
     }`;
-    return <style>{sx}</style>;
+
+    return <style>{cssVariables}</style>;
 });

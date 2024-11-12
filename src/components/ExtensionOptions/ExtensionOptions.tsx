@@ -1,7 +1,11 @@
 import React from "react";
 import { SettingsForm } from "../Settings";
 
-export const ExtensionOptions = () => {
+type ExtensionOptionsProps = {
+    origin?: SettingsForm["origin"];
+};
+
+export const ExtensionOptions = ({ origin }: ExtensionOptionsProps) => {
     const github = "http://github.com/yakunins";
     const mail = "mailto:s@yakunins.com";
     const styles = `
@@ -14,7 +18,7 @@ export const ExtensionOptions = () => {
         <>
             <style>{styles}</style>
             <div className="extension-options">
-                <SettingsForm />
+                <SettingsForm origin={origin} />
                 <p>
                     2022, 2024 ©{" "}
                     <a target="_blank" href={github}>

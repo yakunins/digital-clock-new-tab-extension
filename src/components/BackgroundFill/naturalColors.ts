@@ -1,14 +1,18 @@
-import { mixHexColors, type FourHex } from "./colorUtils";
+import { mixHexColors, saturateColors, type FourHex } from "./colorUtils";
 
 type HourToColors = { [key: number]: FourHex };
 
-export const naturalColors = (time = new Date()): FourHex => {
+export const naturalColors = (
+    time = new Date(),
+    saturation = 1.35
+): FourHex => {
     const [prevColors, nextColors, weight] = getClosestColors(time);
     const mixedColors = [0, 1, 2, 3].map((idx) =>
         mixHexColors(prevColors[idx], nextColors[idx], weight)
-    );
+    ) as FourHex;
 
-    return mixedColors as FourHex;
+    const saturated = saturateColors(mixedColors, saturation);
+    return saturated;
 };
 
 export const skyColorsByHour: HourToColors = {

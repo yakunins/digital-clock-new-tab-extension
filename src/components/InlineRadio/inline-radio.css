@@ -1,8 +1,8 @@
 .inline.radio {
     --accent-color: var(--primary-color, currentColor);
     --padding: 0.3rem;
-    --radius: var(--controls-radius, 0.35rem);
     --border-width: calc(0.125rem * 0.5);
+
     all: unset;
     padding-top: calc(var(--padding) * 0.5);
     padding-bottom: calc(var(--padding) * 0.5);

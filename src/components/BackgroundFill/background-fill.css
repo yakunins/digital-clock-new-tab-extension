@@ -57,4 +57,10 @@
         height: 16vh;
         box-shadow: inset 100vw 100vh rgba(0, 0, 0, 0.05);
     }
+
+    @container style(--theme: random) {
+        .s4 {
+            border: 10px solid #000;
+        }
+    }
 }

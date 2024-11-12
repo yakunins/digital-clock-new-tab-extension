@@ -8,7 +8,6 @@
     --button-size: 2.75rem;
     --icon-size: 1.35rem;
     --padding: 0.5rem;
-    --radius: 0.35rem;
 
     position: absolute;
     right: 0;
@@ -72,28 +71,33 @@
             opacity: 0.1;
         }
     }
+    &:focus-visible {
+        outline-color: var(--color, currentColor);
+        outline-offset: -0.25rem;
+    }
 }
 
 .settings-overlay {
-    position: absolute;
-    top: calc(var(--button-size) * 0.9);
-    right: calc(var(--button-size) * 0.9);
-
-    font-size: 125%;
     --mix-1: rgba(255, 255, 255, 1);
     --gradient-01: color-mix(in srgb, var(--bg-color-1), var(--mix-1) 50%);
     --gradient-02: color-mix(in srgb, var(--bg-color-2), var(--mix-1) 65%);
     --mix-2: transparent;
-    --gradient-11: color-mix(in srgb, var(--gradient-01), var(--mix-2) 10%);
-    --gradient-12: color-mix(in srgb, var(--gradient-02), var(--mix-2) 10%);
+    --gradient-11: color-mix(in srgb, var(--gradient-01), var(--mix-2) 20%);
+    --gradient-12: color-mix(in srgb, var(--gradient-02), var(--mix-2) 20%);
     --shadow-border: 0 0 0.125rem rgba(0, 0, 0, 0.05);
     --shadow-dark-s: 0 0.2rem 2rem rgba(0, 0, 0, 0.05);
     --shadow-dark-l: 0 0.6rem 6rem rgba(0, 0, 0, 0.05);
 
-    backdrop-filter: sepia(90%);
+    backdrop-filter: saturate(150%) blur(0.5rem);
     background: linear-gradient(-10deg, var(--gradient-12), var(--gradient-11));
     border-radius: calc(var(--radius) * 1.5);
     box-shadow: var(--shadow-border), var(--shadow-dark-s), var(--shadow-dark-l);
+
+    position: absolute;
+    top: calc(var(--button-size) * 0.9);
+    right: calc(var(--button-size) * 0.9);
+    font-size: 125%;
+    z-index: 1;
 
     .inline.radio .checked-indicator {
         opacity: 0.25;
@@ -122,23 +126,24 @@
         scrollbar-color: rgba(127, 127, 127, 0.5) transparent;
     }
 }
-.settings .reset-to-defaults,
-.settings .custom-style-editor {
+
+.settings .hidden-in-page {
     display: none;
 }
 
 .extension-options-modal,
 .extension-popup {
-    .all-settings {
+    .hidden-in-popup {
         display: none;
     }
 }
+
 .all-settings,
 .reset-to-defaults {
     button {
         color: var(--primary-color);
         background-color: transparent;
-        font-family: "Segoe UI", Tahoma, sans-serif;
+        font-family: var(--font);
         font-size: 100%;
         border: none;
         padding: 0;

@@ -12,8 +12,8 @@ export const getTimezone = () =>
 
 // format: "Wednesday 28 September 2022"
 export const getDateString = (
-    locale = getLocale(),
-    date = new Date()
+    date = new Date(),
+    locale = getLocale()
 ): string => {
     const now = date || new Date();
     const weekday = now.toLocaleString(locale, { weekday: "long" });
@@ -32,3 +32,22 @@ export const getTimeString = (locale = getLocale()): string => {
     };
     return now.toLocaleTimeString(locale, formatOptions).toLowerCase();
 };
+
+export const popularLocales = [
+    "en-US", // 0
+    "zh-CN",
+    "ru-RU",
+    "fr-FR",
+    "es-ES",
+    "en-GB", // 5
+    "de-DE",
+    "pt-BR",
+    "en-CA",
+    "es-MX",
+    "it-IT", // 10
+    "ja-JP",
+    "bn-IN",
+    "da-DK",
+    "th-TH",
+    "ar-EG", // 15
+];

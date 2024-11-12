@@ -1,7 +1,8 @@
 :root {
+    --font: "Segoe UI", Tahoma, sans-serif;
     --scale: 1; /* ~40% percent of a screen width at default zoom level 100% */
     --color: rgba(150, 250, 220, 1);
-    --controls-radius: 0.35rem;
+    --radius: 0.35rem;
 }
 
 html,
@@ -11,12 +12,11 @@ body {
 
 body {
     width: 100vw;
-    height: 100vh;
-
     max-width: 100vw;
-    max-height: 100vw;
     min-width: 100vw;
-    min-height: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    min-height: 100vh;
 
     overflow: hidden;
 }
