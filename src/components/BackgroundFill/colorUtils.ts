@@ -131,6 +131,17 @@ export const saturateColor = (c: string, val: number) => {
     return hex;
 };
 
+export const lightenColor = (c: string, val: number) => {
+    const hsb = hex2hsb(c);
+    let brightness = hsb[2] * val;
+    if (brightness > 100) brightness = 100;
+    if (brightness < 0) brightness = 0;
+    hsb[2] = brightness;
+    const rgb = hsb2rgb(...hsb);
+    const hex = rgb2hex(...rgb);
+    return hex;
+};
+
 export const saturateColors = (colors: FourHex, val: number) =>
     colors.map((c) => saturateColor(c, val)) as FourHex;
 

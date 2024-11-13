@@ -37,17 +37,14 @@ export const InlineRadio = memo(
         useEffect(() => {
             if (!parentRef.current) return;
             const selector = ":checked + label"; // "div:has(:checked)";
-            const checkedEl = parentRef.current.querySelector(
+            const checked = parentRef.current.querySelector(
                 selector
             ) as HTMLElement;
             const parentWidth = parentRef.current?.offsetWidth;
-            const left = checkedEl?.offsetLeft;
-            const right = parentWidth - left - checkedEl?.offsetWidth;
-            parentRef.current.style.setProperty("--caret-left", `${left}px`);
-            parentRef.current.style.setProperty(
-                "--caret-right",
-                `${right - 0.5}px`
-            );
+            const l = checked?.offsetLeft;
+            const w = checked?.offsetWidth;
+            parentRef.current.style.setProperty("--caret-left", `${l}px`);
+            parentRef.current.style.setProperty("--caret-width", `${w}px`);
         }, [value]);
 
         useEffect(() => {

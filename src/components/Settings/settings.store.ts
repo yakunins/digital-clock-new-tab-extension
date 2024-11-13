@@ -1,8 +1,6 @@
 import { makeObservable, observable, computed, action } from "mobx";
 import { getLocaleAmpm } from "../utils";
 import { getId } from "../utils";
-import { randomColors } from "../BackgroundFill/randomColors";
-import { naturalColors } from "../BackgroundFill/naturalColors";
 
 type Settings = {
     backgroundRepaintPeriod?: number;

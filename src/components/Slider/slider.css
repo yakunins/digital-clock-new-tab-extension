@@ -52,7 +52,7 @@
         width: 100%;
 
         .react-aria-SliderTrack {
-            height: calc(0.125rem * 10);
+            height: 1.25rem;
             width: 100%;
 
             &:before {

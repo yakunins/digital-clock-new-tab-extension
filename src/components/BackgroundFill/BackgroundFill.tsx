@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import { SettingsStore as Settings } from "../Settings/settings.store";
 import { randomColors } from "./randomColors";
 import { naturalColors } from "./naturalColors";
+import { lightenColor } from "./colorUtils";
 import "./background-fill.css";
 
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
@@ -12,14 +13,13 @@ export const BackgroundFill = ({ children, ...rest }: BackgroundFill) => {
     return (
         <div className="background-fill" {...rest}>
             <BackgroundFillStyle />
-            <div className="strips layer">
-                <div className="s1"></div>
-                <div className="s2"></div>
-                <div className="s3"></div>
-                <div className="s4"></div>
+            <div className="gradient layer">
+                <Strips />
             </div>
-            <div className="darken layer"></div>
-            <div className="blur layer"></div>
+            <div className="blur layer">
+                <Strips />
+            </div>
+            <div className="effects layer"></div>
             <div className="content layer">{children}</div>
         </div>
     );
@@ -35,6 +35,10 @@ const BackgroundFillStyle = observer(() => {
             break;
         case "random":
             colors = randomColors();
+            colors[0] = lightenColor(colors[0], 1);
+            colors[1] = lightenColor(colors[1], 0.8);
+            colors[2] = lightenColor(colors[2], 0.6);
+            colors[3] = lightenColor(colors[3], 0.4);
             Settings.setFixedColors(JSON.stringify(colors), true);
             break;
     }
@@ -49,3 +53,17 @@ const BackgroundFillStyle = observer(() => {
 
     return <style>{cssVariables}</style>;
 });
+
+const Strips = () => (
+    <>
+        <div className="strip-1">
+            <div className="mask" />
+        </div>
+        <div className="strip-2">
+            <div className="mask" />
+        </div>
+        <div className="strip-3">
+            <div className="mask" />
+        </div>
+    </>
+);

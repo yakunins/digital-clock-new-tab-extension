@@ -1,6 +1,6 @@
 .inline.radio {
     --accent-color: var(--primary-color, currentColor);
-    --padding: 0.3rem;
+    --padding: 0.25rem;
     --border-width: calc(0.125rem * 0.5);
 
     all: unset;
@@ -11,8 +11,8 @@
         padding: calc(var(--padding) * 0.5) 0;
     }
     .options {
-        border-radius: var(--radius);
-        box-shadow: 0 0 0 var(--border-width) var(--accent-color);
+        border-radius: calc(var(--radius) + 0.125rem * 0.5);
+        border: var(--border-width) solid var(--accent-color);
         display: flex;
         position: relative;
 
@@ -41,10 +41,10 @@
         position: absolute;
         height: 100%;
         left: var(--caret-left);
-        right: var(--caret-right);
+        width: var(--caret-width);
         z-index: 0;
         pointer-events: none;
-        transition-property: left, right;
+        transition-property: left, right, width;
         transition-duration: 0.2s;
     }
     input {

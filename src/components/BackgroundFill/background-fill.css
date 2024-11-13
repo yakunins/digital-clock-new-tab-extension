@@ -1,4 +1,9 @@
 .background-fill {
+    --blur-size: 6vh;
+    --h1: calc(33.5% + 5%);
+    --h2: calc(33.5%);
+    --h3: calc(33.5% - 5%);
+
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -7,7 +12,8 @@
     justify-content: center;
     align-items: center;
 
-    & .layer {
+    .layer .mask,
+    .layer {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -15,52 +21,55 @@
         right: 0;
     }
 
-    & .content {
+    .content.layer {
         display: flex;
         flex-direction: column;
         place-items: center;
         place-content: center;
     }
 
-    & .darken {
-        background: linear-gradient(-5deg, rgba(0, 0, 0, 0.25), transparent);
-    }
-    & .blur {
-        backdrop-filter: blur(20vh);
+    .effects.layer {
+        backdrop-filter: brightness(95%);
     }
 
-    & .strips {
-        filter: brightness(95%);
-
-        & > * {
-            width: 100%;
-            transition-property: background-color;
-            transition-duration: 0.2s;
-        }
+    .blur.layer {
+        filter: blur(var(--blur-size));
+        width: calc(100% + var(--blur-size) * 4);
+        left: calc(var(--blur-size) * -2);
     }
 
-    & .s1 {
+    .blur.layer > div,
+    .gradient.layer > div {
+        position: relative;
+    }
+    .strip-1 {
         background-color: var(--bg-color-1);
-        height: 36vh;
+        height: var(--h1);
     }
-    & .s2 {
+    .strip-1 .mask {
         background-color: var(--bg-color-2);
-        height: 28vh;
     }
-    & .s3 {
+    .strip-2 {
+        background-color: var(--bg-color-2);
+        height: var(--h2);
+    }
+    .strip-2 .mask {
         background-color: var(--bg-color-3);
-        height: 20vh;
-        box-shadow: inset 100vw 100vh rgba(0, 0, 0, 0.025);
     }
-    & .s4 {
+    .strip-3 {
+        background-color: var(--bg-color-3);
+        height: var(--h3);
+    }
+    .strip-3 .mask {
         background-color: var(--bg-color-4);
-        height: 16vh;
-        box-shadow: inset 100vw 100vh rgba(0, 0, 0, 0.05);
     }
 
-    @container style(--theme: random) {
-        .s4 {
-            border: 10px solid #000;
-        }
+    .mask {
+        mask-image: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.98));
+    }
+    .blur.layer *,
+    .gradient.layer * {
+        transition-property: background-color;
+        transition-duration: 0.35s;
     }
 }

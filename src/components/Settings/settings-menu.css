@@ -14,11 +14,11 @@
     top: 0;
 
     .settings-form {
-        --padding-x: calc(var(--padding) * 2.5);
+        --padding-x: calc(var(--padding) * 3);
         --padding-y: calc(var(--padding) * 2);
 
-        margin: var(--padding-y) var(--padding-x)
-            calc(var(--padding-y) + 0.5rem);
+        margin: var(--padding-y) var(--padding-x);
+        margin-bottom: calc(var(--padding-y) + 0.65rem);
     }
 }
 
