@@ -2,9 +2,17 @@
     --clock-color: var(--color, rgba(150, 250, 220, 1));
     --clock-gap: 0.75rem;
     --clock-font-size: calc(2.5rem * var(--scale));
+
     --clock-frame-offset: calc(var(--clock-font-size) * -1);
     --clock-frame-opacity: 0.1;
+
     --glow-size: 2em;
+    --glow-opacity: 100%;
+    --glow-color: color-mix(
+        in srgb,
+        transparent,
+        var(--clock-color) var(--glow-opacity)
+    );
 
     color: var(--clock-color);
     display: flex;
@@ -26,8 +34,8 @@
         transition: all 1s;
     }
     & .digit {
-        filter: drop-shadow(0 0 calc(var(--glow-size) * 1) var(--clock-color))
-            drop-shadow(0 0 calc(var(--glow-size) * 2) var(--clock-color))
+        filter: drop-shadow(0 0 calc(var(--glow-size) * 1) var(--glow-color))
+            drop-shadow(0 0 calc(var(--glow-size) * 2) var(--glow-color))
             blur(0.75px);
     }
     & .digit.ampm,

@@ -27,10 +27,10 @@ export const SettingsMenu = ({ ...rest }: DivProps) => {
         sessionStorage.setItem(sessionStorageItem, opened.toString());
         document.addEventListener("focus", handleActivity);
         document.addEventListener("keydown", handleEscape);
-        document.addEventListener("click", handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("keydown", handleEscape);
-            document.removeEventListener("click", handleClickOutside);
+            document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [opened]);
 

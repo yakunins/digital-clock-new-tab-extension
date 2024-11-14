@@ -35,14 +35,18 @@ const css = `:root {
 .clock {
   --clock-gap: 0.75rem;
   --clock-frame-opacity: 0;
+  --glow-size: 2em;
+  --glow-opacity: 100%;
 }`;
-const activeRequestPrefix = "set_active_store_id";
+
+const colors0 = ["#fff", "#aaa", "#666", "#000"];
+const colors1 = ["#ffe8de", "#6e7cca", "#860d0e", "#21022a"];
 
 const initial: Settings = {
     backgroundRepaintPeriod: 2 * 1000,
     clockType: getLocaleAmpm() ? "ampm" : "24-hour",
     colorSchema: "sky",
-    fixedColors: JSON.stringify(["#fff", "#aaa", "#666", "#000"]),
+    fixedColors: JSON.stringify(colors1),
     css: css,
     dateStyle: "long",
     segmentLength: 50,
