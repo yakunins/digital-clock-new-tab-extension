@@ -1,4 +1,13 @@
 .react-aria-Slider {
+    --accent-color: var(--primary-color, currentColor);
+    --accent-color-88: color-mix(in srgb, var(--accent-color), transparent 88%);
+    --accent-color-76: color-mix(in srgb, var(--accent-color), transparent 76%);
+
+    --s-1px: 0.0625rem;
+    --s-2px: 0.125rem;
+    --s-3px: 0.1875rem;
+    --s-4px: 0.25rem;
+
     display: grid;
     grid-template-areas:
         "label output"
@@ -8,7 +17,7 @@
 
     .react-aria-Label {
         grid-area: label;
-        margin-bottom: 0.125rem;
+        margin-bottom: var(--s-2px);
     }
 
     .react-aria-SliderOutput {
@@ -24,7 +33,7 @@
             content: "";
             display: block;
             position: absolute;
-            background: var(--primary-color, currentColor);
+            background-color: var(--accent-color);
         }
     }
 
@@ -33,17 +42,22 @@
         height: 1.25rem;
         border-radius: var(--radius);
         background: transparent;
-        border: calc(0.125rem * 0.5) solid var(--primary-color, currentColor);
+        border: var(--s-1px) solid var(--accent-color);
         cursor: pointer;
         forced-color-adjust: none;
+        transition-property: background-color, border, border-color;
+        transition-duration: 0.2s;
 
+        &:hover {
+            background-color: var(--accent-color-76);
+        }
         &[data-dragging] {
-            background-color: var(--primary-color, currentColor);
+            background-color: var(--accent-color);
+            border: var(--s-1px) solid var(--accent-color-88);
             opacity: 0.5;
         }
-
         &[data-focus-visible] {
-            outline: 0.125rem solid var(--primary-color, currentColor);
+            outline: var(--s-1px) solid var(--accent-color);
         }
     }
 

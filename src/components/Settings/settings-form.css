@@ -7,3 +7,38 @@
     gap: 0.5rem;
     min-width: 12.5rem;
 }
+
+.reset-to-defaults {
+    button.danger {
+        color: salmon;
+    }
+}
+
+.custom-style-editor {
+    margin-top: var(--padding);
+
+    textarea {
+        border-radius: var(--radius);
+        box-sizing: border-box;
+        display: block;
+        font-size: 120%;
+        width: 100%;
+        margin: var(--padding) 0;
+        padding: calc(var(--padding) * 0.5) var(--padding);
+        scrollbar-width: thin;
+        scrollbar-color: rgba(127, 127, 127, 0.5) transparent;
+    }
+}
+
+.extension-options-modal,
+.extension-popup {
+    .hidden-in-popup {
+        display: none;
+    }
+}
+
+.settings-menu {
+    .hidden-in-page {
+        display: none;
+    }
+}

@@ -3,33 +3,60 @@ import "./in-n-out.css";
 
 type Stage = {
     duration: number;
-    inClassName: string;
-    outClassName: string;
+    class_in: string;
+    class_out: string;
 };
 type Stages = Stage[];
 
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
 type Innout = DivProps & {
-    unmount: boolean;
+    out: boolean;
     stages?: Stages;
     minimumDuration?: number;
 };
 
+const unmountStages = [
+    {
+        duration: 0,
+        class_in: "out", // unmounted
+        class_out: "out", // unmounted
+    },
+    {
+        duration: 10,
+        class_in: "in-start", // just mounted
+        class_out: "out-end", // to be unmounted
+    },
+];
 const defaultStages = [
     {
         duration: 250,
-        inClassName: "fade-0-in", // mounting
-        outClassName: "fade-0-out", // unmounting
+        class_in: "stage-0-in", // revealing
+        class_out: "stage-0-out", // hiding
+    },
+];
+const mountStages = [
+    {
+        duration: 10,
+        class_in: "in-end",
+        class_out: "out-start",
+    },
+    {
+        duration: 0,
+        class_in: "in", // fully mounted
+        class_out: "in", // fully mounted
     },
 ];
 
 export const Innout = ({
-    unmount = false,
+    out = false,
     stages = defaultStages,
-    minimumDuration = 20,
+    minimumDuration = 25,
     ...rest
 }: Innout) => {
-    const [stage, setStage] = useState<number>(unmount ? -2 : stages.length);
+    const allStages = [...unmountStages, ...stages, ...mountStages];
+    const lastStage = allStages.length - 1;
+    const dir = out ? "out" : "in";
+    const [stage, setStage] = useState<number>(out ? 0 : lastStage);
     const t = useRef<ReturnType<typeof setTimeout>>();
 
     const durationsObj = {} as any;
@@ -41,36 +68,30 @@ export const Innout = ({
         ...rest.style,
     } as CSSProperties;
 
-    function getClassName() {
-        const dir = unmount ? "out" : "in";
-        if (stage < stages.length && stage > -1) {
-            return stages[stage][`${dir}ClassName`];
+    const getClassName = React.useCallback(() => {
+        const cx = allStages[stage][`class_${dir}`];
+        if (out) {
+            return addClass(cx, "out");
         } else {
-            if (stage === -1 || stage === -2) {
-                return "out";
-            }
-            return "in";
+            return addClass(cx, "in");
+        }
+    }, [out, stage, stages.length]);
+
+    function nextStage() {
+        if (out) {
+            if (stage - 1 >= 0) setStage(stage - 1);
+        } else {
+            if (stage + 1 <= lastStage) setStage(stage + 1);
         }
     }
 
-    function nextStage() {
-        const dir = unmount ? "out" : "in";
-        if (dir === "in") {
-            const next = stage + 1;
-            if (next <= stages.length) setStage(next);
-        }
-        if (dir === "out") {
-            const next = stage - 1;
-            if (next >= -2) setStage(next);
-        }
-    }
     function scheduleNextStage() {
         clearTimeout(t.current);
         const duration =
-            stage > -1 && stage < stages.length
-                ? stages[stage].duration
-                : stage === -2
+            allStages[stage].duration === 0
                 ? 0
+                : allStages[stage].duration > minimumDuration
+                ? allStages[stage].duration
                 : minimumDuration;
         t.current = setTimeout(() => {
             nextStage();
@@ -80,9 +101,9 @@ export const Innout = ({
     useEffect(() => {
         scheduleNextStage();
         return () => clearTimeout(t.current);
-    }, [unmount, stage, stages.length]);
+    }, [out, stage, stages.length]);
 
-    if (stage === -2) return null;
+    if (stage === 0) return null;
     return (
         <div
             {...rest}
@@ -90,4 +111,10 @@ export const Innout = ({
             className={`in-n-out animation ${getClassName()}`}
         />
     );
+};
+
+const addClass = (cx: string, cls: string) => {
+    const parts = cx.split(" ");
+    if (parts.includes(cls)) return cx;
+    return cls + " " + cx;
 };

@@ -1,18 +1,19 @@
 .clock {
     --clock-color: var(--color, rgba(150, 250, 220, 1));
-    --clock-gap: 0.75rem;
     --clock-font-size: calc(2.5rem * var(--scale));
-
     --clock-frame-offset: calc(var(--clock-font-size) * -1);
     --clock-frame-opacity: 0.1;
+    --clock-gap: calc(var(--thickness, 0.75rem) * 0.5 + 0.5rem);
 
-    --glow-size: 2em;
+    --glow-size: 3em;
     --glow-opacity: 100%;
     --glow-color: color-mix(
         in srgb,
         transparent,
         var(--clock-color) var(--glow-opacity)
     );
+    --glow-color-25: color-mix(in srgb, transparent, var(--glow-color) 25%);
+    --glow-color-33: color-mix(in srgb, transparent, var(--glow-color) 33%);
 
     color: var(--clock-color);
     display: flex;
@@ -22,7 +23,7 @@
     position: relative;
     transform: skew(-2deg, -1deg);
 
-    & .clock-frame {
+    .clock-frame {
         border: 1px solid var(--clock-color);
         border-radius: calc(-1 * var(--clock-frame-offset) + 0.5rem);
         opacity: var(--clock-frame-opacity, 0.2);
@@ -33,17 +34,65 @@
         right: var(--clock-frame-offset);
         transition: all 1s;
     }
-    & .digit {
+    .digit {
         filter: drop-shadow(0 0 calc(var(--glow-size) * 1) var(--glow-color))
-            drop-shadow(0 0 calc(var(--glow-size) * 2) var(--glow-color))
-            blur(0.75px);
+            drop-shadow(0 0 calc(var(--glow-size) * 0.33) var(--glow-color-33))
+            blur(0.5px);
     }
-    & .digit.ampm,
-    & .digit.colon {
+    .digit.ampm,
+    .digit.colon {
         margin-left: -0.25rem;
         margin-right: -0.25rem;
     }
-    & .digit.ampm {
+
+    .in-n-out {
+        &.fade-in,
+        &.fade-out {
+            transition-property: opacity;
+            transition-duration: var(--stage-1-duration, 0.2s);
+        }
+
+        &.in-end,
+        &.out-start,
+        &.fade-in {
+            opacity: 1;
+        }
+        &.out-end,
+        &.in-start,
+        &.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        &.width-in,
+        &.width-out {
+            opacity: 0;
+        }
+        &.in-end,
+        &.out-start,
+        &.width-in {
+            margin-left: 0;
+
+            .digit.ampm {
+                margin-right: -1.5rem;
+            }
+        }
+        &.out-end,
+        &.in-start,
+        &.width-out {
+            margin-left: calc(var(--clock-gap) * -1);
+
+            .digit.ampm {
+                margin-right: calc(var(--length) * -1.25);
+            }
+        }
+    }
+    .digit.ampm {
         margin-right: -1.5rem;
+    }
+    .digit.ampm,
+    .in-n-out {
+        transition-property: margin-right, margin-left;
+        transition-duration: var(--stage-0-duration, 0.2s);
     }
 }

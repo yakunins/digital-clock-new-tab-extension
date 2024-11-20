@@ -35,10 +35,10 @@ export const SettingsMenu = ({ ...rest }: DivProps) => {
     }, [opened]);
 
     return (
-        <div {...rest} className="settings" ref={settingsRef}>
+        <div {...rest} className="settings-menu" ref={settingsRef}>
             <SetActiveStore origin="tab" />
-            <SettingsButton onClick={toggle} opened={opened} />
-            <Innout unmount={!opened}>
+            <SettingsToggleButton onClick={toggle} opened={opened} />
+            <Innout out={!opened}>
                 <div className="settings-overlay">
                     <SettingsForm close={close} origin="tab" />
                 </div>
@@ -48,25 +48,25 @@ export const SettingsMenu = ({ ...rest }: DivProps) => {
 };
 
 type ButtonProps = React.HTMLAttributes<HTMLButtonElement>;
-type SettingsButton = ButtonProps & {
+type SettingsToggleButton = ButtonProps & {
     onClick: () => void;
     opened: boolean;
 };
-export const SettingsButton = ({
+export const SettingsToggleButton = ({
     onClick,
     opened,
     ...rest
-}: SettingsButton) => {
+}: SettingsToggleButton) => {
     return (
         <button
             {...rest}
-            className="settings button"
+            className="settings-toggle button"
             onClick={onClick}
             aria-label="Settings"
         >
             <span className="hover-layer"></span>
-            <Innout unmount={!opened}>{closeIcon}</Innout>
-            <Innout unmount={opened}>{menuIcon}</Innout>
+            <Innout out={!opened}>{closeIcon}</Innout>
+            <Innout out={opened}>{menuIcon}</Innout>
         </button>
     );
 };

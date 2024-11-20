@@ -47,11 +47,11 @@ export const SettingsForm = observer(
             },
             []
         );
-        const handleAllSettings = () => {
+        const openPopup = () => {
             chrome.runtime.sendMessage("open_extension_popup");
             close?.();
         };
-        const handleReset = () => {
+        const resetToDefaults = () => {
             Settings.reset();
         };
 
@@ -102,7 +102,7 @@ export const SettingsForm = observer(
                     onChange={handleDateChange}
                 />
                 <div className="all-settings hidden-in-popup">
-                    <button onClick={handleAllSettings}>More Settings</button>
+                    <button onClick={openPopup}>More Settings</button>
                 </div>
                 <CssEditor
                     className="hidden-in-page"
@@ -110,7 +110,9 @@ export const SettingsForm = observer(
                     defaultValue={Settings.css}
                 />
                 <div className="reset-to-defaults hidden-in-page">
-                    <button onClick={handleReset}>Reset to defaults</button>
+                    <button className="danger" onClick={resetToDefaults}>
+                        Reset to defaults
+                    </button>
                 </div>
             </div>
         );

@@ -31,11 +31,11 @@ export type SettingsStore = Settings & {
 
 const css = `:root {
   --color: rgba(160, 255, 230, 1);
+  --bg-solid-color: rgba(0,0,0,0);
 }
 .clock {
-  --clock-gap: 0.75rem;
   --clock-frame-opacity: 0;
-  --glow-size: 2em;
+  --glow-size: 3em;
   --glow-opacity: 100%;
 }`;
 
@@ -49,8 +49,8 @@ const initial: Settings = {
     fixedColors: JSON.stringify(colors1),
     css: css,
     dateStyle: "long",
-    segmentLength: 50,
-    segmentThickness: 50,
+    segmentLength: 30,
+    segmentThickness: 40,
     storageThrottlePeriod: 100,
     storeId: getId(),
     origin: "unknown",

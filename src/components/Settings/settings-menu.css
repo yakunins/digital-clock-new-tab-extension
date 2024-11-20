@@ -1,10 +1,6 @@
-.settings {
-    --primary-pre-color: color-mix(
-        in srgb,
-        var(--bg-color-1),
-        var(--bg-color-2) 35%
-    );
-    --primary-color: color-mix(in srgb, var(--primary-pre-color), black 20%);
+.settings-menu {
+    --pre-color: color-mix(in srgb, var(--bg-color-1), var(--bg-color-2) 35%);
+    --primary-color: color-mix(in srgb, var(--pre-color), black 35%);
     --button-size: 2.75rem;
     --icon-size: 1.35rem;
     --padding: 0.5rem;
@@ -22,7 +18,7 @@
     }
 }
 
-.settings.button {
+.settings-toggle.button {
     display: flex;
     place-content: center;
     place-items: center;
@@ -99,42 +95,12 @@
     font-size: 125%;
     z-index: 1;
 
-    .inline.radio .checked-indicator {
-        opacity: 0.25;
-    }
     div.close {
         display: flex;
         place-content: flex-end;
         & button {
             margin-right: calc(var(--padding) * -1);
         }
-    }
-}
-
-.custom-style-editor {
-    margin-top: var(--padding);
-
-    textarea {
-        border-radius: var(--radius);
-        box-sizing: border-box;
-        display: block;
-        font-size: 120%;
-        width: 100%;
-        margin: var(--padding) 0;
-        padding: calc(var(--padding) * 0.5) var(--padding);
-        scrollbar-width: thin;
-        scrollbar-color: rgba(127, 127, 127, 0.5) transparent;
-    }
-}
-
-.settings .hidden-in-page {
-    display: none;
-}
-
-.extension-options-modal,
-.extension-popup {
-    .hidden-in-popup {
-        display: none;
     }
 }
 
@@ -162,10 +128,5 @@
         &:hover {
             opacity: 0.8;
         }
-    }
-}
-.reset-to-defaults {
-    button {
-        color: salmon;
     }
 }

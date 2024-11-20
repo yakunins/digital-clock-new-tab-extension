@@ -7,6 +7,12 @@
     letter-spacing: 0.05rem;
     transform: scaleX(0.98);
     opacity: 0.75;
+    width: 50vw;
+
+    .formatted-date {
+        position: absolute;
+        width: 100%;
+    }
 
     .date-long,
     .date-short {

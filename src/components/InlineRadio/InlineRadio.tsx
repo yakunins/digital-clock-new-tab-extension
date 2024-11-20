@@ -36,11 +36,10 @@ export const InlineRadio = memo(
         // calculate checked-indicator (caret) left and right position
         useEffect(() => {
             if (!parentRef.current) return;
-            const selector = ":checked + label"; // "div:has(:checked)";
+            const selector = ":checked + label";
             const checked = parentRef.current.querySelector(
                 selector
             ) as HTMLElement;
-            const parentWidth = parentRef.current?.offsetWidth;
             const l = checked?.offsetLeft;
             const w = checked?.offsetWidth;
             parentRef.current.style.setProperty("--caret-left", `${l}px`);
@@ -91,13 +90,14 @@ const InlineRadioItem = memo(
         const inputRef = useRef<HTMLInputElement>(null);
         const [focused, setFocused] = useState(false);
         const id = rest.id || getId();
+        const cx = `option${checked ? " checked" : ""}`;
 
         useEffect(() => {
             focused && inputRef?.current?.focus();
         });
 
         return (
-            <div className="option" key={id}>
+            <div className={cx} key={id}>
                 <input
                     {...rest}
                     ref={inputRef}

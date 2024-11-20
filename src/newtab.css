@@ -3,6 +3,11 @@
     --scale: 1; /* ~40% percent of a screen width at default zoom level 100% */
     --color: rgba(150, 250, 220, 1);
     --radius: 0.35rem;
+
+    --s-1px: 0.0625rem;
+    --s-2px: 0.125rem;
+    --s-3px: 0.1875rem;
+    --s-4px: 0.25rem;
 }
 
 html,

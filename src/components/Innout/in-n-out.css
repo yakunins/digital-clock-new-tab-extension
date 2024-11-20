@@ -1,16 +1,19 @@
 .in-n-out {
-    &.fade-0-in,
-    &.in {
-        opacity: 1;
+    &.stage-0-in,
+    &.stage-0-out {
         transition-property: opacity;
-        transition-duration: var(--stage-0-duration, 0.1s);
+        transition-duration: var(--stage-0-duration, 0.2s);
     }
 
-    &.out,
-    &.fade-0-out {
+    &.in-end,
+    &.out-start,
+    &.stage-0-in {
+        opacity: 1;
+    }
+    &.out-end,
+    &.in-start,
+    &.stage-0-out {
         opacity: 0;
         pointer-events: none;
-        transition-property: opacity;
-        transition-duration: var(--stage-0-duration, 0.1s);
     }
 }

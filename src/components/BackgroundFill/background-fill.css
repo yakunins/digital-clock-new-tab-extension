@@ -12,8 +12,8 @@
     justify-content: center;
     align-items: center;
 
-    .layer .mask,
-    .layer {
+    .layer,
+    .layer .mask {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -30,6 +30,7 @@
 
     .effects.layer {
         backdrop-filter: brightness(95%);
+        background-color: var(--bg-solid-color);
     }
 
     .blur.layer {

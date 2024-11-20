@@ -1,7 +1,15 @@
 .inline.radio {
     --accent-color: var(--primary-color, currentColor);
-    --padding: 0.25rem;
+    --accent-color-88: color-mix(in srgb, var(--accent-color), transparent 88%);
+    --accent-color-76: color-mix(in srgb, var(--accent-color), transparent 76%);
     --border-width: calc(0.125rem * 0.5);
+    --padding: 0.25rem;
+    --options-radius: calc(var(--radius) + 0.125rem * 0.5);
+
+    --s-1px: 0.0625rem;
+    --s-2px: 0.125rem;
+    --s-3px: 0.1875rem;
+    --s-4px: 0.25rem;
 
     all: unset;
     padding-top: calc(var(--padding) * 0.5);
@@ -11,8 +19,8 @@
         padding: calc(var(--padding) * 0.5) 0;
     }
     .options {
-        border-radius: calc(var(--radius) + 0.125rem * 0.5);
-        border: var(--border-width) solid var(--accent-color);
+        border-radius: var(--options-radius);
+        background-color: var(--accent-color-88);
         display: flex;
         position: relative;
 
@@ -21,6 +29,7 @@
         }
     }
     label {
+        border-radius: var(--options-radius);
         cursor: pointer;
         display: block;
         padding: var(--padding) calc(var(--padding) * 2);
@@ -29,15 +38,28 @@
         text-align: center;
         user-select: none;
         z-index: 1;
+        transition-property: background-color;
+        transition-duration: 0.2s;
+
+        &:hover {
+            background-color: var(--accent-color-88);
+        }
+        .checked & {
+            cursor: default;
+
+            &:hover {
+                background-color: transparent;
+            }
+        }
     }
-    input:focus-visible + label {
-        border-radius: var(--radius);
-        box-shadow: 0 0 0 0.125rem var(--accent-color); /* focus ring */
+
+    &:focus-within .checked-indicator {
+        box-shadow: 0 0 0 var(--s-2px) var(--accent-color); /* focus ring */
     }
     .checked-indicator {
-        background-color: var(--accent-color);
-        opacity: 0.125;
-        border-radius: calc(var(--radius) * 1);
+        _background-color: var(--accent-color-88);
+        box-shadow: 0 0 0 var(--s-1px) var(--accent-color);
+        border-radius: var(--options-radius);
         position: absolute;
         height: 100%;
         left: var(--caret-left);
