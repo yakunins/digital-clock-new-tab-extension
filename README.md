@@ -4,7 +4,7 @@
 
 ## Installation
 
--  Chrome
--  Firefox
+-   [Chrome](https://chromewebstore.google.com/detail/digital-clock-in-a-new-ta/jigadjkijhkamfmjfjnjlgojkdednakp)
+-   Firefox (TBD)
 
 Enjoy!
