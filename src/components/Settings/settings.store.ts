@@ -34,9 +34,9 @@ const css = `:root {
   --bg-solid-color: rgba(0,0,0,0);
 }
 .clock {
-  --clock-frame-opacity: 0;
-  --glow-size: 3em;
+  --glow-size: 3rem;
   --glow-opacity: 100%;
+  --clock-frame-opacity: 0;
 }`;
 
 const colors0 = ["#fff", "#aaa", "#666", "#000"];

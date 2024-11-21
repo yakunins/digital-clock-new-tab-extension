@@ -3,23 +3,28 @@
     --clock-font-size: calc(2.5rem * var(--scale));
     --clock-frame-offset: calc(var(--clock-font-size) * -1);
     --clock-frame-opacity: 0.1;
+    --clock-shine-offset: calc(var(--clock-font-size) * -1);
     --clock-gap: calc(var(--thickness, 0.75rem) * 0.5 + 0.5rem);
 
-    --glow-size: 3em;
+    --blur-size: calc(var(--s-1px) * 0.65);
+    --glow-size: 3rem;
     --glow-opacity: 100%;
     --glow-color: color-mix(
         in srgb,
         transparent,
         var(--clock-color) var(--glow-opacity)
     );
+    --glow-color-10: color-mix(in srgb, transparent, var(--glow-color) 10%);
     --glow-color-25: color-mix(in srgb, transparent, var(--glow-color) 25%);
     --glow-color-33: color-mix(in srgb, transparent, var(--glow-color) 33%);
+    --glow-color-50: color-mix(in srgb, transparent, var(--glow-color) 50%);
+    --glow-color-75: color-mix(in srgb, transparent, var(--glow-color) 75%);
 
     color: var(--clock-color);
     display: flex;
     font-size: var(--clock-font-size);
     gap: var(--clock-gap);
-    margin-bottom: calc(-1 * var(--clock-frame-offset));
+    margin-bottom: calc(2 * var(--clock-gap));
     position: relative;
     transform: skew(-2deg, -1deg);
 
@@ -34,15 +39,41 @@
         right: var(--clock-frame-offset);
         transition: all 1s;
     }
+
+    .clock-shine {
+        --g-1: radial-gradient(
+            circle at 25% 50%,
+            var(--clock-color) 0%,
+            transparent 25%
+        );
+        --g-2: radial-gradient(
+            circle at 75% 50%,
+            var(--clock-color) 0%,
+            transparent 25%
+        );
+        background: var(--g-1), var(--g-2);
+        filter: blur(calc(var(--glow-size) * 2 + var(--length)));
+        opacity: calc(var(--glow-opacity, 1) * 0.65);
+        overflow: visible;
+        position: absolute;
+        top: calc(var(--clock-shine-offset) * 0.92);
+        bottom: calc(var(--clock-shine-offset) * 0.92);
+        left: var(--clock-shine-offset);
+        right: var(--clock-shine-offset);
+        transition: all 1s;
+    }
     .digit {
-        filter: drop-shadow(0 0 calc(var(--glow-size) * 1) var(--glow-color))
-            drop-shadow(0 0 calc(var(--glow-size) * 0.33) var(--glow-color-33))
-            blur(0.5px);
+        filter: drop-shadow(0 0 calc(var(--glow-size) / 2) var(--glow-color-25))
+            blur(var(--blur-size));
     }
     .digit.ampm,
     .digit.colon {
         margin-left: -0.25rem;
         margin-right: -0.25rem;
+    }
+    .digit.colon.blinking {
+        filter: drop-shadow(0 0 calc(var(--glow-size) * 2) var(--glow-color-50))
+            blur(var(--blur-size));
     }
 
     .in-n-out {

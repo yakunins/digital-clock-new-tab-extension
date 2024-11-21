@@ -47,11 +47,12 @@ export const Clock = observer(
         const ampm = timeString.trim().endsWith("am")
             ? "am"
             : timeString.trim().endsWith("pm")
-            ? "pm"
-            : null;
+              ? "pm"
+              : null;
         return (
             <time className="clock" {...rest} style={clockStyle}>
                 <div className="clock-frame"></div>
+                <div className="clock-shine"></div>
                 {timeString.split("").map((i, idx) => {
                     if (i == ":" || i === ".")
                         return <BlinkingDigit key={idx} value={i} {...style} />;

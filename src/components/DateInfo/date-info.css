@@ -5,8 +5,10 @@
     font-family: "Work Sans", WorkSansEmbedded, "Segoe UI", Segoe, sans-serif;
     font-size: var(--size);
     letter-spacing: 0.05rem;
+    margin: calc(var(--size) + 1.5vmin) 0;
     transform: scaleX(0.98);
     opacity: 0.75;
+    height: 2rem;
     width: 50vw;
 
     .formatted-date {
@@ -22,7 +24,6 @@
         gap: var(--gap);
         align-items: center;
         justify-content: center;
-        margin-top: calc(var(--size) + 1.5vmin);
     }
 
     /* numbers style */
