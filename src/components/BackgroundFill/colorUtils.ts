@@ -142,7 +142,7 @@ export const lightenColor = (c: string, val: number) => {
     return hex;
 };
 
-export const saturateColors = (colors: FourHex, val: number) =>
+export const saturateFourColors = (colors: FourHex, val: number) =>
     colors.map((c) => saturateColor(c, val)) as FourHex;
 
 const round = (n: number, precision = 0.01): number => {

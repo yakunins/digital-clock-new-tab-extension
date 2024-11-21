@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import { SettingsStore as Settings } from "../Settings/settings.store";
 import { randomColors } from "./randomColors";
 import { naturalColors } from "./naturalColors";
-import { lightenColor } from "./colorUtils";
+import { lightenColor, saturateFourColors, mixHexColors } from "./colorUtils";
 import "./background-fill.css";
 
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
@@ -31,13 +31,16 @@ const BackgroundFillStyle = observer(() => {
     switch (Settings.colorSchema) {
         case "sky":
             colors = naturalColors(Settings.backgroundRepaintTimer);
+            colors = saturateFourColors(colors, 1.35);
             Settings.setFixedColors(JSON.stringify(colors), true);
             break;
         case "random":
             colors = randomColors();
             colors[0] = lightenColor(colors[0], 1);
             colors[1] = lightenColor(colors[1], 0.8);
+            colors[2] = mixHexColors(colors[2], colors[1], 0.2);
             colors[2] = lightenColor(colors[2], 0.6);
+            colors[3] = mixHexColors(colors[3], colors[2], 0.6);
             colors[3] = lightenColor(colors[3], 0.4);
             Settings.setFixedColors(JSON.stringify(colors), true);
             break;
