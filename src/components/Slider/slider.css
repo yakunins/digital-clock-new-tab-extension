@@ -2,6 +2,7 @@
     --accent-color: var(--primary-color, currentColor);
     --accent-color-88: color-mix(in srgb, var(--accent-color), transparent 88%);
     --accent-color-76: color-mix(in srgb, var(--accent-color), transparent 76%);
+    --accent-color-50: color-mix(in srgb, var(--accent-color), transparent 50%);
 
     --s-1px: 0.0625rem;
     --s-2px: 0.125rem;
@@ -38,26 +39,36 @@
     }
 
     .react-aria-SliderThumb {
-        width: 1.25rem;
-        height: 1.25rem;
+        --size: calc(var(--s-4px) * 5); /* 20px */
+
+        width: var(--size);
+        height: var(--size);
         border-radius: var(--radius);
         background: transparent;
-        border: var(--s-1px) solid var(--accent-color);
+        outline: var(--s-1px) solid var(--accent-color);
         cursor: pointer;
         forced-color-adjust: none;
         transition-property: background-color, border, border-color;
         transition-duration: 0.2s;
 
+        &::after {
+            content: "";
+            position: absolute;
+            top: var(--s-2px);
+            bottom: var(--s-2px);
+            left: var(--s-2px);
+            right: var(--s-2px);
+        }
+
         &:hover {
-            background-color: var(--accent-color-76);
+            background-color: var(--accent-color-88);
         }
         &[data-dragging] {
-            background-color: var(--accent-color);
-            border: var(--s-1px) solid var(--accent-color-88);
-            opacity: 0.5;
+            background-color: transparent;
         }
+        &[data-focused],
         &[data-focus-visible] {
-            outline: var(--s-1px) solid var(--accent-color);
+            outline: var(--s-2px) solid var(--accent-color);
         }
     }
 
