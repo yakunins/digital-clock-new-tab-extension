@@ -65,7 +65,7 @@ export const SettingsToggleButton = ({
             aria-label="Settings"
         >
             <span className="hover-layer"></span>
-            <Innout out={!opened}>{closeIcon}</Innout>
+            <Innout out={!opened}>{closeIcon2px}</Innout>
             <Innout out={opened}>{menuIcon}</Innout>
         </button>
     );
@@ -92,7 +92,7 @@ const SetActiveStore = ({ origin }: { origin: Settings["origin"] }) => {
     return null;
 };
 
-const closeIcon = (
+const closeIcon1px = (
     <span className="icon">
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -102,6 +102,14 @@ const closeIcon = (
             fill="#5f6368"
         >
             <path d="M256-227.69 227.69-256l224-224-224-224L256-732.31l224 224 224-224L732.31-704l-224 224 224 224L704-227.69l-224-224-224 224Z" />
+        </svg>
+    </span>
+);
+
+const closeIcon2px = (
+    <span className="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
         </svg>
     </span>
 );
