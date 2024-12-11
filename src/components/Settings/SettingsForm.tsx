@@ -14,33 +14,27 @@ export const SettingsForm = observer(
     ({ close, origin, ...rest }: SettingsForm) => {
         origin && Settings.setOrigin(origin);
 
-        const handleClockChange = useCallback<InlineRadio["onChange"]>(
-            (next) => {
-                Settings.setClockType(next as Settings["clockType"]);
-            },
-            []
-        );
-        const handleSchemaChange = useCallback<InlineRadio["onChange"]>(
-            (next) => {
-                Settings.setColorSchema(next as Settings["colorSchema"]);
-            },
-            []
-        );
+        const clockChange = useCallback<InlineRadio["onChange"]>((next) => {
+            Settings.setClockType(next as Settings["clockType"]);
+        }, []);
+        const schemaChange = useCallback<InlineRadio["onChange"]>((next) => {
+            Settings.setColorSchema(next as Settings["colorSchema"]);
+        }, []);
 
-        const handleLengthChange: Slider["onChange"] = (next) => {
+        const lengthChange: Slider["onChange"] = (next) => {
             Settings.setLength(next as Settings["segmentLength"]);
         };
-        const handleThicknessChange: Slider["onChange"] = (next) => {
+        const thicknessChange: Slider["onChange"] = (next) => {
             Settings.setThickness(next as Settings["segmentThickness"]);
         };
-        const handleDateChange = useCallback<InlineRadio["onChange"]>(
-            (next) => {
-                Settings.setDateStyle(next as Settings["dateStyle"]);
-            },
-            []
-        );
+        const shapeChange = useCallback<InlineRadio["onChange"]>((next) => {
+            Settings.setShape(next as Settings["segmentShape"]);
+        }, []);
+        const dateChange = useCallback<InlineRadio["onChange"]>((next) => {
+            Settings.setDateStyle(next as Settings["dateStyle"]);
+        }, []);
 
-        const handleCssChange = useCallback(
+        const cssChange = useCallback(
             (e: React.ChangeEvent<HTMLTextAreaElement>) => {
                 const text = e?.target?.value || "";
                 Settings.setCss(text);
@@ -58,6 +52,7 @@ export const SettingsForm = observer(
         return (
             <div className="settings-form" {...rest}>
                 <InlineRadio
+                    className="test"
                     legend="Background"
                     defaultValue={Settings.colorSchema}
                     options={[
@@ -65,7 +60,7 @@ export const SettingsForm = observer(
                         { value: "random", text: "Random" },
                         { value: "fixed", text: "This" },
                     ]}
-                    onChange={handleSchemaChange}
+                    onChange={schemaChange}
                 />
                 <InlineRadio
                     legend="Clock"
@@ -74,21 +69,34 @@ export const SettingsForm = observer(
                         { value: "24-hour", text: "24-hour" },
                         { value: "ampm", text: "AM-PM" },
                     ]}
-                    onChange={handleClockChange}
+                    onChange={clockChange}
+                    style={{ marginBottom: ".35rem" }}
                 />
                 <SliderControlled
                     label="Segment Length"
                     defaultValue={Settings.segmentLength}
-                    onChange={handleLengthChange}
+                    onChange={lengthChange}
                     minValue={10}
                     maxValue={100}
                 />
                 <SliderControlled
                     label="Segment Thickness"
                     defaultValue={Settings.segmentThickness}
-                    onChange={handleThicknessChange}
+                    onChange={thicknessChange}
                     minValue={10}
                     maxValue={100}
+                />
+                <InlineRadio
+                    legend="Segment Shape"
+                    defaultValue={Settings.segmentShape}
+                    options={[
+                        { value: "diamond", text: "1" },
+                        { value: "natural", text: "2" },
+                        { value: "rect", text: "3" },
+                        { value: "pill", text: "4" },
+                    ]}
+                    onChange={shapeChange}
+                    style={{ marginBottom: ".35rem" }}
                 />
                 <InlineRadio
                     className="hidden-in-page"
@@ -99,14 +107,14 @@ export const SettingsForm = observer(
                         { value: "short", text: "Short" },
                         { value: "none", text: "None" },
                     ]}
-                    onChange={handleDateChange}
+                    onChange={dateChange}
                 />
                 <div className="all-settings hidden-in-popup">
                     <button onClick={openPopup}>More Settings</button>
                 </div>
                 <CssEditor
                     className="hidden-in-page"
-                    onChange={handleCssChange}
+                    onChange={cssChange}
                     defaultValue={Settings.css}
                 />
                 <div className="reset-to-defaults hidden-in-page">

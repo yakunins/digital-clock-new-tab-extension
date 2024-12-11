@@ -11,6 +11,7 @@ type Settings = {
     dateStyle: "long" | "short" | "none";
     segmentLength: number;
     segmentThickness: number;
+    segmentShape: "diamond" | "natural" | "rect" | "pill";
     status?: string;
     storageThrottlePeriod?: number;
     // multiple stores handling
@@ -25,6 +26,7 @@ export type SettingsStore = Settings & {
     setDateStyle: (val: Settings["dateStyle"]) => void;
     setLength: (val: Settings["segmentLength"]) => void;
     setThickness: (val: Settings["segmentThickness"]) => void;
+    setShape: (val: Settings["segmentShape"]) => void;
     setBackgroundRepaint: () => void;
     reset: () => void;
 };
@@ -51,6 +53,7 @@ const initial: Settings = {
     dateStyle: "long",
     segmentLength: 30,
     segmentThickness: 40,
+    segmentShape: "diamond",
     storageThrottlePeriod: 100,
     storeId: getId(),
     origin: "unknown",
@@ -65,6 +68,7 @@ class ExtensionSettingsStore implements SettingsStore {
     fixedColors = initial.fixedColors;
     segmentLength = initial.segmentLength;
     segmentThickness = initial.segmentThickness;
+    segmentShape = initial.segmentShape;
     backgroundRepaintTimer = new Date();
     // handling different SettingsStore's in tab, popups and settings
     storeId = initial.storeId;
@@ -80,6 +84,7 @@ class ExtensionSettingsStore implements SettingsStore {
             dateStyle: observable,
             segmentLength: observable,
             segmentThickness: observable,
+            segmentShape: observable,
             status: computed,
             setBackgroundRepaint: action,
             setClockType: action,
@@ -89,6 +94,7 @@ class ExtensionSettingsStore implements SettingsStore {
             setFixedColors: action,
             setLength: action,
             setThickness: action,
+            setShape: action,
             reset: action,
         });
 
@@ -102,6 +108,7 @@ class ExtensionSettingsStore implements SettingsStore {
                 colorSchema: this.colorSchema,
                 segmentLength: this.segmentLength,
                 segmentThickness: this.segmentThickness,
+                segmentShape: this.segmentShape,
                 css: this.css,
                 dateStyle: this.dateStyle,
                 fixedColors: this.fixedColors,
@@ -111,6 +118,7 @@ class ExtensionSettingsStore implements SettingsStore {
                 this.setColorSchema(items.colorSchema, false);
                 this.setLength(items.segmentLength, false);
                 this.setThickness(items.segmentThickness, false);
+                this.setShape(items.segmentShape, false);
                 this.setCss(items.css, false);
                 this.setDateStyle(items.dateStyle, false);
                 this.setFixedColors(items.fixedColors, false);
@@ -129,6 +137,7 @@ class ExtensionSettingsStore implements SettingsStore {
                 if (key === "segmentLength") this.setLength(newValue, false);
                 if (key === "segmentThickness")
                     this.setThickness(newValue, false);
+                if (key === "segmentShape") this.setShape(newValue, false);
                 if (key === "css") this.setCss(newValue, false);
                 if (key === "dateStyle") this.setDateStyle(newValue, false);
                 if (key === "fixedColors") this.setFixedColors(newValue, false);
@@ -178,6 +187,12 @@ class ExtensionSettingsStore implements SettingsStore {
         if (store) throttledSet({ segmentThickness: this.segmentThickness });
     }
 
+    setShape(val: Settings["segmentShape"], store = true) {
+        if (this.segmentShape === val) return;
+        this.segmentShape = val;
+        if (store) throttledSet({ segmentShape: this.segmentShape });
+    }
+
     setCss(val: Settings["css"], store = true) {
         if (this.css === val) return;
         this.css = val;
@@ -220,6 +235,7 @@ class ExtensionSettingsStore implements SettingsStore {
             colorSchema: initial.colorSchema,
             segmentLength: initial.segmentLength,
             segmentThickness: initial.segmentThickness,
+            segmentShape: initial.segmentShape,
             css: initial.css,
             dateStyle: initial.dateStyle,
         });
@@ -249,12 +265,6 @@ const isValidJSON = (str: string) => {
         return false;
     }
     return true;
-};
-
-const isEqual = (a1: any[], a2: any[]) => {
-    if (!Array.isArray(a1) || !Array.isArray(a2)) return false;
-    if (a1.length !== a2.length) return false;
-    return a1.every((i, idx) => i === a2[idx]);
 };
 
 const set = (obj: Object) => chrome.storage.sync.set(obj);

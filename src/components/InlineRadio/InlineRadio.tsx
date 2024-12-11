@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, memo } from "react";
+import { clsx } from "clsx";
 import { getId } from "../utils";
 import "./inline-radio.css";
 
@@ -26,9 +27,17 @@ export const InlineRadio = memo(
             defaultValue || getValue(options)
         );
 
+        function getCheckedClassName() {
+            const idx = options
+                .map((i) => i.value)
+                .findIndex((v) => v === value);
+            if (idx === 0) return "checked-first";
+            if (idx === options.length - 1) return "checked-last";
+        }
+
         const handleChange = (e: React.FormEvent<HTMLFieldSetElement>) => {
             const prev = value;
-            const next = (e.target as any).value;
+            const next = getFieldSetValue(e.currentTarget.elements);
             setValue(next);
             onChange?.(next, prev);
         };
@@ -53,12 +62,15 @@ export const InlineRadio = memo(
         return (
             <fieldset
                 {...rest}
-                className={`inline radio ${rest.className}`}
+                className={clsx("inline radio", rest.className)}
                 onChange={handleChange}
             >
                 {legend && <legend>{legend}</legend>}
-                <div className="options" ref={parentRef}>
-                    <div className="checked-indicator"></div>
+                <div
+                    className={clsx("options", getCheckedClassName())}
+                    ref={parentRef}
+                >
+                    <div className="checked-indicator" />
                     {options
                         .map((i, idx) => {
                             return {
@@ -86,18 +98,17 @@ type InlineRadioOption = RadioProps & {
 };
 
 const InlineRadioItem = memo(
-    ({ checked, name, value, text, ...rest }: InlineRadioOption) => {
+    ({ className, checked, name, value, text, ...rest }: InlineRadioOption) => {
         const inputRef = useRef<HTMLInputElement>(null);
         const [focused, setFocused] = useState(false);
         const id = rest.id || getId();
-        const cx = `option${checked ? " checked" : ""}`;
 
         useEffect(() => {
             focused && inputRef?.current?.focus();
         });
 
         return (
-            <div className={cx} key={id}>
+            <div className={clsx("option", className, { checked })}>
                 <input
                     {...rest}
                     ref={inputRef}
@@ -121,4 +132,10 @@ const getValue = (opts: InlineRadioOption[]): InlineRadioOption["value"] => {
     const checked = opts.find((i) => i.checked);
     if (checked) return checked.value;
     return opts[0].value;
+};
+const getFieldSetValue = (opts: HTMLCollection): InlineRadioOption["value"] => {
+    const opts2 = Array.from(opts) as HTMLInputElement[];
+    const checked = opts2.find((i) => i.checked);
+    if (checked) return checked.value;
+    return opts2[0].value;
 };

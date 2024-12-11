@@ -1,6 +1,9 @@
-import { nanoid } from "nanoid";
+import { nanoid, customAlphabet } from "nanoid";
 
-export const getId = (size = 4): string => nanoid(size);
+const lc = "abcdefghijklmnopqrstuvwxyz";
+const uc = lc.toUpperCase();
+export const getNanoid = (size = 4): string => nanoid(size);
+export const getId = customAlphabet(lc + uc, 5);
 
 export const getLocale = () => Intl.DateTimeFormat().resolvedOptions().locale;
 export const getLocaleAmpm = () =>

@@ -30,18 +30,32 @@ export const Clock = observer(
         }, [Settings.clockType]);
 
         const thickness = (Settings.segmentThickness / 100) * 2.5;
-        const length = (Settings.segmentLength / 100) * 8 + thickness;
+        const length = (Settings.segmentLength / 100) * 12;
+        const shape = ["natural", "diamond"].includes(Settings.segmentShape)
+            ? "default"
+            : (Settings.segmentShape as Digit["shape"]);
+        const cornerShift =
+            Settings.segmentShape === "natural"
+                ? `calc(${thickness}rem * .25)`
+                : undefined;
+        const spacing =
+            Settings.segmentShape === "pill"
+                ? `calc(${thickness}rem * .5)`
+                : Settings.segmentShape === "rect"
+                  ? `calc(${thickness}rem * .9)`
+                  : undefined;
 
-        const style = {
-            segmentStyle: {
-                thickness: `max(${thickness}rem, 2px)`,
-                length: `max(${length}rem, 4px)`,
-                opacityOff: 0.075,
-            } as Digit["segmentStyle"],
-        };
+        const segmentStyle = {
+            thickness: `max(${thickness}rem, 2px)`,
+            length: `max(${length}rem, ${thickness}rem, 4px)`,
+            opacityOff: 0.075,
+            cornerShift: cornerShift,
+            spacing: spacing,
+        } as Digit["segmentStyle"];
+
         const clockStyle = {
-            "--thickness": style.segmentStyle?.thickness,
-            "--length": style.segmentStyle?.length,
+            "--thickness": segmentStyle?.thickness,
+            "--length": segmentStyle?.length,
         } as React.CSSProperties;
 
         const ampm = timeString.trim().endsWith("am")
@@ -49,15 +63,30 @@ export const Clock = observer(
             : timeString.trim().endsWith("pm")
               ? "pm"
               : null;
+
         return (
             <time className="clock" {...rest} style={clockStyle}>
                 <div className="clock-frame"></div>
-                <div className="clock-shine"></div>
+                <div className="clock-glow"></div>
                 {timeString.split("").map((i, idx) => {
                     if (i == ":" || i === ".")
-                        return <BlinkingDigit key={idx} value={i} {...style} />;
+                        return (
+                            <BlinkingDigit
+                                key={idx}
+                                value={i}
+                                shape={shape}
+                                segmentStyle={segmentStyle}
+                            />
+                        );
                     if ("0123456789".includes(i))
-                        return <Digit key={idx} value={i as "0"} {...style} />;
+                        return (
+                            <Digit
+                                key={idx}
+                                value={i as "0"}
+                                shape={shape}
+                                segmentStyle={segmentStyle}
+                            />
+                        );
                     return null;
                 })}
                 <Innout
@@ -69,7 +98,7 @@ export const Clock = observer(
                         key="ampm"
                         off={!ampm}
                         value={ampm || "am"}
-                        {...style}
+                        segmentStyle={segmentStyle}
                     />
                 </Innout>
             </time>

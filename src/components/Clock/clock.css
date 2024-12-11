@@ -3,7 +3,7 @@
     --clock-font-size: calc(2.5rem * var(--scale));
     --clock-frame-offset: calc(var(--clock-font-size) * -1);
     --clock-frame-opacity: 0.1;
-    --clock-shine-offset: calc(var(--clock-font-size) * -1);
+    --clock-glow-offset: calc(var(--clock-font-size) * -1);
     --clock-gap: calc(var(--thickness, 0.75rem) * 0.5 + 0.5rem);
 
     --blur-size: calc(var(--s-1px) * 0.65);
@@ -40,7 +40,7 @@
         transition: all 1s;
     }
 
-    .clock-shine {
+    .clock-glow {
         --g-1: radial-gradient(
             circle at 25% 50%,
             var(--clock-color) 0%,
@@ -56,16 +56,17 @@
         opacity: calc(var(--glow-opacity, 1) * 0.65);
         overflow: visible;
         position: absolute;
-        top: calc(var(--clock-shine-offset) * 0.92);
-        bottom: calc(var(--clock-shine-offset) * 0.92);
-        left: var(--clock-shine-offset);
-        right: var(--clock-shine-offset);
+        top: calc(var(--clock-glow-offset) * 0.92);
+        bottom: calc(var(--clock-glow-offset) * 0.92);
+        left: var(--clock-glow-offset);
+        right: var(--clock-glow-offset);
         transition: all 1s;
     }
     .digit {
         filter: drop-shadow(0 0 calc(var(--glow-size) / 2) var(--glow-color-25))
             blur(var(--blur-size));
     }
+
     .digit.ampm,
     .digit.colon {
         margin-left: -0.25rem;
