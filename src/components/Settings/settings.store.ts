@@ -70,7 +70,7 @@ class ExtensionSettingsStore implements SettingsStore {
     segmentThickness = initial.segmentThickness;
     segmentShape = initial.segmentShape;
     backgroundRepaintTimer = new Date();
-    // handling different SettingsStore's in tab, popups and settings
+    // handling different SettingsStore's for newtab.html, popup.html and options.html
     storeId = initial.storeId;
     origin = initial.origin;
     isActive = initial.isActive;
@@ -102,30 +102,36 @@ class ExtensionSettingsStore implements SettingsStore {
             this.setBackgroundRepaint();
         }, initial.backgroundRepaintPeriod);
 
-        chrome.storage.sync.get(
+        get({ clockType: this.clockType }).then((res) =>
+            this.setClockType(res, false)
+        );
+        get({ colorSchema: this.colorSchema }).then((res) =>
+            this.setColorSchema(res, false)
+        );
+        get({ segmentLength: this.segmentLength }).then((res) =>
+            this.setLength(res, false)
+        );
+        get({ segmentThickness: this.segmentThickness }).then((res) =>
+            this.setThickness(res, false)
+        );
+        /*
+        chrome.storage?.sync?.get(
             {
-                clockType: this.clockType,
-                colorSchema: this.colorSchema,
-                segmentLength: this.segmentLength,
-                segmentThickness: this.segmentThickness,
                 segmentShape: this.segmentShape,
                 css: this.css,
                 dateStyle: this.dateStyle,
                 fixedColors: this.fixedColors,
             },
             (items) => {
-                this.setClockType(items.clockType, false);
-                this.setColorSchema(items.colorSchema, false);
-                this.setLength(items.segmentLength, false);
-                this.setThickness(items.segmentThickness, false);
                 this.setShape(items.segmentShape, false);
                 this.setCss(items.css, false);
                 this.setDateStyle(items.dateStyle, false);
                 this.setFixedColors(items.fixedColors, false);
             }
         );
+        */
 
-        chrome.storage.onChanged.addListener((changes, namespace) => {
+        chrome.storage?.onChanged?.addListener((changes, namespace) => {
             // namespace === "sync" here
             for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
                 if (oldValue === newValue) return;
@@ -160,9 +166,10 @@ class ExtensionSettingsStore implements SettingsStore {
     }
 
     setClockType(val: Settings["clockType"], store = true) {
+        console.log("setClockType", val);
         if (this.clockType === val) return;
         this.clockType = val;
-        if (store) chrome.storage.sync.set({ clockType: this.clockType });
+        if (store) set({ clockType: this.clockType });
     }
 
     setColorSchema(val: Settings["colorSchema"], store = true) {
@@ -267,8 +274,31 @@ const isValidJSON = (str: string) => {
     return true;
 };
 
-const set = (obj: Object) => chrome.storage.sync.set(obj);
+type StorageGetObject<V> = {
+    [key: string]: V;
+};
+const get = async <V>(o: StorageGetObject<V>): Promise<V> => {
+    const [key, defaultValue] = Object.entries(o)[0];
+    let result = defaultValue;
+    if (chrome?.storage?.sync?.get) {
+        await chrome.storage.sync.get(o, (items) => {
+            result = items[key];
+        });
+        return result;
+    } else {
+        const storedValue = localStorage.getItem(key);
+        result = storedValue !== null ? (storedValue as V) : defaultValue;
+        return result;
+    }
+};
 const send = (message: string) => chrome.runtime.sendMessage(message);
+const set = (obj: Object) => {
+    if (chrome?.storage?.sync?.set) {
+        return chrome.storage.sync.set(obj);
+    } else {
+        return localStorage.setItem(...Object.entries(obj)[0]);
+    }
+};
 const throttledSet = throttled(set);
 
 function throttled(

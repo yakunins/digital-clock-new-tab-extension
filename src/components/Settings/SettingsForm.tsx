@@ -80,14 +80,14 @@ export const SettingsForm = observer(
                     maxValue={100}
                 />
                 <SliderControlled
-                    label="Segment Thickness"
+                    label="Thickness"
                     defaultValue={Settings.segmentThickness}
                     onChange={thicknessChange}
                     minValue={10}
                     maxValue={100}
                 />
                 <InlineRadio
-                    legend="Segment Shape"
+                    legend="Shape"
                     defaultValue={Settings.segmentShape}
                     options={[
                         { value: "diamond", text: "1" },
@@ -96,7 +96,6 @@ export const SettingsForm = observer(
                         { value: "pill", text: "4" },
                     ]}
                     onChange={shapeChange}
-                    style={{ marginBottom: ".35rem" }}
                 />
                 <InlineRadio
                     className="hidden-in-page"

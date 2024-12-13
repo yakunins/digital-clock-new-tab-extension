@@ -1,5 +1,5 @@
 :root {
-    --font: "Segoe UI", Tahoma, sans-serif;
+    --typeface: "Segoe UI", Tahoma, sans-serif;
     --scale: 1; /* ~40% percent of a screen width at default zoom level 100% */
     --color: rgba(150, 250, 220, 1);
     --radius: 0.35rem;
@@ -13,6 +13,7 @@
 html,
 body {
     margin: 0;
+    font-family: var(--typeface);
 }
 
 body {

@@ -2,6 +2,7 @@
     --date-info-color: var(--color, rgba(150, 250, 220, 1));
     --size: calc(1.5rem * var(--scale));
     --gap: 0.5rem;
+
     font-family: "Work Sans", WorkSansEmbedded, "Segoe UI", Segoe, sans-serif;
     font-size: var(--size);
     letter-spacing: 0.05rem;
@@ -51,7 +52,7 @@
     &[class*="locale-ru-"],
     &.locale-ru-RU {
         text-transform: capitalize;
-        font-family: var(--font);
+        font-family: var(--typeface);
         em {
             font-weight: 200;
             font-size: inherit;
@@ -67,7 +68,7 @@
     }
     &.locale-th-TH {
         em {
-            font-family: var(--font);
+            font-family: var(--typeface);
             font-size: 115%;
             font-weight: normal;
         }

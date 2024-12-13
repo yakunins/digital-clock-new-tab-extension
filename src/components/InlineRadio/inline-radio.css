@@ -30,6 +30,7 @@
     }
     label {
         cursor: pointer;
+        background-color: transparent;
         display: block;
         padding: var(--padding) calc(var(--padding) * 2);
         padding-bottom: calc(var(--padding) * 1.5);
@@ -43,14 +44,11 @@
         &:hover {
             background-color: var(--accent-color-88);
         }
-        .checked & {
-            cursor: default;
-
-            &:hover {
-                background-color: transparent;
-            }
-        }
     }
+    .checked label:hover {
+        background-color: transparent;
+    }
+
     .checked-first .checked-indicator,
     .option:nth-child(2) label {
         border-start-start-radius: var(--options-radius);
