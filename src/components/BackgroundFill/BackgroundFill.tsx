@@ -30,7 +30,7 @@ const BackgroundFillStyle = observer(() => {
 
     switch (Settings.colorSchema) {
         case "sky":
-            colors = naturalColors(Settings.backgroundRepaintTimer);
+            colors = naturalColors(Settings.skyBackgroundRepaintTimer);
             colors = saturateFourColors(colors, 1.35);
             Settings.setFixedColors(JSON.stringify(colors), true);
             break;

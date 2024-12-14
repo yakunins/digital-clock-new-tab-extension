@@ -61,6 +61,7 @@ export const SettingsForm = observer(
                         { value: "fixed", text: "This" },
                     ]}
                     onChange={schemaChange}
+                    style={{ marginTop: 0 }}
                 />
                 <InlineRadio
                     legend="Clock"
@@ -98,7 +99,7 @@ export const SettingsForm = observer(
                     onChange={shapeChange}
                 />
                 <InlineRadio
-                    className="hidden-in-page"
+                    className="_hidden-in-page"
                     legend="Date"
                     defaultValue={Settings.dateStyle}
                     options={[
@@ -108,15 +109,12 @@ export const SettingsForm = observer(
                     ]}
                     onChange={dateChange}
                 />
-                <div className="all-settings hidden-in-popup">
-                    <button onClick={openPopup}>More Settings</button>
-                </div>
                 <CssEditor
-                    className="hidden-in-page"
+                    className="_hidden-in-page"
                     onChange={cssChange}
                     defaultValue={Settings.css}
                 />
-                <div className="reset-to-defaults hidden-in-page">
+                <div className="reset-to-defaults _hidden-in-page">
                     <button className="danger" onClick={resetToDefaults}>
                         Reset to defaults
                     </button>

@@ -72,6 +72,9 @@
         margin-left: -0.25rem;
         margin-right: -0.25rem;
     }
+    .digit.ampm {
+        margin-right: -1.5rem;
+    }
     .digit.colon.blinking {
         filter: drop-shadow(0 0 calc(var(--glow-size) * 2) var(--glow-color-50))
             blur(var(--blur-size));
@@ -115,12 +118,9 @@
             margin-left: calc(var(--clock-gap) * -1);
 
             .digit.ampm {
-                margin-right: calc(var(--length) * -1.25);
+                margin-right: calc(var(--length) * -1 + var(--thickness) * -1);
             }
         }
-    }
-    .digit.ampm {
-        margin-right: -1.5rem;
     }
     .digit.ampm,
     .in-n-out {

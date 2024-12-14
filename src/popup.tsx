@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { ExtensionOptions } from "./components";
+import "./global.css";
 
 const root = createRoot(document.getElementById("root")!);
 root.render(

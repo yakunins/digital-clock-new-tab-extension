@@ -2,14 +2,16 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { SettingsForm } from "./SettingsForm";
 import { SettingsStore as Settings } from "./settings.store";
 import { Innout } from "../Innout";
-import "./settings-menu.css";
+import "./settings-dropdown.css";
 
-type DivProps = React.HTMLAttributes<HTMLDivElement>;
-
+const github = "http://github.com/yakunins";
+const mail = "mailto:s@yakunins.com";
 const sessionStorageItem = "digital_clock_newtab__settings_opened";
 const initialOpened = sessionStorage.getItem(sessionStorageItem) === "true";
 
-export const SettingsMenu = ({ ...rest }: DivProps) => {
+type DivProps = React.HTMLAttributes<HTMLDivElement>;
+
+export const SettingsDropdown = ({ ...rest }: DivProps) => {
     const settingsRef = useRef<HTMLDivElement>(null);
     const [opened, setOpened] = useState(initialOpened);
 
@@ -21,11 +23,11 @@ export const SettingsMenu = ({ ...rest }: DivProps) => {
             close();
         }
     };
-    const handleActivity = () => {};
+    const handleFocus = () => {};
 
     useEffect(() => {
         sessionStorage.setItem(sessionStorageItem, opened.toString());
-        document.addEventListener("focus", handleActivity);
+        document.addEventListener("focus", handleFocus);
         document.addEventListener("keydown", handleEscape);
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
@@ -35,12 +37,21 @@ export const SettingsMenu = ({ ...rest }: DivProps) => {
     }, [opened]);
 
     return (
-        <div {...rest} className="settings-menu" ref={settingsRef}>
+        <div {...rest} className="settings-dropdown" ref={settingsRef}>
             <SetActiveStore origin="tab" />
             <SettingsToggleButton onClick={toggle} opened={opened} />
             <Innout out={!opened}>
                 <div className="settings-overlay">
                     <SettingsForm close={close} origin="tab" />
+                    <div className="settings-footer">
+                        2022, 2024 ©{" "}
+                        <a target="_blank" href={github}>
+                            Sergey Yakunin
+                        </a>
+                        <br />
+                        Enjoy!
+                        <br />
+                    </div>
                 </div>
             </Innout>
         </div>

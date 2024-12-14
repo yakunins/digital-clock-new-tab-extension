@@ -91,8 +91,8 @@ export const Clock = observer(
                 })}
                 <Innout
                     out={!ampm}
-                    style={{ display: "flex" }}
                     stages={ampmAnimationStages}
+                    style={{ display: "flex" }}
                 >
                     <Digit
                         key="ampm"

@@ -1,4 +1,4 @@
-.settings-menu {
+.settings-dropdown {
     --pre-color: color-mix(in srgb, var(--bg-color-1), var(--bg-color-2) 35%);
     --primary-color: color-mix(in srgb, var(--pre-color), black 35%);
     --button-size: 2.75rem;
@@ -9,14 +9,6 @@
     position: absolute;
     right: 0;
     top: 0;
-
-    .settings-form {
-        --padding-x: calc(var(--padding) * 3);
-        --padding-y: calc(var(--padding) * 2);
-
-        margin: var(--padding-y) var(--padding-x);
-        margin-bottom: calc(var(--padding-y) + 0.65rem);
-    }
 }
 
 .settings-toggle.button {
@@ -98,39 +90,9 @@
     div.close {
         display: flex;
         place-content: flex-end;
+
         & button {
             margin-right: calc(var(--padding) * -1);
-        }
-    }
-}
-
-.all-settings {
-    margin-top: var(--padding);
-}
-
-.all-settings,
-.reset-to-defaults {
-    button {
-        color: var(--primary-color);
-        background-color: transparent;
-        font-family: var(--typeface);
-        font-size: 1rem;
-        border: none;
-        padding: 0;
-        border-radius: var(--radius);
-        line-height: 100%;
-        text-decoration: underline;
-        text-decoration-color: color-mix(
-            in srgb,
-            currentColor,
-            transparent 65%
-        );
-        text-decoration-thickness: calc(0.125rem * 0.5);
-        text-underline-offset: 0.125rem;
-        cursor: pointer;
-
-        &:hover {
-            opacity: 0.8;
         }
     }
 }

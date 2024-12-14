@@ -1,9 +1,10 @@
 import { makeObservable, observable, computed, action } from "mobx";
 import { getLocaleAmpm } from "../utils";
 import { getId } from "../utils";
+import { storage } from "./storage";
 
 type Settings = {
-    backgroundRepaintPeriod?: number;
+    skyBackgroundRepaintPeriod?: number;
     clockType: "24-hour" | "ampm";
     colorSchema: "sky" | "random" | "fixed";
     fixedColors: string;
@@ -45,7 +46,7 @@ const colors0 = ["#fff", "#aaa", "#666", "#000"];
 const colors1 = ["#ffe8de", "#6e7cca", "#860d0e", "#21022a"];
 
 const initial: Settings = {
-    backgroundRepaintPeriod: 2 * 1000,
+    skyBackgroundRepaintPeriod: 30 * 1000, // update each 30 seconds
     clockType: getLocaleAmpm() ? "ampm" : "24-hour",
     colorSchema: "sky",
     fixedColors: JSON.stringify(colors1),
@@ -69,7 +70,7 @@ class ExtensionSettingsStore implements SettingsStore {
     segmentLength = initial.segmentLength;
     segmentThickness = initial.segmentThickness;
     segmentShape = initial.segmentShape;
-    backgroundRepaintTimer = new Date();
+    skyBackgroundRepaintTimer = new Date();
     // handling different SettingsStore's for newtab.html, popup.html and options.html
     storeId = initial.storeId;
     origin = initial.origin;
@@ -77,7 +78,7 @@ class ExtensionSettingsStore implements SettingsStore {
 
     constructor() {
         makeObservable(this, {
-            backgroundRepaintTimer: observable,
+            skyBackgroundRepaintTimer: observable,
             clockType: observable,
             colorSchema: observable,
             css: observable,
@@ -100,42 +101,34 @@ class ExtensionSettingsStore implements SettingsStore {
 
         setInterval(() => {
             this.setBackgroundRepaint();
-        }, initial.backgroundRepaintPeriod);
+        }, initial.skyBackgroundRepaintPeriod);
 
-        get({ clockType: this.clockType }).then((res) =>
-            this.setClockType(res, false)
-        );
-        get({ colorSchema: this.colorSchema }).then((res) =>
-            this.setColorSchema(res, false)
-        );
-        get({ segmentLength: this.segmentLength }).then((res) =>
-            this.setLength(res, false)
-        );
-        get({ segmentThickness: this.segmentThickness }).then((res) =>
-            this.setThickness(res, false)
-        );
-        /*
-        chrome.storage?.sync?.get(
-            {
-                segmentShape: this.segmentShape,
-                css: this.css,
-                dateStyle: this.dateStyle,
-                fixedColors: this.fixedColors,
-            },
-            (items) => {
-                this.setShape(items.segmentShape, false);
-                this.setCss(items.css, false);
-                this.setDateStyle(items.dateStyle, false);
-                this.setFixedColors(items.fixedColors, false);
-            }
-        );
-        */
+        storage
+            .get({ clockType: this.clockType })
+            .then((res) => this.setClockType(res, false));
+        storage
+            .get({ colorSchema: this.colorSchema })
+            .then((res) => this.setColorSchema(res, false));
+        storage
+            .get({ segmentLength: this.segmentLength })
+            .then((res) => this.setLength(res, false));
+        storage
+            .get({ segmentThickness: this.segmentThickness })
+            .then((res) => this.setThickness(res, false));
+        storage
+            .get({ segmentShape: this.segmentShape })
+            .then((res) => this.setShape(res, false));
+        storage.get({ css: this.css }).then((res) => this.setCss(res, false));
+        storage
+            .get({ dateStyle: this.dateStyle })
+            .then((res) => this.setDateStyle(res, false));
+        storage
+            .get({ fixedColors: this.fixedColors })
+            .then((res) => this.setFixedColors(res, false));
 
         chrome.storage?.onChanged?.addListener((changes, namespace) => {
-            // namespace === "sync" here
             for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
                 if (oldValue === newValue) return;
-                // console.log("storage.onChanged:", key, newValue);
                 if (key === "lastActiveStore")
                     this.setActiveStore(newValue, false);
                 if (key === "clockType") this.setClockType(newValue, false);
@@ -153,7 +146,7 @@ class ExtensionSettingsStore implements SettingsStore {
 
     get status() {
         const status = `
-            backgroundRepaintTimer: ${this.backgroundRepaintTimer},
+            backgroundRepaintTimer: ${this.skyBackgroundRepaintTimer},
             clockType: ${this.clockType},
             colorSchema: ${this.colorSchema},
             dateStyle: ${this.dateStyle},
@@ -166,16 +159,15 @@ class ExtensionSettingsStore implements SettingsStore {
     }
 
     setClockType(val: Settings["clockType"], store = true) {
-        console.log("setClockType", val);
         if (this.clockType === val) return;
         this.clockType = val;
-        if (store) set({ clockType: this.clockType });
+        if (store) storage.set({ clockType: this.clockType });
     }
 
     setColorSchema(val: Settings["colorSchema"], store = true) {
         if (this.colorSchema === val) return;
         this.colorSchema = val;
-        if (store) set({ colorSchema: this.colorSchema });
+        if (store) storage.set({ colorSchema: this.colorSchema });
     }
 
     setLength(val: Settings["segmentLength"], store = true) {
@@ -183,7 +175,7 @@ class ExtensionSettingsStore implements SettingsStore {
         val <= 100 && val >= 10
             ? (this.segmentLength = val)
             : (this.segmentLength = initial.segmentLength);
-        if (store) throttledSet({ segmentLength: this.segmentLength });
+        if (store) storage.throttledSet({ segmentLength: this.segmentLength });
     }
 
     setThickness(val: Settings["segmentThickness"], store = true) {
@@ -191,34 +183,35 @@ class ExtensionSettingsStore implements SettingsStore {
         val <= 100 && val >= 10
             ? (this.segmentThickness = val)
             : (this.segmentThickness = initial.segmentThickness);
-        if (store) throttledSet({ segmentThickness: this.segmentThickness });
+        if (store)
+            storage.throttledSet({ segmentThickness: this.segmentThickness });
     }
 
     setShape(val: Settings["segmentShape"], store = true) {
         if (this.segmentShape === val) return;
         this.segmentShape = val;
-        if (store) throttledSet({ segmentShape: this.segmentShape });
+        if (store) storage.set({ segmentShape: this.segmentShape });
     }
 
     setCss(val: Settings["css"], store = true) {
         if (this.css === val) return;
         this.css = val;
-        if (store) set({ css: this.css });
+        if (store) storage.set({ css: this.css });
     }
 
     setDateStyle(val: Settings["dateStyle"], store = true) {
         if (this.dateStyle === val) return;
         this.dateStyle = val;
-        if (store) set({ dateStyle: this.dateStyle });
+        if (store) storage.set({ dateStyle: this.dateStyle });
     }
     setBackgroundRepaint() {
-        this.backgroundRepaintTimer = new Date();
+        this.skyBackgroundRepaintTimer = new Date();
     }
     setFixedColors(val: string, store = true) {
         if (!hasValidColors(val)) return;
         this.fixedColors = val;
         if (store && this.isActive) {
-            set({ fixedColors: val });
+            storage.set({ fixedColors: val });
         }
     }
     setOrigin(val: Settings["origin"]) {
@@ -232,24 +225,19 @@ class ExtensionSettingsStore implements SettingsStore {
         } else {
             this.isActive = true;
             if (store && this.origin === "tab") {
-                set({ lastActiveStore: this.storeId });
+                storage.set({ lastActiveStore: this.storeId });
             }
         }
     }
     reset() {
-        set({
-            clockType: initial.clockType,
-            colorSchema: initial.colorSchema,
-            segmentLength: initial.segmentLength,
-            segmentThickness: initial.segmentThickness,
-            segmentShape: initial.segmentShape,
-            css: initial.css,
-            dateStyle: initial.dateStyle,
-        });
-        this.isActive &&
-            throttledSet({
-                fixedColors: initial.fixedColors,
-            });
+        this.setColorSchema(initial.colorSchema);
+        this.setClockType(initial.clockType);
+        this.setLength(initial.segmentLength);
+        this.setThickness(initial.segmentThickness);
+        this.setShape(initial.segmentShape);
+        this.setDateStyle(initial.dateStyle);
+        this.setCss(initial.css);
+        this.setFixedColors(initial.fixedColors);
     }
 }
 
@@ -273,63 +261,5 @@ const isValidJSON = (str: string) => {
     }
     return true;
 };
-
-type StorageGetObject<V> = {
-    [key: string]: V;
-};
-const get = async <V>(o: StorageGetObject<V>): Promise<V> => {
-    const [key, defaultValue] = Object.entries(o)[0];
-    let result = defaultValue;
-    if (chrome?.storage?.sync?.get) {
-        await chrome.storage.sync.get(o, (items) => {
-            result = items[key];
-        });
-        return result;
-    } else {
-        const storedValue = localStorage.getItem(key);
-        result = storedValue !== null ? (storedValue as V) : defaultValue;
-        return result;
-    }
-};
-const send = (message: string) => chrome.runtime.sendMessage(message);
-const set = (obj: Object) => {
-    if (chrome?.storage?.sync?.set) {
-        return chrome.storage.sync.set(obj);
-    } else {
-        return localStorage.setItem(...Object.entries(obj)[0]);
-    }
-};
-const throttledSet = throttled(set);
-
-function throttled(
-    fn: Function,
-    throttlePeriod = initial.storageThrottlePeriod
-) {
-    const state = {
-        t: null,
-    };
-    return (...args: any) => {
-        if (state.t) {
-            clearTimeout(state.t);
-        }
-        (state.t as any) = setTimeout(() => {
-            fn(...args);
-            state.t = null;
-        }, throttlePeriod);
-    };
-}
-
-function suppressed(fn: Function, suppressPeriod = 1000) {
-    const state = {
-        t: null,
-    };
-    return (...args: any) => {
-        if (state.t) return;
-        fn(...args);
-        (state.t as any) = setTimeout(() => {
-            state.t = null;
-        }, suppressPeriod);
-    };
-}
 
 export const SettingsStore = new ExtensionSettingsStore();
