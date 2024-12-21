@@ -20,6 +20,7 @@ html,
 body {
     margin: 0;
     font-family: var(--typeface);
+    font-size: 1rem;
 }
 
 body.extension-newtab {
@@ -35,26 +36,28 @@ body.extension-newtab {
 button,
 input,
 textarea {
-    font-size: 100%;
-}
+    font-size: 1rem;
 
+    &:focus-visible {
+        outline-color: var(--primary-color, currentColor);
+        outline-style: solid;
+        outline-width: var(--s-2px);
+        outline-offset: calc(var(--s-1px) * -1);
+        text-decoration: none;
+    }
+}
 button:focus-visible {
-    outline-color: var(--primary-color, currentColor);
-    outline-style: solid;
-    outline-width: 0.125rem;
-    outline-offset: 0.25rem;
-    text-decoration: none;
+    outline-offset: var(--s-4px);
 }
 
-body.extension-options-modal,
-body.extension-popup {
-    button.danger {
-        color: salmon;
-    }
+::-webkit-scrollbar {
+    outline: none;
 }
 
-body.extension-options-modal {
-    .extension-options {
-        margin-top: 0rem;
-    }
+::-webkit-scrollbar-track {
+    outline: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.25);
 }

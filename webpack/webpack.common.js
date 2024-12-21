@@ -46,7 +46,22 @@ module.exports = {
     },
     plugins: [
         new CopyPlugin({
-            patterns: [{ from: ".", to: "../", context: "public" }],
+            patterns: [
+                {
+                    from: ".",
+                    to: "../",
+                    context: "public",
+                    filter: async (resPath) => {
+                        if (resPath.includes("manifest")) return false;
+                        return true;
+                    },
+                },
+                {
+                    from: "./manifest-firefox.json",
+                    to: "../manifest.json",
+                    context: "public",
+                },
+            ],
             options: {},
         }),
     ],

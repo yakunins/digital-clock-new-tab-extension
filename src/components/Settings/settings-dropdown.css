@@ -3,21 +3,17 @@
     --primary-color: color-mix(in srgb, var(--pre-color), black 35%);
     --button-size: 2.75rem;
     --icon-size: 1.35rem;
-    --padding: 0.5rem;
+    --padding: var(var(--padding), 0.5rem);
 
-    font-size: 1rem;
     position: absolute;
     right: 0;
     top: 0;
 }
 
 .settings-toggle.button {
-    display: flex;
-    place-content: center;
-    place-items: center;
+    background: none;
     border: none;
     border-radius: 100rem;
-    background: none;
     cursor: pointer;
     height: var(--button-size);
     width: var(--button-size);
@@ -25,6 +21,10 @@
     position: absolute;
     right: 0;
     top: 0;
+
+    display: flex;
+    place-content: center;
+    place-items: center;
 
     .icon {
         display: block;
@@ -77,6 +77,9 @@
     --shadow-dark-s: 0 0.2rem 2rem rgba(0, 0, 0, 0.05);
     --shadow-dark-l: 0 0.6rem 6rem rgba(0, 0, 0, 0.05);
 
+    --scroll-height: 75vh;
+    --scroll-gradient-size: 0vh;
+
     backdrop-filter: saturate(150%) blur(0.5rem);
     background: linear-gradient(-10deg, var(--gradient-12), var(--gradient-11));
     border-radius: calc(var(--radius) * 1.5);
@@ -86,13 +89,27 @@
     top: calc(var(--button-size) * 0.9);
     right: calc(var(--button-size) * 0.9);
     z-index: 1;
+    overflow: hidden;
+    max-height: var(--scroll-height);
 
-    div.close {
-        display: flex;
-        place-content: flex-end;
+    mask-image: linear-gradient(
+        transparent 0%,
+        black var(--scroll-gradient-size),
+        black calc(100% - var(--scroll-gradient-size)),
+        transparent 100%
+    );
 
-        & button {
-            margin-right: calc(var(--padding) * -1);
-        }
+    .scroll-wrapper {
+        --padding-x: calc(var(--padding) * 2);
+        --padding-y: calc(var(--padding) * 1.5 + var(--radius) * 0.5);
+        padding: var(--padding-y) var(--padding-x);
+        scrollbar-width: thin;
+        scrollbar-color: color-mix(in srgb, currentColor, transparent 75%)
+            transparent;
+
+        box-sizing: border-box;
+        max-height: var(--scroll-height);
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 }

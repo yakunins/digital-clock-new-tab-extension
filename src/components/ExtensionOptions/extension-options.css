@@ -1,0 +1,29 @@
+body.extension-options-modal,
+body.extension-popup {
+    font-size: 0.8rem;
+
+    button.danger {
+        color: salmon;
+    }
+}
+
+body.extension-options-modal {
+    .extension-options {
+        margin-top: 0rem;
+    }
+}
+
+.extension-options {
+    margin: calc(var(--padding) * 1.5) calc(var(--padding) * 2);
+
+    button,
+    input,
+    textarea {
+        font-size: 0.8rem;
+    }
+}
+
+.copy-info {
+    margin-top: var(--s-4px);
+    margin-bottom: var(--s-16px);
+}

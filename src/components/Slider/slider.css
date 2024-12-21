@@ -4,11 +4,6 @@
     --accent-color-76: color-mix(in srgb, var(--accent-color), transparent 76%);
     --accent-color-50: color-mix(in srgb, var(--accent-color), transparent 50%);
 
-    --s-1px: 0.0625rem;
-    --s-2px: 0.125rem;
-    --s-3px: 0.1875rem;
-    --s-4px: 0.25rem;
-
     display: grid;
     grid-template-areas:
         "label output"
@@ -18,7 +13,7 @@
 
     .react-aria-Label {
         grid-area: label;
-        margin-bottom: var(--s-2px);
+        margin-bottom: calc(var(--padding) * 0.5);
     }
 
     .react-aria-SliderOutput {
@@ -28,6 +23,7 @@
     .react-aria-SliderTrack {
         grid-area: track;
         position: relative;
+        cursor: pointer;
 
         /* track line */
         &:before {
@@ -39,10 +35,10 @@
     }
 
     .react-aria-SliderThumb {
-        --size: calc(var(--s-4px) * 5); /* 20px */
+        --thumb-size: calc(var(--s-1px) * 22); /* 20px */
 
-        width: var(--size);
-        height: var(--size);
+        width: var(--thumb-size);
+        height: var(--thumb-size);
         border-radius: var(--radius);
         background: transparent;
         outline: var(--s-1px) solid var(--accent-color);
@@ -51,13 +47,22 @@
         transition-property: background-color, border, border-color;
         transition-duration: 0.2s;
 
+        /* increase hover area */
         &::after {
             content: "";
             position: absolute;
-            top: var(--s-2px);
-            bottom: var(--s-2px);
-            left: var(--s-2px);
-            right: var(--s-2px);
+            top: calc(var(--s-2px) * -1);
+            bottom: calc(var(--s-2px) * -1);
+            left: calc(var(--s-2px) * -1);
+            right: calc(var(--s-2px) * -1);
+        }
+        &::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 1rem;
+            outline: 0rem solid var(--accent-color);
         }
 
         &:hover {
@@ -69,6 +74,9 @@
         &[data-focused],
         &[data-focus-visible] {
             outline: var(--s-2px) solid var(--accent-color);
+            &::before {
+                outline-width: var(--s-2px);
+            }
         }
     }
 

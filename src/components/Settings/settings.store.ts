@@ -1,7 +1,8 @@
 import { makeObservable, observable, computed, action } from "mobx";
 import { getLocaleAmpm } from "../utils";
 import { getId } from "../utils";
-import { storage } from "./storage";
+
+import { storage, StorageChangeHandler, Changes, Namespace } from "./storage";
 
 type Settings = {
     skyBackgroundRepaintPeriod?: number;
@@ -21,6 +22,7 @@ type Settings = {
     isActive: boolean; // store belongs to last active tab
 };
 export type SettingsStore = Settings & {
+    handleStorageChange: StorageChangeHandler;
     setClockType: (val: Settings["clockType"]) => void;
     setColorSchema: (val: Settings["colorSchema"]) => void;
     setCss: (val: Settings["css"]) => void;
@@ -126,22 +128,7 @@ class ExtensionSettingsStore implements SettingsStore {
             .get({ fixedColors: this.fixedColors })
             .then((res) => this.setFixedColors(res, false));
 
-        chrome.storage?.onChanged?.addListener((changes, namespace) => {
-            for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
-                if (oldValue === newValue) return;
-                if (key === "lastActiveStore")
-                    this.setActiveStore(newValue, false);
-                if (key === "clockType") this.setClockType(newValue, false);
-                if (key === "colorSchema") this.setColorSchema(newValue, false);
-                if (key === "segmentLength") this.setLength(newValue, false);
-                if (key === "segmentThickness")
-                    this.setThickness(newValue, false);
-                if (key === "segmentShape") this.setShape(newValue, false);
-                if (key === "css") this.setCss(newValue, false);
-                if (key === "dateStyle") this.setDateStyle(newValue, false);
-                if (key === "fixedColors") this.setFixedColors(newValue, false);
-            }
-        });
+        storage.addListener(this.handleStorageChange.bind(this));
     }
 
     get status() {
@@ -156,6 +143,22 @@ class ExtensionSettingsStore implements SettingsStore {
             origin: ${this.origin}
         `;
         return status;
+    }
+
+    handleStorageChange(changes: Changes, namespace: Namespace) {
+        console.log(namespace, this);
+        for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+            if (oldValue === newValue) return;
+            if (key === "lastActiveStore") this.setActiveStore(newValue, false);
+            if (key === "clockType") this.setClockType(newValue, false);
+            if (key === "colorSchema") this.setColorSchema(newValue, false);
+            if (key === "segmentLength") this.setLength(newValue, false);
+            if (key === "segmentThickness") this.setThickness(newValue, false);
+            if (key === "segmentShape") this.setShape(newValue, false);
+            if (key === "css") this.setCss(newValue, false);
+            if (key === "dateStyle") this.setDateStyle(newValue, false);
+            if (key === "fixedColors") this.setFixedColors(newValue, false);
+        }
     }
 
     setClockType(val: Settings["clockType"], store = true) {

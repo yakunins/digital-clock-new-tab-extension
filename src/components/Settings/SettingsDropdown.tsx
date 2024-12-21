@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { SettingsForm } from "./SettingsForm";
 import { SettingsStore as Settings } from "./settings.store";
+import { Icon } from "../Icon";
 import { Innout } from "../Innout";
 import "./settings-dropdown.css";
 
-const github = "http://github.com/yakunins";
-const mail = "mailto:s@yakunins.com";
 const sessionStorageItem = "digital_clock_newtab__settings_opened";
 const initialOpened = sessionStorage.getItem(sessionStorageItem) === "true";
 
@@ -42,15 +41,8 @@ export const SettingsDropdown = ({ ...rest }: DivProps) => {
             <SettingsToggleButton onClick={toggle} opened={opened} />
             <Innout out={!opened}>
                 <div className="settings-overlay">
-                    <SettingsForm close={close} origin="tab" />
-                    <div className="settings-footer">
-                        2022, 2024 ©{" "}
-                        <a target="_blank" href={github}>
-                            Sergey Yakunin
-                        </a>
-                        <br />
-                        Enjoy!
-                        <br />
+                    <div className="scroll-wrapper">
+                        <SettingsForm close={close} origin="tab" />
                     </div>
                 </div>
             </Innout>
@@ -76,8 +68,12 @@ export const SettingsToggleButton = ({
             aria-label="Settings"
         >
             <span className="hover-layer"></span>
-            <Innout out={!opened}>{closeIcon2px}</Innout>
-            <Innout out={opened}>{menuIcon}</Innout>
+            <Innout out={!opened}>
+                <Icon name="closeIcon2px" />
+            </Innout>
+            <Innout out={opened}>
+                <Icon name="menuIcon" />
+            </Innout>
         </button>
     );
 };
@@ -102,33 +98,3 @@ const SetActiveStore = ({ origin }: { origin: Settings["origin"] }) => {
 
     return null;
 };
-
-const closeIcon1px = (
-    <span className="icon">
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24px"
-            viewBox="0 -960 960 960"
-            width="24px"
-            fill="#5f6368"
-        >
-            <path d="M256-227.69 227.69-256l224-224-224-224L256-732.31l224 224 224-224L732.31-704l-224 224 224 224L704-227.69l-224-224-224 224Z" />
-        </svg>
-    </span>
-);
-
-const closeIcon2px = (
-    <span className="icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
-        </svg>
-    </span>
-);
-
-const menuIcon = (
-    <span className="icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
-        </svg>
-    </span>
-);
