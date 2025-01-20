@@ -4,17 +4,17 @@
         "label output"
         "track track";
     grid-template-columns: 1fr auto;
-    gap: 0.5rem;
+    gap: 0.5em;
     max-width: 300px;
 
     .react-aria-SliderTrack {
         grid-area: track;
-        border-radius: calc(var(--radius) + 0.125rem);
+        border-radius: calc(var(--radius) + var(--s-2px));
     }
 
     &[data-orientation="horizontal"] {
         .react-aria-SliderTrack {
-            height: 0.5rem;
+            height: var(--s-4px);
         }
 
         .react-aria-ColorThumb {
@@ -24,7 +24,7 @@
 }
 
 .react-aria-ColorThumb {
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+    box-shadow: inset 0 0 0 var(--s-1px) rgba(0, 0, 0, 0.25);
     width: 24px;
     height: 24px;
     border-radius: 50%;

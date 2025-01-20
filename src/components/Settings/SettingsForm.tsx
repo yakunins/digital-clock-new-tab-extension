@@ -4,6 +4,9 @@ import { SettingsStore as Settings } from "./settings.store";
 import { SlideSwitch } from "../SlideSwitch";
 import { SliderControlled, Slider } from "../Slider";
 import { Icon } from "../Icon";
+import { Collapsible } from "../Collapsible";
+import { TextEditor } from "../TextEditor";
+
 import "./settings-form.css";
 
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
@@ -22,12 +25,17 @@ export const SettingsForm = observer(
             Settings.setColorSchema(next as Settings["colorSchema"]);
         }, []);
 
-        const lengthChange: Slider["onChange"] = (next) => {
-            Settings.setLength(next as Settings["segmentLength"]);
-        };
-        const thicknessChange: Slider["onChange"] = (next) => {
-            Settings.setThickness(next as Settings["segmentThickness"]);
-        };
+        const lengthChange = useCallback<
+            Exclude<Slider["onChange"], undefined>
+        >((next: number) => {
+            Settings.setLength(next);
+        }, []);
+        const thicknessChange = useCallback<
+            Exclude<Slider["onChange"], undefined>
+        >((next: number) => {
+            Settings.setThickness(next);
+        }, []);
+
         const shapeChange = useCallback<SlideSwitch["onChange"]>((next) => {
             Settings.setShape(next as Settings["segmentShape"]);
         }, []);
@@ -106,14 +114,16 @@ export const SettingsForm = observer(
                     ]}
                     onChange={shapeChange}
                 />
-                <Textarea
-                    id="custom_css_editor"
-                    label="Custom Styles"
-                    onChange={cssChange}
-                    defaultValue={Settings.css}
-                    style={{ resize: "vertical" }}
-                />
-                <div className="reset-to-defaults _hidden-in-page">
+                <Collapsible label="Custom Styles">
+                    <TextEditor
+                        id="css_edit"
+                        onChange={cssChange}
+                        defaultValue={Settings.css}
+                        style={{ resize: "vertical" }}
+                        rows={5}
+                    />
+                </Collapsible>
+                <div className="reset-to-defaults">
                     <button className="danger" onClick={resetToDefaults}>
                         Reset to defaults
                     </button>
@@ -122,47 +132,6 @@ export const SettingsForm = observer(
         );
     }
 );
-
-type TextareaProps = React.HTMLAttributes<HTMLTextAreaElement>;
-type CssEditorProps = TextareaProps & {
-    defaultValue?: string;
-    label?: string;
-    onChange?: React.FormEventHandler<HTMLTextAreaElement>;
-};
-const Textarea = ({
-    defaultValue,
-    className,
-    label,
-    onChange,
-    ...rest
-}: CssEditorProps) => {
-    const [text, setText] = React.useState(defaultValue);
-
-    const onChangeFn = (e?: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const text = e?.target?.value || "";
-        setText(text);
-        e && onChange?.(e);
-    };
-
-    React.useEffect(() => {
-        setText(defaultValue);
-    }, [defaultValue]);
-
-    return (
-        <div className={`custom-style-editor ${className}`}>
-            <label htmlFor="textarea">{label}</label>
-            <textarea
-                {...rest}
-                rows={4}
-                onChange={onChangeFn}
-                value={text}
-                spellCheck={false}
-                lang="css"
-            />
-            <div className="error message">{}</div>
-        </div>
-    );
-};
 
 const cornerIconStyle = {
     display: "inline-block",

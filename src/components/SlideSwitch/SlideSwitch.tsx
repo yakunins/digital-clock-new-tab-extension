@@ -24,7 +24,7 @@ export const SlideSwitch = memo(
         ...rest
     }: SlideSwitch) => {
         const id = useRef(name || getId());
-        const parentRef = useRef<HTMLDivElement>(null);
+        const containter = useRef<HTMLDivElement>(null);
         const [value, setValue] = useState<SlideSwitchOption["value"]>(
             defaultValue || getValue(options)
         );
@@ -33,8 +33,10 @@ export const SlideSwitch = memo(
             const idx = options
                 .map((i) => i.value)
                 .findIndex((v) => v === value);
-            if (idx === 0) return "checked-first";
-            if (idx === options.length - 1) return "checked-last";
+            let suffix = "";
+            if (idx === 0) suffix = "checked-first";
+            if (idx === options.length - 1) suffix = "checked-last";
+            return [`checked-idx-${idx}`, suffix];
         }
 
         const handleChange = (e: React.FormEvent<HTMLFieldSetElement>) => {
@@ -44,17 +46,23 @@ export const SlideSwitch = memo(
             onChange?.(next, prev);
         };
 
+        const focusValue = () => {
+            const cc = containter?.current || null;
+            if (!cc) return;
+            const input = cc.querySelector(".checked input") as HTMLElement;
+            input.focus();
+        };
+
         // calculate checked-indicator (caret) left and right position
         useEffect(() => {
-            if (!parentRef.current) return;
-            const selector = ":checked + label";
-            const checked = parentRef.current.querySelector(
-                selector
-            ) as HTMLElement;
+            const cc = containter?.current || null;
+            if (!cc) return;
+            const checked = cc.querySelector(".checked") as HTMLElement;
             const l = checked?.offsetLeft;
             const w = checked?.offsetWidth;
-            parentRef.current.style.setProperty("--caret-left", `${l}px`);
-            parentRef.current.style.setProperty("--caret-width", `${w}px`);
+            // const w = checked?.getBoundingClientRect().width // offsetWidth could be not precise enough
+            cc.style.setProperty("--checked-left", `${l}px`);
+            cc.style.setProperty("--checked-width", `${w}px`);
         }, [value]);
 
         useEffect(() => {
@@ -68,10 +76,10 @@ export const SlideSwitch = memo(
                 onChange={handleChange}
             >
                 <div className="fieldset-style-wrapper">
-                    {legend && <legend>{legend}</legend>}
+                    {legend && <legend onClick={focusValue}>{legend}</legend>}
                     <div
                         className={clsx("options", getCheckedClassName())}
-                        ref={parentRef}
+                        ref={containter}
                     >
                         <div className="checked-indicator" />
                         {options
@@ -98,6 +106,7 @@ const getValue = (opts: SlideSwitchOption[]): SlideSwitchOption["value"] => {
     if (checked) return checked.value;
     return opts[0].value;
 };
+
 const getFieldSetValue = (opts: HTMLCollection): SlideSwitchOption["value"] => {
     const opts2 = Array.from(opts) as HTMLInputElement[];
     const checked = opts2.find((i) => i.checked);

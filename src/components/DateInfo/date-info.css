@@ -1,15 +1,15 @@
 .date-info {
     --date-info-color: var(--color, rgba(150, 250, 220, 1));
-    --date-size: calc(1.6rem * var(--scale));
-    --gap: 0.5rem;
+    --date-size: calc(1.6em * var(--scale));
+    --gap: 0.5em;
 
     font-family: "Work Sans", WorkSansEmbedded, "Segoe UI", Segoe, sans-serif;
     font-size: var(--date-size);
-    letter-spacing: 0.05rem;
+    letter-spacing: 0.05em;
     margin: calc(var(--date-size) + 1.5vmin) 0;
     transform: scaleX(0.98);
     opacity: 0.75;
-    height: 2rem;
+    height: 2em;
     width: 50vw;
 
     .formatted-date {
@@ -36,7 +36,7 @@
     }
     .date-short {
         text-transform: uppercase;
-        letter-spacing: 0.065rem;
+        letter-spacing: 0.065em;
     }
 
     &[class*="locale-ja-"],

@@ -3,6 +3,7 @@
     --h1: calc(33.5% + 5%);
     --h2: calc(33.5%);
     --h3: calc(33.5% - 5%);
+    --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.616' numOctaves='1' stitchTiles='stitch' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E");
 
     position: relative;
     width: 100vw;
@@ -30,7 +31,18 @@
 
     .effects.layer {
         backdrop-filter: brightness(95%);
-        background-color: var(--bg-solid-color);
+    }
+
+    .noise.layer {
+        background-image: var(--noise);
+        background-size: 1000px 1000px;
+        opacity: 0;
+        mix-blend-mode: color-burn;
+    }
+
+    .solid-color.layer {
+        background-color: var(--bg-color, transparent);
+        opacity: var(--bg-opacity, 0);
     }
 
     .blur.layer {

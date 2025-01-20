@@ -1,8 +1,6 @@
 .settings-dropdown {
-    --pre-color: color-mix(in srgb, var(--bg-color-1), var(--bg-color-2) 35%);
-    --primary-color: color-mix(in srgb, var(--pre-color), black 35%);
-    --button-size: 2.75rem;
-    --icon-size: 1.35rem;
+    --button-size: 2.75em;
+    --icon-size: 1.35em;
     --padding: var(var(--padding), 0.5rem);
 
     position: absolute;
@@ -50,7 +48,7 @@
         right: 0;
         bottom: 0;
         border-radius: 100rem;
-        filter: blur(0.5rem);
+        filter: blur(0.5em);
         transition-property: opacity;
         transition-duration: 0.5s;
         z-index: 0;
@@ -62,17 +60,19 @@
     }
     &:focus-visible {
         outline-color: var(--color, currentColor);
-        outline-offset: -0.25rem;
+        outline-offset: calc(var(--s-4px) * -1);
     }
 }
 
 .settings-overlay {
-    --mix-1: rgba(255, 255, 255, 1);
-    --gradient-01: color-mix(in srgb, var(--bg-color-1), var(--mix-1) 50%);
-    --gradient-02: color-mix(in srgb, var(--bg-color-2), var(--mix-1) 65%);
+    --c-1: var(--bg-color-1); /* upper strip */
+    --c-2: var(--bg-color-3); /* lower strip */
+    --mix-1: white;
+    --c-grad-01: color-mix(in srgb, var(--c-1), var(--mix-1) 50%);
+    --c-grad-02: color-mix(in srgb, var(--c-2), var(--mix-1) 50%);
     --mix-2: transparent;
-    --gradient-11: color-mix(in srgb, var(--gradient-01), var(--mix-2) 20%);
-    --gradient-12: color-mix(in srgb, var(--gradient-02), var(--mix-2) 20%);
+    --c-grad-11: color-mix(in srgb, var(--c-grad-01), var(--mix-2) 17.5%);
+    --c-grad-12: color-mix(in srgb, var(--c-grad-02), var(--mix-2) 17.5%);
     --shadow-border: 0 0 0.125rem rgba(0, 0, 0, 0.05);
     --shadow-dark-s: 0 0.2rem 2rem rgba(0, 0, 0, 0.05);
     --shadow-dark-l: 0 0.6rem 6rem rgba(0, 0, 0, 0.05);
@@ -80,8 +80,8 @@
     --scroll-height: 75vh;
     --scroll-gradient-size: 0vh;
 
-    backdrop-filter: saturate(150%) blur(0.5rem);
-    background: linear-gradient(-10deg, var(--gradient-12), var(--gradient-11));
+    backdrop-filter: saturate(125%) blur(0.5rem);
+    background: linear-gradient(-10deg, var(--c-grad-12), var(--c-grad-11));
     border-radius: calc(var(--radius) * 1.5);
     box-shadow: var(--shadow-border), var(--shadow-dark-s), var(--shadow-dark-l);
 

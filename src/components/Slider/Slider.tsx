@@ -9,13 +9,20 @@ import {
 } from "react-aria-components";
 import "./slider.css";
 
-export type Slider = AriaSliderProps & {
+export type Slider = Omit<AriaSliderProps, "onChange"> & {
     label?: string;
+    onChange?: (value: number) => void;
 };
 
-export const Slider = ({ label, ...rest }: Slider) => {
+export const Slider = ({ label, onChange, ...rest }: Slider) => {
+    const handleChange = (value: number | number[]) => {
+        if (typeof value === "number" && onChange) {
+            onChange(value);
+        }
+    };
+
     return (
-        <AriaSlider {...rest}>
+        <AriaSlider {...rest} onChange={handleChange}>
             {label && <Label>{label}</Label>}
             <SliderOutput />
             <SliderTrack>

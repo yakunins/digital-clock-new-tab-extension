@@ -89,7 +89,7 @@ const set = async (obj: StorageObject<string | number>) => {
     return;
 };
 
-function throttledCallback(fn: Function, throttlePeriod = 500) {
+function throttledCallback(fn: Function, throttlePeriod = 250) {
     const state = {
         t: null,
     };

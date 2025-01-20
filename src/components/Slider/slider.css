@@ -39,15 +39,16 @@
 
         width: var(--thumb-size);
         height: var(--thumb-size);
+
         border-radius: var(--radius);
-        background: transparent;
-        outline: var(--s-1px) solid var(--accent-color);
+        background-color: transparent;
         cursor: pointer;
         forced-color-adjust: none;
+        outline: var(--s-1px) solid var(--accent-color);
         transition-property: background-color, border, border-color;
         transition-duration: 0.2s;
 
-        /* increase hover area */
+        /* +2px to hover area size */
         &::after {
             content: "";
             position: absolute;
@@ -56,13 +57,15 @@
             left: calc(var(--s-2px) * -1);
             right: calc(var(--s-2px) * -1);
         }
+        /* center dot */
         &::before {
             content: "";
             position: absolute;
             top: 50%;
             left: 50%;
             border-radius: 1rem;
-            outline: 0rem solid var(--accent-color);
+            outline: var(--s-2px) solid var(--accent-color-76);
+            outline-color: transparent;
         }
 
         &:hover {
@@ -74,8 +77,9 @@
         &[data-focused],
         &[data-focus-visible] {
             outline: var(--s-2px) solid var(--accent-color);
+
             &::before {
-                outline-width: var(--s-2px);
+                outline-color: var(--accent-color);
             }
         }
     }

@@ -35,8 +35,9 @@ export type SettingsStore = Settings & {
 };
 
 const css = `:root {
-  --color: rgba(160, 255, 230, 1);
-  --bg-solid-color: rgba(0,0,0,0);
+  --color: rgba(150, 250, 220, 1);
+  --bg-color: black;
+  --bg-opacity: 0;
 }
 .clock {
   --glow-size: 3rem;
@@ -44,14 +45,11 @@ const css = `:root {
   --clock-frame-opacity: 0;
 }`;
 
-const colors0 = ["#fff", "#aaa", "#666", "#000"];
-const colors1 = ["#ffe8de", "#6e7cca", "#860d0e", "#21022a"];
-
 const initial: Settings = {
     skyBackgroundRepaintPeriod: 30 * 1000, // update each 30 seconds
     clockType: getLocaleAmpm() ? "ampm" : "24-hour",
     colorSchema: "sky",
-    fixedColors: JSON.stringify(colors1),
+    fixedColors: JSON.stringify(["#ffe8de", "#6e7cca", "#860d0e", "#21022a"]),
     css: css,
     dateStyle: "long",
     segmentLength: 30,
@@ -146,7 +144,6 @@ class ExtensionSettingsStore implements SettingsStore {
     }
 
     handleStorageChange(changes: Changes, namespace: Namespace) {
-        console.log(namespace, this);
         for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
             if (oldValue === newValue) return;
             if (key === "lastActiveStore") this.setActiveStore(newValue, false);

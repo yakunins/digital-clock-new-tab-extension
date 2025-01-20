@@ -1,0 +1,25 @@
+.text-editor {
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding);
+
+    > *:empty {
+        display: none;
+    }
+
+    textarea {
+        border-radius: var(--radius);
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+        padding: calc(var(--padding) * 0.5) var(--padding);
+        scrollbar-width: thin;
+        scrollbar-color: color-mix(in srgb, currentColor, transparent 75%)
+            transparent;
+
+        .settings-dropdown & {
+            background-color: transparent;
+            border-color: var(--primary-color);
+        }
+    }
+}

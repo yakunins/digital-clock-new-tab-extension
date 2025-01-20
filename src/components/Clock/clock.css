@@ -1,13 +1,13 @@
 .clock {
     --clock-color: var(--color, rgba(150, 250, 220, 1));
-    --clock-font-size: calc(2.5rem * var(--scale));
+    --clock-font-size: calc(1em * var(--scale));
     --clock-frame-offset: calc(var(--clock-font-size) * -1);
     --clock-frame-opacity: 0.1;
     --clock-glow-offset: calc(var(--clock-font-size) * -1);
-    --clock-gap: calc(var(--thickness, 0.75rem) * 0.5 + 0.5rem);
+    --clock-gap: calc(var(--thickness, 0.75em) * 0.5 + 0.5em);
 
     --blur-size: calc(var(--s-1px) * 0.65);
-    --glow-size: 3rem;
+    --glow-size: 3em;
     --glow-opacity: 100%;
     --glow-color: color-mix(
         in srgb,
@@ -30,7 +30,7 @@
 
     .clock-frame {
         border: 1px solid var(--clock-color);
-        border-radius: calc(-1 * var(--clock-frame-offset) + 0.5rem);
+        border-radius: calc(-1 * var(--clock-frame-offset) + 0.5em);
         opacity: var(--clock-frame-opacity, 0.2);
         position: absolute;
         top: calc(var(--clock-frame-offset) * 0.92);
@@ -69,11 +69,11 @@
 
     .digit.ampm,
     .digit.colon {
-        margin-left: -0.25rem;
-        margin-right: -0.25rem;
+        margin-left: -0.25em;
+        margin-right: -0.25em;
     }
     .digit.ampm {
-        margin-right: -1.5rem;
+        margin-right: -1.5em;
     }
     .digit.colon.blinking {
         filter: drop-shadow(0 0 calc(var(--glow-size) * 2) var(--glow-color-50))
@@ -109,7 +109,7 @@
             margin-left: 0;
 
             .digit.ampm {
-                margin-right: -1.5rem;
+                margin-right: -1.5em;
             }
         }
         &.out-end,

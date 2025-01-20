@@ -48,7 +48,7 @@ const mountStages = [
 ];
 
 export const Innout = ({
-    out = false,
+    out,
     stages = defaultStages,
     minimumDuration = 25,
     ...rest
@@ -91,8 +91,8 @@ export const Innout = ({
             allStages[stage].duration === 0
                 ? 0
                 : allStages[stage].duration > minimumDuration
-                ? allStages[stage].duration
-                : minimumDuration;
+                  ? allStages[stage].duration
+                  : minimumDuration;
         t.current = setTimeout(() => {
             nextStage();
         }, duration);

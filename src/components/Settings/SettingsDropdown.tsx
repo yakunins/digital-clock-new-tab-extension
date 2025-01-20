@@ -18,6 +18,7 @@ export const SettingsDropdown = ({ ...rest }: DivProps) => {
     const close = useCallback(() => setOpened(false), []);
     const handleEscape = (e: KeyboardEvent) => e.key === "Escape" && toggle();
     const handleClickOutside = (e: MouseEvent) => {
+        if (e?.button !== 0) return; // detect left mouse button
         if (!settingsRef.current?.contains(e.target as any)) {
             close();
         }

@@ -4,6 +4,7 @@ import { SettingsStore as Settings } from "../Settings/settings.store";
 import { randomColors } from "./randomColors";
 import { naturalColors } from "./naturalColors";
 import { lightenColor, saturateFourColors, mixHexColors } from "./colorUtils";
+
 import "./background-fill.css";
 
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
@@ -20,6 +21,8 @@ export const BackgroundFill = ({ children, ...rest }: BackgroundFill) => {
                 <Strips />
             </div>
             <div className="effects layer"></div>
+            <div className="noise layer"></div>
+            <div className="solid-color layer"></div>
             <div className="content layer">{children}</div>
         </div>
     );

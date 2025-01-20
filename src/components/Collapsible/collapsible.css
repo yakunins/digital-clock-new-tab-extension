@@ -1,0 +1,33 @@
+.collapsible {
+    --icon-size: calc(var(--s-1px) * 20);
+
+    summary {
+        border-radius: var(--radius);
+        cursor: pointer;
+        user-select: none;
+        display: flex;
+        place-items: center;
+        padding: calc(var(--padding) / 2) 0;
+
+        .icon {
+            flex-shrink: 0;
+            width: var(--icon-size);
+            height: var(--icon-size);
+            margin: var(--s-2px);
+            transform: translateY(var(--s-1px));
+
+            svg {
+                transform: rotate(0deg);
+                transition: transform 0.2s;
+            }
+        }
+        &:focus-visible {
+            outline: 2px solid var(--primary-color, currentColor);
+        }
+    }
+    &.collapsed {
+        .icon svg {
+            transform: rotate(-90deg);
+        }
+    }
+}

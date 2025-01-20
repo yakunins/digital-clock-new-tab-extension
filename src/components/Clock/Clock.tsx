@@ -36,18 +36,18 @@ export const Clock = observer(
             : (Settings.segmentShape as Digit["shape"]);
         const cornerShift =
             Settings.segmentShape === "natural"
-                ? `calc(${thickness}rem * .25)`
+                ? `calc(${thickness}em * .25)`
                 : undefined;
         const spacing =
             Settings.segmentShape === "pill"
-                ? `calc(${thickness}rem * .5)`
+                ? `calc(${thickness}em * .35)`
                 : Settings.segmentShape === "rect"
-                  ? `calc(${thickness}rem * .9)`
+                  ? `calc(${thickness}em * .75)`
                   : undefined;
 
         const segmentStyle = {
-            thickness: `max(${thickness}rem, 2px)`,
-            length: `max(${length}rem, ${thickness}rem, 4px)`,
+            thickness: `max(${thickness}em, 2px)`,
+            length: `max(${length}em, ${thickness}em, 4px)`,
             opacityOff: 0.075,
             cornerShift: cornerShift,
             spacing: spacing,
