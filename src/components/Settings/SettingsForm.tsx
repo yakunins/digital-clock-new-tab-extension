@@ -117,7 +117,7 @@ export const SettingsForm = observer(
                     ]}
                     onChange={shapeChange}
                 />
-                <Collapsible label="Custom Styles">
+                <Collapsible label="Custom Styles" id="custom_styles">
                     <TextEditor
                         id="css_edit"
                         onChange={cssChange}

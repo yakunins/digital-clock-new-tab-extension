@@ -3,6 +3,7 @@ import { clsx } from "clsx";
 
 import { Icon } from "../Icon";
 import { Innout } from "../Innout";
+import { useSessionState } from "../useSessionState";
 import "./collapsible.css";
 
 type DetailsProps = React.HTMLAttributes<HTMLDetailsElement>;
@@ -10,15 +11,22 @@ export type Collapsible = DetailsProps & {
     children: React.ReactNode;
     collapsed?: boolean;
     label: React.ReactNode;
+    id?: string; // if provided, store state in seesion storage
 };
 
 export const Collapsible = ({
     children,
     collapsed: initialCollapsed = true,
+    id,
     label,
     ...rest
 }: Collapsible) => {
-    const [collapsed, setCollapsed] = React.useState(initialCollapsed === true);
+    const sessionStorageId = id ? `collapsible_${id}` : null;
+
+    const [collapsed, setCollapsed] = useSessionState(
+        sessionStorageId,
+        initialCollapsed
+    );
     const [collapsing, setCollapsing] = React.useState(false);
 
     const handleClick = (e: React.SyntheticEvent) => {
@@ -27,7 +35,8 @@ export const Collapsible = ({
             setCollapsing(true);
             setTimeout(() => setCollapsing(false), 250);
         }
-        setCollapsed(!collapsed);
+        const next = !collapsed;
+        setCollapsed(next);
     };
 
     return (
