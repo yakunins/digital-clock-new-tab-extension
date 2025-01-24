@@ -54,3 +54,22 @@ export const popularLocales = [
     "th-TH",
     "ar-EG", // 15
 ];
+
+export function throttledCallback(fn: Function, throttlePeriod = 250) {
+    const state = {
+        t: null,
+    };
+    return (...args: any) => {
+        if (state.t) {
+            clearTimeout(state.t);
+        }
+        (state.t as any) = setTimeout(() => {
+            fn(...args);
+            state.t = null;
+        }, throttlePeriod);
+    };
+}
+
+const digits = /^\d+$/;
+export const parseDigits = (str: string): string | number =>
+    digits.test(str) ? parseInt(str, 10) : str;

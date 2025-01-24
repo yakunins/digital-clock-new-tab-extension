@@ -1,5 +1,6 @@
-declare const browser: typeof chrome;
+import { throttledCallback, parseDigits } from "../../utils";
 
+declare const browser: typeof chrome;
 type StorageObject<V> = {
     [key: string]: V;
 };
@@ -89,25 +90,6 @@ const set = async (obj: StorageObject<string | number>) => {
     return;
 };
 
-function throttledCallback(fn: Function, throttlePeriod = 250) {
-    const state = {
-        t: null,
-    };
-    return (...args: any) => {
-        if (state.t) {
-            clearTimeout(state.t);
-        }
-        (state.t as any) = setTimeout(() => {
-            fn(...args);
-            state.t = null;
-        }, throttlePeriod);
-    };
-}
-
-const digits = /^\d+$/;
-const parseDigits = (str: string): string | number =>
-    digits.test(str) ? parseInt(str, 10) : str;
-
 export type Changes = {
     [key: string]: chrome.storage.StorageChange;
 };
@@ -122,6 +104,7 @@ function addListener(fn: StorageChangeHandler) {
         chrome.storage.onChanged.addListener(fn);
     if (storageName === "browser.storage")
         browser.storage.onChanged.addListener(fn);
+
     // storageName === "localStorage"
     function storageEventListener(e: StorageEvent) {
         if (e.key) {
@@ -134,9 +117,11 @@ function addListener(fn: StorageChangeHandler) {
     window.addEventListener("storage", storageEventListener);
 }
 
-export const storage = {
-    get,
-    set,
-    addListener,
-    throttledSet: throttledCallback(set),
+export const storage = (throttlePeriod = 100) => {
+    return {
+        get,
+        set,
+        addListener,
+        throttledSet: throttledCallback(set, throttlePeriod),
+    };
 };

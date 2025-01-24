@@ -53,12 +53,12 @@ export const SettingsForm = observer(
             },
             []
         );
+        const resetToDefaults = () => {
+            Settings.reset();
+        };
         const openPopup = () => {
             chrome.runtime.sendMessage("open_extension_popup");
             close?.();
-        };
-        const resetToDefaults = () => {
-            Settings.reset();
         };
 
         return (
