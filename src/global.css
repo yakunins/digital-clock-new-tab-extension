@@ -11,7 +11,7 @@
 
     --typeface: "Segoe UI", Tahoma, sans-serif;
     --scale: 1; /* ~40% percent of a screen width at default zoom level 100% */
-    --color: rgba(150, 250, 220, 1);
+    --color: rgba(168, 255, 236, 1);
     --radius: var(--s-6px);
     --padding: var(--s-8px);
 }

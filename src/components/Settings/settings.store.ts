@@ -1,6 +1,6 @@
 import { makeObservable, observable, computed, action } from "mobx";
-import { getLocaleAmpm } from "../utils";
-import { getId } from "../utils";
+import { getLocaleAmpm } from "../../utils";
+import { getId } from "../../utils";
 
 import { storage, StorageChangeHandler, Changes, Namespace } from "./storage";
 
@@ -35,7 +35,7 @@ export type SettingsStore = Settings & {
 };
 
 const css = `:root {
-  --color: rgba(150, 250, 220, 1);
+  --color: rgba(168, 255, 236, 1);
   --bg-color: black;
   --bg-opacity: 0;
 }

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, memo } from "react";
 import { observer } from "mobx-react";
 import { Blinker } from "react-led-digit";
-import { getLocale, popularLocales } from "../utils";
+import { getLocale, popularLocales } from "../../utils";
 import { SettingsStore as Settings } from "../";
-import { Innout } from "../Innout";
+import { Innout } from "../../components-shared";
 import "./date-info.css";
 import "./work-sans-100.css";
 import "./work-sans-200.css";

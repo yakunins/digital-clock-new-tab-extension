@@ -2,8 +2,8 @@ import React, { useCallback, useState, useEffect } from "react";
 import { observer } from "mobx-react";
 import { Digit, BlinkingDigit, Blinker } from "react-led-digit";
 import { SettingsStore as Settings } from "../";
-import { getTimeString, getLocale } from "../utils";
-import { Innout } from "../Innout";
+import { getTimeString, getLocale } from "../../utils";
+import { Innout } from "../../components-shared";
 import "./clock.css";
 
 const blinker = new Blinker(); // singleton

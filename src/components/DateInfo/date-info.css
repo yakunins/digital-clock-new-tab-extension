@@ -1,5 +1,5 @@
 .date-info {
-    --date-info-color: var(--color, rgba(150, 250, 220, 1));
+    --date-info-color: var(--color, currentColor);
     --date-size: calc(1.6em * var(--scale));
     --gap: 0.5em;
 

@@ -1,11 +1,14 @@
 import React, { useCallback } from "react";
 import { observer } from "mobx-react";
 import { SettingsStore as Settings } from "./settings.store";
-import { SlideSwitch } from "../SlideSwitch";
-import { SliderControlled, Slider } from "../Slider";
-import { Icon } from "../Icon";
-import { Collapsible } from "../Collapsible";
-import { TextEditor } from "../TextEditor";
+import {
+    Collapsible,
+    Icon,
+    Radio,
+    SliderControlled,
+    Slider,
+    TextEditor,
+} from "../../components-shared";
 
 import "./settings-form.css";
 
@@ -18,10 +21,11 @@ export const SettingsForm = observer(
     ({ close, origin, ...rest }: SettingsForm) => {
         origin && Settings.setOrigin(origin);
 
-        const clockChange = useCallback<SlideSwitch["onChange"]>((next) => {
+        const clockChange = useCallback<Radio["onChange"]>((next) => {
+            console.log("clockChange");
             Settings.setClockType(next as Settings["clockType"]);
         }, []);
-        const schemaChange = useCallback<SlideSwitch["onChange"]>((next) => {
+        const schemaChange = useCallback<Radio["onChange"]>((next) => {
             Settings.setColorSchema(next as Settings["colorSchema"]);
         }, []);
 
@@ -36,10 +40,10 @@ export const SettingsForm = observer(
             Settings.setThickness(next);
         }, []);
 
-        const shapeChange = useCallback<SlideSwitch["onChange"]>((next) => {
+        const shapeChange = useCallback<Radio["onChange"]>((next) => {
             Settings.setShape(next as Settings["segmentShape"]);
         }, []);
-        const dateChange = useCallback<SlideSwitch["onChange"]>((next) => {
+        const dateChange = useCallback<Radio["onChange"]>((next) => {
             Settings.setDateStyle(next as Settings["dateStyle"]);
         }, []);
 
@@ -60,7 +64,7 @@ export const SettingsForm = observer(
 
         return (
             <div className="settings-form" {...rest}>
-                <SlideSwitch
+                <Radio
                     legend="Background"
                     defaultValue={Settings.colorSchema}
                     options={[
@@ -70,7 +74,7 @@ export const SettingsForm = observer(
                     ]}
                     onChange={schemaChange}
                 />
-                <SlideSwitch
+                <Radio
                     legend="Clock"
                     defaultValue={Settings.clockType}
                     options={[
@@ -79,7 +83,7 @@ export const SettingsForm = observer(
                     ]}
                     onChange={clockChange}
                 />
-                <SlideSwitch
+                <Radio
                     legend="Date"
                     defaultValue={Settings.dateStyle}
                     options={[
@@ -103,7 +107,7 @@ export const SettingsForm = observer(
                     minValue={10}
                     maxValue={100}
                 />
-                <SlideSwitch
+                <Radio
                     legend="Segment Shape"
                     defaultValue={Settings.segmentShape}
                     options={[

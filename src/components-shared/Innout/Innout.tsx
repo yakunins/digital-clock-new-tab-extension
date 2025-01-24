@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, CSSProperties } from "react";
-import "./in-n-out.css";
+import "./innout.css";
 
 type Stage = {
     duration: number;

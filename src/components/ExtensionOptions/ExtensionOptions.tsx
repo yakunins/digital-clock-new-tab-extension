@@ -1,15 +1,17 @@
+// to be used within `options.html` and `popup.html`
 import React from "react";
 import { SettingsForm } from "../Settings";
 import "./extension-options.css";
 
-type ExtensionOptionsProps = {
-    origin?: SettingsForm["origin"];
-};
-
-const anchorProps = {
+const author = {
     target: "_blank",
     href: "http://github.com/yakunins",
+    children: "yakunins@github",
     mail: "mailto:s@yakunins.com",
+};
+
+type ExtensionOptionsProps = {
+    origin?: SettingsForm["origin"];
 };
 
 export const ExtensionOptions = ({ origin }: ExtensionOptionsProps) => {
@@ -17,7 +19,7 @@ export const ExtensionOptions = ({ origin }: ExtensionOptionsProps) => {
         <div className="extension-options">
             <SettingsForm origin={origin} />
             <p className="copy-info">
-                2022, 2024 © <a {...anchorProps}>yakunins@github</a>
+                2022, 2024 © <a {...author} />
                 <br />
             </p>
         </div>

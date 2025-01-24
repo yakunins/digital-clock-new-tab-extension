@@ -1,24 +1,17 @@
 import React, { useState, useEffect, useRef, memo } from "react";
 import { clsx } from "clsx";
-import { getId } from "../utils";
+import { getId } from "../../utils";
 
-type RadioProps = React.HTMLAttributes<HTMLInputElement>;
-export type SlideSwitchOption = RadioProps & {
+type InputProps = React.HTMLAttributes<HTMLInputElement>;
+export type RadioButton = InputProps & {
     children: any;
     value: string;
     checked?: boolean;
     name?: string;
 };
 
-export const SlideSwitchOption = memo(
-    ({
-        className,
-        checked,
-        name,
-        value,
-        children,
-        ...rest
-    }: SlideSwitchOption) => {
+export const RadioButton = memo(
+    ({ className, checked, name, value, children, ...rest }: RadioButton) => {
         const inputRef = useRef<HTMLInputElement>(null);
         const [focused, setFocused] = useState(false);
         const id = rest.id || getId();
@@ -28,7 +21,7 @@ export const SlideSwitchOption = memo(
         });
 
         return (
-            <div className={clsx("option", className, { checked })}>
+            <div className={clsx("radio-button", className, { checked })}>
                 <input
                     {...rest}
                     className="visually-hidden"

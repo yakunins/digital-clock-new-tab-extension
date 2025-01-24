@@ -1,7 +1,7 @@
 import React from "react";
 import { clsx } from "clsx";
 
-import { getId } from "../utils";
+import { getId } from "../../utils";
 import "./text-editor.css";
 
 type TextAreaProps = React.HTMLAttributes<HTMLTextAreaElement>;

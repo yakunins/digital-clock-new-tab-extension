@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { SettingsForm } from "./SettingsForm";
 import { SettingsStore as Settings } from "./settings.store";
-import { Icon } from "../Icon";
-import { Innout } from "../Innout";
+import { Icon, Innout } from "../../components-shared";
 import "./settings-dropdown.css";
 
 const sessionStorageItem = "digital_clock_newtab__settings_opened";

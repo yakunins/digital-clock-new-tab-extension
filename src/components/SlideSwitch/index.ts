@@ -1,1 +1,0 @@
-export { SlideSwitch } from "./SlideSwitch";

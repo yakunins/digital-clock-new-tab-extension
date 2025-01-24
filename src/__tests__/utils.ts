@@ -1,4 +1,4 @@
-import { getDateString } from "../components/utils";
+import { getDateString } from "../utils";
 
 test("getDateString", () => {
     const locale = "en-US";

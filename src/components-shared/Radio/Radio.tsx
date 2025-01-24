@@ -1,31 +1,24 @@
 import React, { useState, useEffect, useRef, memo } from "react";
 import { clsx } from "clsx";
 
-import { SlideSwitchOption } from "./SlideSwitchOption";
-import { getId } from "../utils";
-import "./slide-switch.css";
+import { RadioButton } from "./RadioButton";
+import { getId } from "../../utils";
+import "./radio.css";
 
 type FieldSetProps = React.HTMLAttributes<HTMLFieldSetElement>;
-export type SlideSwitch = Omit<FieldSetProps, "onChange"> & {
-    options: SlideSwitchOption[];
-    defaultValue?: SlideSwitchOption["value"];
+export type Radio = Omit<FieldSetProps, "onChange"> & {
+    options: RadioButton[];
+    defaultValue?: RadioButton["value"];
     onChange: (next?: string, prev?: string) => void;
     legend?: string;
     name?: string;
 };
 
-export const SlideSwitch = memo(
-    ({
-        defaultValue,
-        options,
-        onChange,
-        legend,
-        name,
-        ...rest
-    }: SlideSwitch) => {
+export const Radio = memo(
+    ({ defaultValue, options, onChange, legend, name, ...rest }: Radio) => {
         const id = useRef(name || getId());
         const containter = useRef<HTMLDivElement>(null);
-        const [value, setValue] = useState<SlideSwitchOption["value"]>(
+        const [value, setValue] = useState<RadioButton["value"]>(
             defaultValue || getValue(options)
         );
 
@@ -72,13 +65,13 @@ export const SlideSwitch = memo(
         return (
             <fieldset
                 {...rest}
-                className={clsx("slide-switch", rest.className)}
+                className={clsx("radio", rest.className)}
                 onChange={handleChange}
             >
                 <div className="fieldset-style-wrapper">
                     {legend && <legend onClick={focusValue}>{legend}</legend>}
                     <div
-                        className={clsx("options", getCheckedClassName())}
+                        className={clsx("radio-options", getCheckedClassName())}
                         ref={containter}
                     >
                         <div className="checked-indicator" />
@@ -92,7 +85,7 @@ export const SlideSwitch = memo(
                                 };
                             })
                             .map((props, idx) => (
-                                <SlideSwitchOption {...props} key={idx} />
+                                <RadioButton {...props} key={idx} />
                             ))}
                     </div>
                 </div>
@@ -101,13 +94,13 @@ export const SlideSwitch = memo(
     }
 );
 
-const getValue = (opts: SlideSwitchOption[]): SlideSwitchOption["value"] => {
+const getValue = (opts: RadioButton[]): RadioButton["value"] => {
     const checked = opts.find((i) => i.checked);
     if (checked) return checked.value;
     return opts[0].value;
 };
 
-const getFieldSetValue = (opts: HTMLCollection): SlideSwitchOption["value"] => {
+const getFieldSetValue = (opts: HTMLCollection): RadioButton["value"] => {
     const opts2 = Array.from(opts) as HTMLInputElement[];
     const checked = opts2.find((i) => i.checked);
     if (checked) return checked.value;

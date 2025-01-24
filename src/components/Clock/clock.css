@@ -1,5 +1,5 @@
 .clock {
-    --clock-color: var(--color, rgba(150, 250, 220, 1));
+    --clock-color: var(--color, currentColor);
     --clock-font-size: calc(1em * var(--scale));
     --clock-frame-offset: calc(var(--clock-font-size) * -1);
     --clock-frame-opacity: 0.1;

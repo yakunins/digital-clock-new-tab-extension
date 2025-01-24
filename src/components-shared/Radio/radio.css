@@ -1,4 +1,4 @@
-.slide-switch {
+.radio {
     --s-1px: 0.0625rem;
     --s-2px: 0.125rem;
     --s-3px: 0.1875rem;
@@ -8,7 +8,7 @@
     --accent-color: var(--primary-color, currentColor);
     --accent-color-88: color-mix(in srgb, var(--accent-color), transparent 88%);
     --accent-color-76: color-mix(in srgb, var(--accent-color), transparent 76%);
-    --options-radius: calc(var(--radius) + 0.125rem * 0.5);
+    --rradius: calc(var(--radius) + 0.125rem * 0.5);
     --duration: 0.2s;
     --padding: var(var(--padding), 0.5rem); /* 8px */
 
@@ -29,15 +29,15 @@
         }
     }
 
-    .options {
-        border-radius: var(--options-radius);
+    .radio-options {
+        border-radius: var(--rradius);
         display: flex;
         position: relative;
 
-        .option {
+        .radio-button {
             flex-grow: 1;
         }
-        .option label {
+        .radio-button label {
             box-sizing: border-box;
             cursor: pointer;
             display: flex;
@@ -65,27 +65,27 @@
 
         /* first child */
         &.checked-first .checked-indicator,
-        .option:nth-child(2) label {
-            border-start-start-radius: var(--options-radius);
-            border-end-start-radius: var(--options-radius);
+        .radio-button:nth-child(2) label {
+            border-start-start-radius: var(--rradius);
+            border-end-start-radius: var(--rradius);
         }
 
         /* last child */
         &.checked-last .checked-indicator,
-        .option:last-child label {
-            border-end-end-radius: var(--options-radius);
-            border-start-end-radius: var(--options-radius);
+        .radio-button:last-child label {
+            border-end-end-radius: var(--rradius);
+            border-start-end-radius: var(--rradius);
         }
 
         .checked-indicator {
-            border-radius: var(--options-radius);
+            border-radius: var(--rradius);
             position: absolute;
             width: 100%;
             height: 100%;
             overflow: hidden;
 
             &:after {
-                border-radius: var(--options-radius);
+                border-radius: var(--rradius);
                 box-shadow:
                     0 0 0 100vmax var(--accent-color-88),
                     inset 0 0 0 var(--s-1px) var(--accent-color);
