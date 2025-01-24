@@ -1,10 +1,8 @@
 {
     "manifest_version": 3,
-
     "name": "Digital Clock in a New Tab",
     "description": "Colorful distraction-free clock in a new tab. Customizable. Choose your preferred time format, background colors and zoom level.",
-    "version": "1.0.6",
-
+    "version": "1.0.7",
     "options_ui": {
         "page": "options.html"
     },
