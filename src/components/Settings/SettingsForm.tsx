@@ -22,7 +22,6 @@ export const SettingsForm = observer(
         origin && Settings.setOrigin(origin);
 
         const clockChange = useCallback<Radio["onChange"]>((next) => {
-            console.log("clockChange");
             Settings.setClockType(next as Settings["clockType"]);
         }, []);
         const schemaChange = useCallback<Radio["onChange"]>((next) => {
