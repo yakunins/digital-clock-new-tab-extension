@@ -6,6 +6,7 @@
     position: absolute;
     right: 0;
     top: 0;
+    z-index: 1000;
 }
 
 .settings-toggle.button {
@@ -80,7 +81,7 @@
     --scroll-height: 75vh;
     --scroll-gradient-size: 0vh;
 
-    backdrop-filter: saturate(125%) blur(0.5rem);
+    backdrop-filter: saturate(125%) blur(0.25rem);
     background: linear-gradient(-10deg, var(--c-grad-12), var(--c-grad-11));
     border-radius: calc(var(--radius) * 1.5);
     box-shadow: var(--shadow-border), var(--shadow-dark-s), var(--shadow-dark-l);
