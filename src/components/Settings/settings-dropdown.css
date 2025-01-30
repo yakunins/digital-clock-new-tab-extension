@@ -104,10 +104,6 @@
         --padding-x: calc(var(--padding) * 2);
         --padding-y: calc(var(--padding) * 1.5 + var(--radius) * 0.5);
         padding: var(--padding-y) var(--padding-x);
-        scrollbar-width: thin;
-        scrollbar-color: color-mix(in srgb, currentColor, transparent 75%)
-            transparent;
-
         box-sizing: border-box;
         max-height: var(--scroll-height);
         overflow-x: hidden;

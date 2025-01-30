@@ -8,6 +8,7 @@ import {
     SliderControlled,
     Slider,
     TextEditor,
+    Tooltip,
 } from "../../components-shared";
 
 import "./settings-form.css";
@@ -56,15 +57,13 @@ export const SettingsForm = observer(
         const resetToDefaults = () => {
             Settings.reset();
         };
-        const openPopup = () => {
-            chrome.runtime.sendMessage("open_extension_popup");
-            close?.();
-        };
 
         return (
             <div className="settings-form" {...rest}>
                 <Radio
-                    legend="Background"
+                    legend={
+                        <span style={{ marginRight: ".1em" }}>Background</span>
+                    }
                     defaultValue={Settings.colorSchema}
                     options={[
                         { value: "sky", children: "Sky" },
@@ -127,7 +126,10 @@ export const SettingsForm = observer(
                     />
                 </Collapsible>
                 <div className="reset-to-defaults">
-                    <button className="danger" onClick={resetToDefaults}>
+                    <button
+                        className="danger button-plus"
+                        onClick={resetToDefaults}
+                    >
                         Reset to defaults
                     </button>
                 </div>
@@ -135,6 +137,17 @@ export const SettingsForm = observer(
         );
     }
 );
+
+const helpIconStyle = {
+    display: "inline-block",
+    width: "calc(var(--s-1px) * 18)",
+    height: "calc(var(--s-1px) * 18)",
+    marginLeft: "var(--s-1px)",
+    marginRight: "var(--s-1px)",
+    verticalAlign: "calc(var(--s-1px) * -3)",
+    maskImage: "linear-gradient(90deg, transparent 0%, black 100%)",
+    opacity: ".65",
+};
 
 const cornerIconStyle = {
     display: "inline-block",

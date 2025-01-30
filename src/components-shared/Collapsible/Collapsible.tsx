@@ -3,7 +3,7 @@ import { clsx } from "clsx";
 
 import { Icon } from "../Icon";
 import { Innout } from "../Innout";
-import { useSessionState } from "../useSessionState";
+import { useSessionState } from "../../hooks";
 import "./collapsible.css";
 
 type DetailsProps = React.HTMLAttributes<HTMLDetailsElement>;
@@ -35,8 +35,7 @@ export const Collapsible = ({
             setCollapsing(true);
             setTimeout(() => setCollapsing(false), 250);
         }
-        const next = !collapsed;
-        setCollapsed(next);
+        setCollapsed(!collapsed);
     };
 
     return (

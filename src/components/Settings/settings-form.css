@@ -15,18 +15,18 @@
     }
 }
 
-.all-settings,
 .reset-to-defaults {
+    margin-top: var(--padding);
+    margin-bottom: var(--padding);
+
     button {
         color: var(--primary-color);
+        cursor: pointer;
         background-color: transparent;
+        border: none;
         border-radius: var(--radius);
         font-family: var(--typeface);
-        border: none;
-        padding: 0;
         line-height: 100%;
-        margin-top: var(--padding);
-        margin-bottom: var(--padding);
         text-decoration: underline;
         text-decoration-color: color-mix(
             in srgb,
@@ -35,7 +35,8 @@
         );
         text-decoration-thickness: calc(0.125rem * 0.5);
         text-underline-offset: 0.125rem;
-        cursor: pointer;
+        transition: opacity 0.25s;
+        padding: 0;
 
         &:hover {
             opacity: 0.8;

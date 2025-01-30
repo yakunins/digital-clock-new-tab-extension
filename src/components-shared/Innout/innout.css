@@ -2,7 +2,7 @@
     &.stage-0-in,
     &.stage-0-out {
         transition-property: opacity;
-        transition-duration: var(--stage-0-duration, 0.2s);
+        transition-duration: var(--stage-0-duration, 0.25s);
     }
 
     &.in-end,

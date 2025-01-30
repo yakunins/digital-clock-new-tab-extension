@@ -6,9 +6,10 @@
     --s-6px: 0.375rem;
 
     --accent-color: var(--primary-color, currentColor);
-    --accent-color-88: color-mix(in srgb, var(--accent-color), transparent 88%);
-    --accent-color-76: color-mix(in srgb, var(--accent-color), transparent 76%);
-    --rradius: calc(var(--radius) + 0.125rem * 0.5);
+    --fill-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+    --border-color: var(--accent-color);
+
+    --rad: calc(var(--radius) + 0.125rem * 0.5);
     --duration: 0.2s;
     --padding: var(var(--padding), 0.5rem); /* 8px */
 
@@ -30,7 +31,7 @@
     }
 
     .radio-options {
-        border-radius: var(--rradius);
+        border-radius: var(--rad);
         display: flex;
         position: relative;
 
@@ -38,6 +39,12 @@
             flex-grow: 1;
         }
         .radio-button label {
+            --hover-color: color-mix(
+                in srgb,
+                var(--fill-color),
+                transparent 75%
+            );
+
             box-sizing: border-box;
             cursor: pointer;
             display: flex;
@@ -49,46 +56,84 @@
             padding-top: calc(var(--padding) * 1.5 - var(--s-1px));
             position: relative;
             text-align: center;
-            transition-property: background-color, opacity;
-            transition-duration: var(--duration);
             user-select: none;
             z-index: 1;
 
+            &,
+            &:before {
+                transition-property: background-color, opacity;
+                transition-duration: var(--duration);
+            }
+
+            &:before {
+                content: "";
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+
+                opacity: 0;
+                mix-blend-mode: multiply;
+                background-image: linear-gradient(
+                        90deg,
+                        transparent 0%,
+                        transparent 5%,
+                        var(--hover-color) 25%,
+                        var(--hover-color) 75%,
+                        transparent 95%,
+                        transparent 100%
+                    ),
+                    linear-gradient(
+                        0deg,
+                        transparent 0%,
+                        transparent 5%,
+                        var(--hover-color) 25%,
+                        var(--hover-color) 75%,
+                        transparent 95%,
+                        transparent 100%
+                    );
+            }
             &:hover {
-                opacity: 0.8;
+                &:before {
+                    opacity: 1;
+                }
             }
         }
         .checked label,
         .checked label:hover {
-            opacity: 1;
+            cursor: default;
+            &:before {
+                opacity: 0;
+            }
         }
 
         /* first child */
         &.checked-first .checked-indicator,
         .radio-button:nth-child(2) label {
-            border-start-start-radius: var(--rradius);
-            border-end-start-radius: var(--rradius);
+            border-start-start-radius: var(--rad);
+            border-end-start-radius: var(--rad);
         }
 
         /* last child */
         &.checked-last .checked-indicator,
         .radio-button:last-child label {
-            border-end-end-radius: var(--rradius);
-            border-start-end-radius: var(--rradius);
+            border-end-end-radius: var(--rad);
+            border-start-end-radius: var(--rad);
         }
 
         .checked-indicator {
-            border-radius: var(--rradius);
+            border-radius: var(--rad);
             position: absolute;
             width: 100%;
             height: 100%;
             overflow: hidden;
 
             &:after {
-                border-radius: var(--rradius);
+                border-radius: var(--rad);
                 box-shadow:
-                    0 0 0 100vmax var(--accent-color-88),
-                    inset 0 0 0 var(--s-1px) var(--accent-color);
+                    0 0 0 100vmax var(--fill-color),
+                    /* fill */ inset 0 0 0 var(--s-1px) var(--border-color);
                 content: "";
                 position: absolute;
                 left: var(--checked-left);
@@ -102,8 +147,8 @@
         &:focus-within .checked-indicator:after {
             /* focus ring */
             box-shadow:
-                0 0 0 100vmax var(--accent-color-88),
-                inset 0 0 0 var(--s-2px) var(--accent-color);
+                0 0 0 100vmax var(--fill-color),
+                inset 0 0 0 var(--s-2px) var(--border-color);
         }
     }
 }

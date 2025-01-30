@@ -3,6 +3,7 @@ import { clsx } from "clsx";
 
 import { RadioButton } from "./RadioButton";
 import { getId } from "../../utils";
+import { useSize } from "../../hooks";
 import "./radio.css";
 
 type FieldSetProps = React.HTMLAttributes<HTMLFieldSetElement>;
@@ -10,14 +11,15 @@ export type Radio = Omit<FieldSetProps, "onChange"> & {
     options: RadioButton[];
     defaultValue?: RadioButton["value"];
     onChange: (next?: string, prev?: string) => void;
-    legend?: string;
+    legend?: React.ReactNode;
     name?: string;
 };
 
 export const Radio = memo(
     ({ defaultValue, options, onChange, legend, name, ...rest }: Radio) => {
         const id = useRef(name || getId());
-        const containter = useRef<HTMLDivElement>(null);
+        const container = useRef<HTMLDivElement>(null);
+        const { width } = useSize(container);
         const [value, setValue] = useState<RadioButton["value"]>(
             defaultValue || getValue(options)
         );
@@ -40,7 +42,7 @@ export const Radio = memo(
         };
 
         const focusValue = () => {
-            const cc = containter?.current || null;
+            const cc = container?.current || null;
             if (!cc) return;
             const input = cc.querySelector(".checked input") as HTMLElement;
             input.focus();
@@ -48,7 +50,7 @@ export const Radio = memo(
 
         // calculate checked-indicator (caret) left and right position
         useEffect(() => {
-            const cc = containter?.current || null;
+            const cc = container?.current || null;
             if (!cc) return;
             const checked = cc.querySelector(".checked") as HTMLElement;
             const l = checked?.offsetLeft;
@@ -56,7 +58,7 @@ export const Radio = memo(
             // const w = checked?.getBoundingClientRect().width // offsetWidth could be not precise enough
             cc.style.setProperty("--checked-left", `${l}px`);
             cc.style.setProperty("--checked-width", `${w}px`);
-        }, [value]);
+        }, [value, width]);
 
         useEffect(() => {
             setValue(defaultValue!);
@@ -72,7 +74,7 @@ export const Radio = memo(
                     {legend && <legend onClick={focusValue}>{legend}</legend>}
                     <div
                         className={clsx("radio-options", getCheckedClassName())}
-                        ref={containter}
+                        ref={container}
                     >
                         <div className="checked-indicator" />
                         {options

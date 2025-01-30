@@ -1,0 +1,199 @@
+.tooltip-anchor {
+    display: inline-block;
+    border-radius: var(--radius);
+}
+
+.tooltip-ship {
+    --offset: 0em;
+    --opacity: 1;
+
+    position: absolute;
+    overflow: visible;
+    z-index: 9990;
+
+    top: calc(var(--top) + var(--height) / 2);
+    left: calc(var(--left) + var(--width) / 2);
+    width: 0; /* var(--width); */
+    height: 0; /* var(--height); */
+    opacity: var(--opacity);
+
+    .tooltip {
+        background-color: black;
+        border-radius: var(--radius, var(--s-3px));
+        color: white;
+        display: inline-block;
+        line-height: 1.25;
+        text-wrap: pretty;
+
+        max-width: 8em;
+        width: max-content;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        position: absolute;
+
+        &:empty {
+            display: none;
+        }
+        &.top {
+            bottom: calc(var(--height) / 2 + var(--offset));
+            left: 0;
+            transform: translate(-50%, 0%);
+        }
+        &.bottom {
+            top: calc(var(--height) / 2 + var(--offset));
+            left: 0;
+            transform: translate(-50%, 0%);
+        }
+        &.left {
+            top: 0;
+            left: calc(var(--width) / 2 + var(--offset));
+            transform: translate(0%, -50%);
+        }
+        &.right {
+            top: 0;
+            right: calc(var(--width) / 2 + var(--offset));
+            transform: translate(0%, -50%);
+        }
+    }
+}
+
+/* tooltip's shape done with clip-path only */
+.tooltip {
+    --padding-y: 0.25em;
+    --padding-x: 0.5em;
+    --radius: 0.35em;
+    --arrow-size: 0.5em;
+    --t: 0%;
+    --b: 0%;
+    --l: 0%;
+    --r: 0%;
+    --py: var(--padding-y, 0.25em);
+    --px: var(--padding-x, 0.5em);
+
+    padding: var(--py) var(--px);
+
+    --rad: var(--radius, 0.25em);
+    --d1: 0% 0%;
+    --d2: 100% 0%;
+    --d3: 100% 100%;
+    --d4: 0% 100%;
+
+    --d1x: calc(0% + var(--rad)) 0%;
+    --d1y: 0% calc(0% + var(--rad));
+    --d2x: calc(100% - var(--rad)) 0%;
+    --d2y: 100% calc(0% + var(--rad));
+    --d3x: calc(100% - var(--rad)) 100%;
+    --d3y: 100% calc(100% - var(--rad));
+    --d4x: calc(0% + var(--rad)) 100%;
+    --d4y: 0% calc(100% - var(--rad));
+
+    --crn1: calc(var(--rad) / 2);
+    --crn2: calc(var(--rad) / 7.5);
+    --d1xs: calc(0% + var(--rad) + var(--l)) calc(0% + var(--t));
+    --d15sX: calc(0% + var(--crn1) + var(--l)) calc(0% + var(--crn2) + var(--t));
+    --d15sY: calc(0% + var(--crn2) + var(--l)) calc(0% + var(--crn1) + var(--t));
+    --d1ys: calc(0% + var(--l)) calc(0% + var(--rad) + var(--t));
+    --d2xs: calc(100% - var(--rad) - var(--r)) calc(0% + var(--t));
+    --d25sX: calc(100% - var(--crn1) - var(--r))
+        calc(0% + var(--crn2) + var(--t));
+    --d25sY: calc(100% - var(--crn2) - var(--r))
+        calc(0% + var(--crn1) + var(--t));
+    --d2ys: calc(100% - var(--r)) calc(0% + var(--rad) + var(--t));
+    --d3xs: calc(100% - var(--rad) - var(--r)) calc(100% - var(--b));
+    --d35sX: calc(100% - var(--crn1) - var(--r))
+        calc(100% - var(--crn2) - var(--b));
+    --d35sY: calc(100% - var(--crn2) - var(--r))
+        calc(100% - var(--crn1) - var(--b));
+    --d3ys: calc(100% - var(--r)) calc(100% - var(--rad) - var(--b));
+    --d4xs: calc(0% + var(--rad) + var(--l)) calc(100% - var(--b));
+    --d45sX: calc(0% + var(--crn1) + var(--l))
+        calc(100% - var(--crn2) - var(--b));
+    --d45sY: calc(0% + var(--crn2) + var(--l))
+        calc(100% - var(--crn1) - var(--b));
+    --d4ys: calc(0% + var(--l)) calc(100% - var(--rad) - var(--b));
+    _clip-path: polygon(var(--d1), var(--d2), var(--d3), var(--d4));
+
+    --corner1: var(--d1ys), var(--d15sY), var(--d15sX), var(--d1xs);
+    --corner2: var(--d2xs), var(--d25sX), var(--d25sY), var(--d2ys);
+    --corner3: var(--d3ys), var(--d35sY), var(--d35sX), var(--d3xs);
+    --corner4: var(--d4xs), var(--d45sX), var(--d45sY), var(--d4ys);
+    clip-path: polygon(
+        var(--corner1),
+        var(--corner2),
+        var(--corner3),
+        var(--corner4)
+    );
+
+    &.top {
+        --b: var(--arrow-size);
+        --cx: 50%;
+        --cy: calc(100% - var(--arrow-size));
+        --a1: calc(var(--cx) - var(--arrow-size) * 0.707) var(--cy);
+        --a2: var(--cx) calc(var(--cy) + var(--arrow-size) * 0.707);
+        --a3: calc(var(--cx) + var(--arrow-size) * 0.707) var(--cy);
+        --arrow-bottom: var(--a1), var(--a2), var(--a3);
+
+        padding-bottom: calc(var(--b) + var(--py));
+        clip-path: polygon(
+            var(--corner1),
+            var(--corner2),
+            var(--corner3),
+            var(--arrow-bottom),
+            var(--corner4)
+        );
+    }
+    &.bottom {
+        --t: var(--arrow-size);
+        --cx: 50%;
+        --cy: calc(0% + var(--arrow-size));
+        --a1: calc(var(--cx) - var(--arrow-size) * 0.707) var(--cy);
+        --a2: var(--cx) calc(var(--cy) - var(--arrow-size) * 0.707);
+        --a3: calc(var(--cx) + var(--arrow-size) * 0.707) var(--cy);
+        --arrow-top: var(--a1), var(--a2), var(--a3);
+
+        padding-top: calc(var(--t) + var(--py));
+        clip-path: polygon(
+            var(--corner1),
+            var(--arrow-top),
+            var(--corner2),
+            var(--corner3),
+            var(--corner4)
+        );
+    }
+    &.right {
+        --r: var(--arrow-size);
+        --cx: calc(100% - var(--arrow-size));
+        --cy: 50%;
+        --a1: var(--cx) calc(var(--cy) - var(--arrow-size) * 0.707);
+        --a2: calc(var(--cx) + var(--arrow-size) * 0.707) var(--cy);
+        --a3: var(--cx) calc(var(--cy) + var(--arrow-size) * 0.707);
+        --arrow-right: var(--a1), var(--a2), var(--a3);
+
+        padding-right: calc(var(--r) + var(--px));
+        clip-path: polygon(
+            var(--corner1),
+            var(--corner2),
+            var(--arrow-right),
+            var(--corner3),
+            var(--corner4)
+        );
+    }
+    &.left {
+        --l: var(--arrow-size);
+        --cx: calc(0% + var(--arrow-size));
+        --cy: 50%;
+        --a1: var(--cx) calc(var(--cy) + var(--arrow-size) * 0.707);
+        --a2: calc(var(--cx) - var(--arrow-size) * 0.707) var(--cy);
+        --a3: var(--cx) calc(var(--cy) - var(--arrow-size) * 0.707);
+        --arrow-left: var(--a1), var(--a2), var(--a3);
+
+        padding-left: calc(var(--l) + var(--px));
+        clip-path: polygon(
+            var(--arrow-left),
+            var(--corner1),
+            var(--corner2),
+            var(--corner3),
+            var(--corner4)
+        );
+    }
+}

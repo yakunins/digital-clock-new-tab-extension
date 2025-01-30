@@ -7,6 +7,7 @@ import {
     SliderThumb,
     SliderTrack,
 } from "react-aria-components";
+
 import "./slider.css";
 
 export type Slider = Omit<AriaSliderProps, "onChange"> & {

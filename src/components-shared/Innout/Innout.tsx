@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, CSSProperties } from "react";
+
 import "./innout.css";
 
 type Stage = {
@@ -59,12 +60,12 @@ export const Innout = ({
     const [stage, setStage] = useState<number>(out ? 0 : lastStage);
     const t = useRef<ReturnType<typeof setTimeout>>();
 
-    const durationsObj = {} as any;
+    const durations = {} as any;
     stages.forEach((i, idx) => {
-        durationsObj[`--stage-${idx}-duration`] = i.duration + "ms";
+        durations[`--stage-${idx}-duration`] = i.duration + "ms";
     });
     const styles = {
-        ...durationsObj,
+        ...durations,
         ...rest.style,
     } as CSSProperties;
 
