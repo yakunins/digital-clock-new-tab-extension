@@ -1,6 +1,8 @@
 # Digital Clock in a New Tab
 
-<img src="images/digital-clock-extension-how-it-works.gif" width="768" alt="digital clock extension: how it works" />
+<a href="https://www.youtube.com/watch?feature=player_embedded&v=yAkfVipe3VQ" target="_blank">
+ <img src="https://i3.ytimg.com/vi/yAkfVipe3VQ/maxresdefault.jpg" alt="how it work" width="240" height="180" />
+</a>
 
 ## Installation
 
