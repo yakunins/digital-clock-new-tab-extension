@@ -4,7 +4,7 @@
 
 ## Installation
 
--   [Chrome](https://chromewebstore.google.com/detail/digital-clock-in-a-new-ta/jigadjkijhkamfmjfjnjlgojkdednakp)
--   Firefox (TBD)
+- [Chrome](https://chromewebstore.google.com/detail/digital-clock-in-a-new-ta/jigadjkijhkamfmjfjnjlgojkdednakp)
+- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/digital-clock-in-a-new-tab/)
 
 Enjoy!
