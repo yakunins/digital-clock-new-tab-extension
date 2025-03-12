@@ -14,6 +14,9 @@
         top: auto;
         bottom: 0;
     }
+}
+
+@media (pointer: coarse) and (orientation: portrait) {
     .settings-overlay {
         --c-1: var(--bg-color-2); /* upper strip */
         --c-2: var(--bg-color-3); /* lower strip */
@@ -29,6 +32,20 @@
             --h1: calc(23.5% + 5%);
             --h2: calc(23.5%);
             --h3: calc(53.5% - 5%);
+        }
+    }
+}
+
+@media (pointer: coarse) and (orientation: landscape) {
+    .settings-overlay {
+        --scroll-height: 80vh;
+        top: auto;
+        bottom: calc(var(--button-size) * 0.9);
+    }
+    [data-settings-opened="true"] {
+        .content {
+            height: 100vh;
+            width: 60vw;
         }
     }
 }
