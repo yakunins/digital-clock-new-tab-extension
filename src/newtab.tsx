@@ -8,6 +8,7 @@ import {
     CustomStyle,
 } from "./components";
 import "./global.css";
+import "./mobile.css";
 
 // const initDate = new Date("Wednesday 28 September 2022");
 
@@ -15,11 +16,12 @@ const root = createRoot(document.getElementById("root")!);
 const useStrict = true;
 const app = (
     <>
-        <BackgroundFill>
-            <SettingsDropdown />
+        <BackgroundFill />
+        <div className="content flex-center-col">
             <Clock />
             <DateInfo />
-        </BackgroundFill>
+        </div>
+        <SettingsDropdown />
         <CustomStyle />
     </>
 );

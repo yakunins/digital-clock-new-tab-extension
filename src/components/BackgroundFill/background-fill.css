@@ -5,9 +5,11 @@
     --h3: calc(33.5% - 5%);
     --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.616' numOctaves='1' stitchTiles='stitch' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E");
 
-    position: relative;
+    overflow: hidden;
+    position: absolute;
     width: 100vw;
     height: 100vh;
+    z-index: 0;
 
     display: flex;
     justify-content: center;
@@ -20,13 +22,6 @@
         bottom: 0;
         left: 0;
         right: 0;
-    }
-
-    .content.layer {
-        display: flex;
-        flex-direction: column;
-        place-items: center;
-        place-content: center;
     }
 
     .effects.layer {
@@ -82,7 +77,7 @@
     }
     .blur.layer *,
     .gradient.layer * {
-        transition-property: background-color;
-        transition-duration: 0.35s;
+        transition-property: background-color, height;
+        transition-duration: var(--duration, 0.35s);
     }
 }

@@ -1,6 +1,6 @@
 .date-info {
-    --date-info-color: var(--color, currentColor);
-    --date-size: calc(1.6em * var(--scale));
+    --date-color: var(--color, currentColor);
+    --date-size: max(2vmin, 1.5rem);
     --gap: 0.5em;
 
     font-family: "Work Sans", WorkSansEmbedded, "Segoe UI", Segoe, sans-serif;
@@ -9,22 +9,14 @@
     margin: calc(var(--date-size) + 1.5vmin) 0;
     transform: scaleX(0.98);
     opacity: 0.75;
-    height: 2em;
-    width: 50vw;
-
-    .formatted-date {
-        position: absolute;
-        width: 100%;
-    }
 
     .date-long,
     .date-short {
-        color: var(--date-info-color);
-        display: flex;
+        color: var(--date-color);
         font-weight: 200;
-        gap: var(--gap);
-        align-items: center;
-        justify-content: center;
+        text-align: center;
+        height: 0;
+        overflow: visible;
     }
 
     /* numbers style */
@@ -33,6 +25,7 @@
         font-style: normal;
         line-height: 100%;
         font-weight: 100;
+        vertical-align: -0.065em;
     }
     .date-short {
         text-transform: uppercase;

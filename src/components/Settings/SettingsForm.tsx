@@ -127,6 +127,7 @@ export const SettingsForm = observer(
                 </Collapsible>
                 <div className="reset-to-defaults">
                     <button
+                        disabled={Settings.hasChanges ? false : true}
                         className="danger button-plus"
                         onClick={resetToDefaults}
                     >

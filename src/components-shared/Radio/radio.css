@@ -10,7 +10,6 @@
     --border-color: var(--accent-color);
 
     --rad: calc(var(--radius) + 0.125rem * 0.5);
-    --duration: 0.2s;
     --padding: var(var(--padding), 0.5rem); /* 8px */
 
     .fieldset-style-wrapper {
@@ -62,7 +61,7 @@
             &,
             &:before {
                 transition-property: background-color, opacity;
-                transition-duration: var(--duration);
+                transition-duration: var(--duration, 0.2s);
             }
 
             &:before {
@@ -140,7 +139,7 @@
                 width: var(--checked-width);
                 height: 100%;
                 transition-property: left, width, border-radius;
-                transition-duration: var(--duration);
+                transition-duration: var(--duration, 0.2s);
             }
         }
 

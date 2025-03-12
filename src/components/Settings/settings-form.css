@@ -1,13 +1,14 @@
 .settings-form {
-    --padding: var(var(--padding), 0.5rem); /* 8px */
+    --padding: var(var(--padding), 0.5em); /* 8px */
 
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.75em;
     min-width: 15em;
 
     .collapsible {
-        transition: margin-bottom 0.2s;
+        transition-property: margin-bottom;
+        transition-duration: var(--duration, 0.2s);
 
         &.collapsed {
             margin-bottom: calc(var(--padding) * -1);
@@ -16,9 +17,6 @@
 }
 
 .reset-to-defaults {
-    margin-top: var(--padding);
-    margin-bottom: var(--padding);
-
     button {
         color: var(--primary-color);
         cursor: pointer;
@@ -27,19 +25,29 @@
         border-radius: var(--radius);
         font-family: var(--typeface);
         line-height: 100%;
+        margin-top: var(--padding);
+        margin-bottom: var(--padding);
         text-decoration: underline;
         text-decoration-color: color-mix(
             in srgb,
             currentColor,
             transparent 65%
         );
-        text-decoration-thickness: calc(0.125rem * 0.5);
-        text-underline-offset: 0.125rem;
-        transition: opacity 0.25s;
+        text-decoration-thickness: calc(0.125em * 0.5);
+        text-underline-offset: 0.125em;
+        transition-property: opacity, color, text-decoration-color;
+        transition-duration: var(--duration, 0.25s);
         padding: 0;
 
         &:hover {
             opacity: 0.8;
+        }
+        &.danger:disabled,
+        &:disabled {
+            color: var(--primary-color);
+            opacity: 0.4;
+            text-decoration-color: transparent;
+            cursor: default;
         }
     }
 }

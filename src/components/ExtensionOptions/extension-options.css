@@ -9,7 +9,7 @@ body.extension-popup {
 
 body.extension-options-modal {
     .extension-options {
-        margin-top: 0rem;
+        margin-top: 0em;
     }
 }
 
@@ -24,6 +24,6 @@ body.extension-options-modal {
 }
 
 .copy-info {
-    margin-top: var(--s-4px);
-    margin-bottom: var(--s-16px);
+    margin-top: calc(var(--padding) * 1.25);
+    padding-bottom: calc(var(--padding) * 0.25);
 }

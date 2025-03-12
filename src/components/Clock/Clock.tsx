@@ -4,6 +4,7 @@ import { Digit, BlinkingDigit, Blinker } from "react-led-digit";
 import { SettingsStore as Settings } from "../";
 import { getTimeString, getLocale } from "../../utils";
 import { Innout } from "../../components-shared";
+
 import "./clock.css";
 
 const blinker = new Blinker(); // singleton
@@ -38,11 +39,14 @@ export const Clock = observer(
             Settings.segmentShape === "natural"
                 ? `calc(${thickness}em * .25)`
                 : undefined;
+
+        const pillSpacing = `calc(${thickness}em * .35)`;
+        const rectSpacing = `calc(${thickness}em * .75)`;
         const spacing =
             Settings.segmentShape === "pill"
-                ? `calc(${thickness}em * .35)`
+                ? pillSpacing
                 : Settings.segmentShape === "rect"
-                  ? `calc(${thickness}em * .75)`
+                  ? rectSpacing
                   : undefined;
 
         const segmentStyle = {

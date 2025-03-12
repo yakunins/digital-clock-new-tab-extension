@@ -18,7 +18,8 @@
 
             svg {
                 transform: rotate(0deg);
-                transition: transform 0.2s;
+                transition-property: transform;
+                transition-duration: var(--duration, 0.2s);
             }
         }
         &:focus-visible {

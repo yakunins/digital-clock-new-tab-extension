@@ -9,7 +9,6 @@
         "label output"
         "track track";
     grid-template-columns: 1fr auto;
-    max-width: 300px;
 
     .react-aria-Label {
         grid-area: label;
@@ -46,7 +45,7 @@
         forced-color-adjust: none;
         outline: var(--s-1px) solid var(--accent-color);
         transition-property: background-color, border, border-color;
-        transition-duration: 0.2s;
+        transition-duration: var(--duration, 0.2s);
 
         /* +2px to hover area size */
         &::after {
@@ -63,7 +62,7 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            border-radius: 1rem;
+            border-radius: 1em;
             outline: var(--s-2px) solid var(--accent-color-76);
             outline-color: transparent;
         }
@@ -89,12 +88,12 @@
         width: 100%;
 
         .react-aria-SliderTrack {
-            height: 1.25rem;
+            height: 1.25em;
             width: 100%;
 
             &:before {
                 opacity: 0.35;
-                height: 0.25rem;
+                height: 0.25em;
                 width: 100%;
                 top: 50%;
                 transform: translateY(-50%);

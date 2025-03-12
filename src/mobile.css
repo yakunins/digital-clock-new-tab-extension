@@ -1,0 +1,34 @@
+@media (pointer: coarse) {
+    :root {
+        font-size: 4.5vmin;
+    }
+    .clock {
+        font-size: 2.5vmin;
+    }
+    .date-info {
+        font-size: 5vmin;
+        margin: 2.5vmin 0;
+    }
+    .settings-toggle.button,
+    .settings-dropdown {
+        top: auto;
+        bottom: 0;
+    }
+    .settings-overlay {
+        --c-1: var(--bg-color-2); /* upper strip */
+        --c-2: var(--bg-color-3); /* lower strip */
+        --scroll-height: 50vh;
+        top: auto;
+        bottom: calc(var(--button-size) * 0.9);
+    }
+    [data-settings-opened="true"] {
+        .content {
+            height: 60vh;
+        }
+        .background-fill {
+            --h1: calc(23.5% + 5%);
+            --h2: calc(23.5%);
+            --h3: calc(53.5% - 5%);
+        }
+    }
+}

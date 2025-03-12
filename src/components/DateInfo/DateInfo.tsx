@@ -73,7 +73,7 @@ type FormattedDateProps = {
 };
 const FormattedDate = memo(({ dateString, format }: FormattedDateProps) => {
     return (
-        <div className={`formatted-date date-${format}`}>
+        <div className={`formatted date-${format}`}>
             <WrapNumbers text={dateString} />
         </div>
     );

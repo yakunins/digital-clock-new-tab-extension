@@ -1,7 +1,7 @@
 .settings-dropdown {
     --button-size: 2.75em;
     --icon-size: 1.35em;
-    --padding: var(var(--padding), 0.5rem);
+    --padding: var(var(--padding), 0.5em);
 
     position: absolute;
     right: 0;
@@ -51,7 +51,7 @@
         border-radius: 100rem;
         filter: blur(0.5em);
         transition-property: opacity;
-        transition-duration: 0.5s;
+        transition-duration: var(--duration, 0.25s);
         z-index: 0;
     }
     &:hover {
@@ -69,19 +69,19 @@
     --c-1: var(--bg-color-1); /* upper strip */
     --c-2: var(--bg-color-3); /* lower strip */
     --mix-1: white;
-    --c-grad-01: color-mix(in srgb, var(--c-1), var(--mix-1) 50%);
-    --c-grad-02: color-mix(in srgb, var(--c-2), var(--mix-1) 50%);
+    --c-grad-01: color-mix(in srgb, var(--c-1), var(--mix-1) 65%);
+    --c-grad-02: color-mix(in srgb, var(--c-2), var(--mix-1) 65%);
     --mix-2: transparent;
     --c-grad-11: color-mix(in srgb, var(--c-grad-01), var(--mix-2) 17.5%);
     --c-grad-12: color-mix(in srgb, var(--c-grad-02), var(--mix-2) 17.5%);
-    --shadow-border: 0 0 0.125rem rgba(0, 0, 0, 0.05);
-    --shadow-dark-s: 0 0.2rem 2rem rgba(0, 0, 0, 0.05);
-    --shadow-dark-l: 0 0.6rem 6rem rgba(0, 0, 0, 0.05);
+    --shadow-border: 0 0 0.125em rgba(0, 0, 0, 0.05);
+    --shadow-dark-s: 0 0.2em 2em rgba(0, 0, 0, 0.05);
+    --shadow-dark-l: 0 0.6em 6em rgba(0, 0, 0, 0.05);
 
     --scroll-height: 75vh;
     --scroll-gradient-size: 0vh;
 
-    backdrop-filter: saturate(125%) blur(0.25rem);
+    backdrop-filter: saturate(125%) blur(0.25em);
     background: linear-gradient(-10deg, var(--c-grad-12), var(--c-grad-11));
     border-radius: calc(var(--radius) * 1.5);
     box-shadow: var(--shadow-border), var(--shadow-dark-s), var(--shadow-dark-l);

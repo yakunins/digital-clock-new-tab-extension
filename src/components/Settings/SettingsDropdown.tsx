@@ -10,33 +10,39 @@ const initialOpened = sessionStorage.getItem(sessionStorageItem) === "true";
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const SettingsDropdown = ({ ...rest }: DivProps) => {
-    const settingsRef = useRef<HTMLDivElement>(null);
+    const dropdownElement = useRef<HTMLDivElement>(null);
     const [opened, setOpened] = useState(initialOpened);
 
     const toggle = () => setOpened(!opened);
     const close = useCallback(() => setOpened(false), []);
     const handleEscape = (e: KeyboardEvent) => e.key === "Escape" && toggle();
     const handleClickOutside = (e: MouseEvent) => {
-        if (e?.button !== 0) return; // detect left mouse button
-        if (!settingsRef.current?.contains(e.target as any)) {
+        if (e?.button !== 0) return; // left mouse button
+        if (!dropdownElement.current?.contains(e.target as any)) {
             close();
         }
     };
-    const handleFocus = () => {};
+    const handleEffects = () => {
+        sessionStorage.setItem(sessionStorageItem, opened.toString());
+        if (!dropdownElement.current) return;
+        const root = dropdownElement.current.closest("#root");
+        if (root instanceof HTMLElement)
+            root.dataset.settingsOpened = opened.toString();
+    };
+
+    useEffect(handleEffects, [opened]);
 
     useEffect(() => {
-        sessionStorage.setItem(sessionStorageItem, opened.toString());
-        document.addEventListener("focus", handleFocus);
         document.addEventListener("keydown", handleEscape);
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("keydown", handleEscape);
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [opened]);
+    }, []);
 
     return (
-        <div {...rest} className="settings-dropdown" ref={settingsRef}>
+        <div {...rest} className="settings-dropdown" ref={dropdownElement}>
             <SetActiveStore origin="tab" />
             <SettingsToggleButton onClick={toggle} opened={opened} />
             <Innout out={!opened}>
