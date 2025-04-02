@@ -1,6 +1,7 @@
 .clock {
     --clock-color: var(--color, currentColor);
-    --clock-frame-offset: calc(var(--clock-font-size) * -1);
+    --clock-font-size: 1rem;
+    --clock-frame-offset: calc(var(--clock-font-size) * -2.5);
     --clock-frame-opacity: 0.1;
     --clock-glow-offset: calc(var(--clock-font-size) * -1);
     --clock-gap: calc(var(--thickness, 0.75em) * 0.5 + 0.5em);
@@ -21,14 +22,15 @@
 
     color: var(--clock-color);
     display: flex;
-    font-size: 1rem;
+    font-size: var(--clock-font-size);
     gap: var(--clock-gap);
     margin-bottom: calc(2 * var(--clock-gap));
     position: relative;
-    transform: skew(-2deg, -1deg);
+    transform: rotate3d(1, -1, 0, -2deg) rotate3d(-1, 1, 0, 16deg)
+        rotate3d(0, 0, 1, 0.25deg);
 
     .clock-frame {
-        border: 1px solid var(--clock-color);
+        border: var(--s-1px) solid var(--clock-color);
         border-radius: calc(-1 * var(--clock-frame-offset) + 0.5em);
         opacity: var(--clock-frame-opacity, 0.2);
         position: absolute;
@@ -66,10 +68,6 @@
     .digit {
         filter: drop-shadow(0 0 calc(var(--glow-size) / 2) var(--glow-color-25))
             blur(var(--blur-size));
-
-        .segment {
-            will-change: initial;
-        }
     }
 
     .digit.ampm,
@@ -85,7 +83,7 @@
             blur(var(--blur-size));
     }
 
-    .in-n-out {
+    .innout {
         &.fade-in,
         &.fade-out {
             transition-property: opacity;
@@ -128,7 +126,7 @@
         }
     }
     .digit.ampm,
-    .in-n-out {
+    .innout {
         transition-property: margin-right, margin-left;
         transition-duration: var(--stage-0-duration, 0.2s);
     }

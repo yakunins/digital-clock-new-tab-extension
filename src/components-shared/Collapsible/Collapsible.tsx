@@ -27,13 +27,15 @@ export const Collapsible = ({
         sessionStorageId,
         initialCollapsed
     );
-    const [collapsing, setCollapsing] = React.useState(false);
+    const [fading, setFading] = React.useState(false);
 
     const handleClick = (e: React.SyntheticEvent) => {
         e.preventDefault();
-        if (!collapsing && !collapsed) {
-            setCollapsing(true);
-            setTimeout(() => setCollapsing(false), 250);
+        if (!fading && !collapsed) {
+            setFading(true); // fading out
+            setTimeout(() => {
+                setFading(false);
+            }, 250); // animation duration
         }
         setCollapsed(!collapsed);
     };
@@ -41,10 +43,10 @@ export const Collapsible = ({
     return (
         <details
             {...rest}
-            open={!collapsed || collapsing}
+            open={!collapsed || fading}
             className={clsx(
                 "collapsible",
-                collapsed && !collapsing ? "collapsed" : "expanded",
+                collapsed && !fading ? "collapsed" : "expanded",
                 rest.className
             )}
         >
@@ -52,7 +54,9 @@ export const Collapsible = ({
                 {icon}
                 {label}
             </summary>
-            <Innout out={collapsed}>{children}</Innout>
+            <Innout scrollIntoView out={collapsed}>
+                {children}
+            </Innout>
         </details>
     );
 };

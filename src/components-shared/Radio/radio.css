@@ -5,7 +5,7 @@
     --s-4px: 0.25rem;
     --s-6px: 0.375rem;
 
-    --accent-color: var(--primary-color, currentColor);
+    --accent-color: var(--text-color, currentColor);
     --fill-color: color-mix(in srgb, var(--accent-color), transparent 90%);
     --border-color: var(--accent-color);
 
@@ -37,7 +37,9 @@
         .radio-button {
             flex-grow: 1;
         }
-        .radio-button label {
+
+        .radio-button > .tooltip-anchor,
+        .radio-button > label {
             --hover-color: color-mix(
                 in srgb,
                 var(--fill-color),
@@ -54,9 +56,12 @@
             padding: calc(var(--padding) * 1.5);
             padding-top: calc(var(--padding) * 1.5 - var(--s-1px));
             position: relative;
-            text-align: center;
             user-select: none;
             z-index: 1;
+
+            & > * {
+                text-align: center;
+            }
 
             &,
             &:before {
@@ -93,16 +98,15 @@
                         transparent 100%
                     );
             }
-            &:hover {
-                &:before {
-                    opacity: 1;
-                }
+            &:hover:before {
+                opacity: 1;
             }
         }
-        .checked label,
-        .checked label:hover {
+        .checked.radio-button > .tooltip-anchor,
+        .checked.radio-button > label {
             cursor: default;
-            &:before {
+
+            &:hover:before {
                 opacity: 0;
             }
         }
@@ -130,24 +134,21 @@
 
             &:after {
                 border-radius: var(--rad);
-                box-shadow:
-                    0 0 0 100vmax var(--fill-color),
-                    /* fill */ inset 0 0 0 var(--s-1px) var(--border-color);
+                border: var(--s-1px) solid var(--border-color);
+                box-shadow: 0 0 0 100vmax var(--fill-color);
                 content: "";
                 position: absolute;
                 left: var(--checked-left);
                 width: var(--checked-width);
                 height: 100%;
+                box-sizing: border-box;
                 transition-property: left, width, border-radius;
                 transition-duration: var(--duration, 0.2s);
             }
         }
 
         &:focus-within .checked-indicator:after {
-            /* focus ring */
-            box-shadow:
-                0 0 0 100vmax var(--fill-color),
-                inset 0 0 0 var(--s-2px) var(--border-color);
+            border: var(--s-2px) solid var(--border-color); /* focus ring */
         }
     }
 }

@@ -13,27 +13,31 @@ export const getLocaleAmpm = () =>
 export const getTimezone = () =>
     Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-// format: "Wednesday 28 September 2022"
+// output format: "Wednesday 28 September 2022"
 export const getDateString = (
-    date = new Date(),
-    locale = getLocale()
-): string => {
-    const now = date || new Date();
-    const weekday = now.toLocaleString(locale, { weekday: "long" });
-    const day = now.toLocaleString(locale, { day: "numeric" });
-    const month = now.toLocaleString(locale, { month: "long" });
-    const year = now.toLocaleString(locale, { year: "numeric" });
-    return `${weekday} ${day} ${month} ${year}`;
+    locale = getLocale(),
+    format: "none" | "long" | "short" = "long",
+    timeZoneShift: number = 0, // minutes
+    date: Date = new Date()
+) => {
+    const d = new Date(date);
+    d.setTime(date.getTime() + timeZoneShift * 60 * 1000);
+    return getLocaleString(d, locale, format);
 };
 
-// format: "01:23 pm" or "13:23"
-export const getTimeString = (locale = getLocale()): string => {
-    const now = new Date();
+// output format: "01:23 pm" or "13:23"
+export const getTimeString = (
+    locale = getLocale(),
+    timeZoneShift: number = 0, // minutes
+    date: Date = new Date()
+): string => {
+    const d = new Date(date);
+    d.setTime(date.getTime() + timeZoneShift * 60 * 1000);
     const formatOptions: Intl.DateTimeFormatOptions = {
         hour: "2-digit",
         minute: "2-digit",
     };
-    return now.toLocaleTimeString(locale, formatOptions).toLowerCase();
+    return d.toLocaleTimeString(locale, formatOptions).toLowerCase();
 };
 
 export const popularLocales = [
@@ -121,4 +125,19 @@ const sumObj = (o1: unknown, o2: unknown) => {
     }
 
     return o2;
+};
+
+export const getLocaleString = (
+    date = new Date(),
+    locale = getLocale(),
+    format: "none" | "long" | "short" = "long"
+): string => {
+    if (format === "none") return date.toLocaleString(locale);
+
+    const localeString = date.toLocaleString(locale, {
+        weekday: format,
+        day: "numeric",
+        month: format,
+    });
+    return localeString;
 };

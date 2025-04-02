@@ -16,6 +16,9 @@
     width: 0; /* var(--width); */
     height: 0; /* var(--height); */
     opacity: var(--opacity);
+    filter: drop-shadow(
+        0 0 var(--s-1px) color-mix(in srgb, white, transparent 35%)
+    );
 
     .tooltip {
         background-color: black;

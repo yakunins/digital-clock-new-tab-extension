@@ -9,62 +9,63 @@
     z-index: 1000;
 }
 
-.settings-toggle.button {
-    background: none;
-    border: none;
-    border-radius: 100rem;
-    cursor: pointer;
-    height: var(--button-size);
-    width: var(--button-size);
-
+.settings-toggle {
     position: absolute;
     right: 0;
     top: 0;
 
-    display: flex;
-    place-content: center;
-    place-items: center;
-
-    .icon {
-        display: block;
-        position: absolute;
-        width: var(--icon-size);
-        height: var(--icon-size);
-        top: calc((var(--button-size) - var(--icon-size)) / 2);
-        left: calc((var(--button-size) - var(--icon-size)) / 2);
-    }
-
-    svg {
-        fill: var(--color);
-        width: 100%;
-        height: 100%;
-    }
-
-    .hover-layer {
-        background-color: var(--color);
-        opacity: 0;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+    .button {
+        background: none;
+        border: none;
         border-radius: 100rem;
-        filter: blur(0.5em);
-        transition-property: opacity;
-        transition-duration: var(--duration, 0.25s);
-        z-index: 0;
-    }
-    &:hover {
-        & .hover-layer {
-            opacity: 0.1;
+        cursor: pointer;
+        height: var(--button-size);
+        width: var(--button-size);
+
+        display: flex;
+        place-content: center;
+        place-items: center;
+
+        .icon {
+            display: block;
+            position: absolute;
+            width: var(--icon-size);
+            height: var(--icon-size);
+            top: calc((var(--button-size) - var(--icon-size)) / 2);
+            left: calc((var(--button-size) - var(--icon-size)) / 2);
+        }
+
+        svg {
+            fill: var(--color);
+            width: 100%;
+            height: 100%;
+        }
+
+        .hover-layer {
+            background-color: var(--color);
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 100rem;
+            filter: blur(0.5em);
+            transition-property: opacity;
+            transition-duration: var(--duration, 0.25s);
+            z-index: 0;
+        }
+        &:hover {
+            & .hover-layer {
+                opacity: 0.1;
+            }
+        }
+        &:focus-visible {
+            outline-color: var(--color, currentColor);
+            outline-offset: calc(var(--s-4px) * -1);
         }
     }
-    &:focus-visible {
-        outline-color: var(--color, currentColor);
-        outline-offset: calc(var(--s-4px) * -1);
-    }
 }
-
 .settings-overlay {
     --c-1: var(--bg-color-1); /* upper strip */
     --c-2: var(--bg-color-3); /* lower strip */
@@ -82,7 +83,11 @@
     --scroll-gradient-size: 0vh;
 
     backdrop-filter: saturate(125%) blur(0.25em);
-    background: linear-gradient(-10deg, var(--c-grad-12), var(--c-grad-11));
+    background-image: linear-gradient(
+        -10deg,
+        var(--c-grad-12),
+        var(--c-grad-11)
+    );
     border-radius: calc(var(--radius) * 1.5);
     box-shadow: var(--shadow-border), var(--shadow-dark-s), var(--shadow-dark-l);
 
@@ -93,7 +98,7 @@
     overflow: hidden;
     max-height: var(--scroll-height);
 
-    mask-image: linear-gradient(
+    _mask-image: linear-gradient(
         transparent 0%,
         black var(--scroll-gradient-size),
         black calc(100% - var(--scroll-gradient-size)),
@@ -103,6 +108,7 @@
     .scroll-wrapper {
         --padding-x: calc(var(--padding) * 2);
         --padding-y: calc(var(--padding) * 1.5 + var(--radius) * 0.5);
+
         padding: var(--padding-y) var(--padding-x);
         box-sizing: border-box;
         max-height: var(--scroll-height);

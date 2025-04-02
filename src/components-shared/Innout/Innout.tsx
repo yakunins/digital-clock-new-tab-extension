@@ -14,6 +14,7 @@ type Innout = DivProps & {
     out: boolean;
     stages?: Stages;
     minimumDuration?: number;
+    scrollIntoView?: boolean; // show full element on last stage of in animation
 };
 
 const unmountStages = [
@@ -52,13 +53,16 @@ export const Innout = ({
     out,
     stages = defaultStages,
     minimumDuration = 25,
+    scrollIntoView = false,
     ...rest
 }: Innout) => {
     const allStages = [...unmountStages, ...stages, ...mountStages];
     const lastStage = allStages.length - 1;
     const dir = out ? "out" : "in";
     const [stage, setStage] = useState<number>(out ? 0 : lastStage);
-    const t = useRef<ReturnType<typeof setTimeout>>();
+    const prevStage = useRef<number>(out ? 0 : lastStage);
+    const tid = useRef<ReturnType<typeof setTimeout>>();
+    const innoutWrapperElement = useRef<HTMLDivElement>(null);
 
     const durations = {} as any;
     stages.forEach((i, idx) => {
@@ -78,38 +82,60 @@ export const Innout = ({
         }
     }, [out, stage, stages.length]);
 
+    const handleScrollIntoView = () => {
+        if (!scrollIntoView) return;
+        if (stage === prevStage.current) return; // prevent scrollIntoView on render without staging
+        if (stage === lastStage) {
+            innoutWrapperElement.current?.scrollIntoView({
+                behavior: "smooth",
+            });
+        }
+    };
+
     function nextStage() {
         if (out) {
-            if (stage - 1 >= 0) setStage(stage - 1);
+            if (stage - 1 >= 0) {
+                prevStage.current = stage;
+                setStage(stage - 1);
+            }
         } else {
-            if (stage + 1 <= lastStage) setStage(stage + 1);
+            if (stage + 1 <= lastStage) {
+                prevStage.current = stage;
+                setStage(stage + 1);
+            }
         }
     }
 
     function scheduleNextStage() {
-        clearTimeout(t.current);
+        clearTimeout(tid.current);
         const duration =
             allStages[stage].duration === 0
                 ? 0
                 : allStages[stage].duration > minimumDuration
                   ? allStages[stage].duration
                   : minimumDuration;
-        t.current = setTimeout(() => {
+        tid.current = setTimeout(() => {
             nextStage();
         }, duration);
     }
 
     useEffect(() => {
         scheduleNextStage();
-        return () => clearTimeout(t.current);
+        return () => clearTimeout(tid.current);
     }, [out, stage, stages.length]);
 
+    useEffect(() => {
+        handleScrollIntoView();
+    }, [out, scrollIntoView, stage]);
+
     if (stage === 0) return null;
+
     return (
         <div
             {...rest}
+            className={`innout animation ${getClassName()}`}
             style={styles}
-            className={`in-n-out animation ${getClassName()}`}
+            ref={innoutWrapperElement}
         />
     );
 };

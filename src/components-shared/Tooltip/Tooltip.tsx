@@ -17,10 +17,12 @@ type DivProps = React.HTMLAttributes<HTMLDivElement>;
 export type Tooltip = DivProps & {
     children: React.ReactNode;
     text: React.ReactNode;
+    useClick?: boolean;
     useFocus?: boolean;
     useHover?: boolean;
-    useClick?: boolean;
+    useStopMove?: boolean;
     direction?: "top" | "bottom" | "left" | "right";
+    delay?: [number, number]; // [showDelay, hideDelay]
     offset?: string;
     autoFlip?: boolean;
     autoFlipDistance?: number;
@@ -32,7 +34,9 @@ export const Tooltip = ({
     useClick = false,
     useFocus = true,
     useHover = true,
+    useStopMove = true,
     direction = "top",
+    delay = [250, 125],
     offset = "0.1em",
     autoFlip = true,
     autoFlipDistance = 150,
@@ -52,11 +56,12 @@ export const Tooltip = ({
     const [dir, setDir] = React.useState(direction); // effective direction based on autoFlipOffset
 
     const hide = () => {
-        t.current = setTimeout(() => setHidden(true), 250);
+        t.current && clearTimeout(t.current);
+        t.current = setTimeout(() => setHidden(true), delay[1]);
     };
     const show = () => {
         t.current && clearTimeout(t.current);
-        setHidden(false);
+        t.current = setTimeout(() => setHidden(false), delay[0]);
     };
     const handleAutoFlip = () => {
         if (isOutside(ship, autoFlipDistance)) {
@@ -94,6 +99,16 @@ export const Tooltip = ({
             s?.removeEventListener("mouseout", hide);
         };
     }, [useHover]);
+
+    useEffect(() => {
+        const a = anchor?.current;
+        if (useStopMove) {
+            a?.addEventListener("mousemove", show);
+        }
+        return () => {
+            a?.removeEventListener("mousemove", show);
+        };
+    }, [useStopMove]);
 
     useEffect(() => {
         if (useFocus) focusWithin ? show() : hide();
@@ -141,7 +156,7 @@ export const Tooltip = ({
                     !hasFocusable && "focusable",
                     rest.className
                 )}
-                tabIndex={hasFocusable ? undefined : 0}
+                tabIndex={hasFocusable ? undefined : useFocus ? 0 : -1}
             >
                 {children}
             </div>

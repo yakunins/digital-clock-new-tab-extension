@@ -39,15 +39,17 @@ export const TextEditor = ({
             className={clsx(`text-editor`, className, errorMessage && "error")}
         >
             {label && <label htmlFor={id}>{label}</label>}
-            <textarea
-                lang="css"
-                rows={4}
-                spellCheck={false}
-                {...rest}
-                id={id}
-                onChange={onChangeFn}
-                value={text}
-            />
+            <div className="wrapper focusable">
+                <textarea
+                    lang="css"
+                    rows={4}
+                    spellCheck={false}
+                    {...rest}
+                    id={id}
+                    onChange={onChangeFn}
+                    value={text}
+                />
+            </div>
             {errorMessage && (
                 <div className="error message">{errorMessage}</div>
             )}

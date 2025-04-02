@@ -1,6 +1,6 @@
 import { makeObservable, observable, computed, action } from "mobx";
-import { getLocaleAmpm } from "../../utils";
-import { getId } from "../../utils";
+import { getLocaleAmpm } from "../utils";
+import { getId } from "../utils";
 
 import {
     storage as getStorage,
@@ -12,14 +12,15 @@ import {
 type Settings = {
     clockType: "24-hour" | "ampm";
     colorSchema: "sky" | "random" | "fixed";
-    fixedColors: string;
     css: string;
     dateStyle: "long" | "short" | "none";
+    favicon: string;
+    fixedColors: string;
     segmentLength: number;
     segmentThickness: number;
     segmentShape: "diamond" | "natural" | "rect" | "pill";
     status?: string;
-
+    timezone: number;
     storeId: string; // multiple stores handling
     origin: "unknown" | "tab" | "popup" | "options";
     isActive: boolean; // store belongs to last active tab
@@ -34,16 +35,17 @@ export type SettingsStore = Settings & {
     setLength: (val: Settings["segmentLength"]) => void;
     setThickness: (val: Settings["segmentThickness"]) => void;
     setShape: (val: Settings["segmentShape"]) => void;
-    setBackgroundRepaint: () => void;
+    setTimezone: (minutes: Settings["timezone"]) => void;
+    updateSkyBackground: () => void;
     reset: () => void;
 };
 
 const config = {
-    skyBackgroundRepaintPeriod: 30 * 1000, // update each 30 seconds
+    skyUpdatePeriod: 5000, // update period of natural sky background
     storageDebouncePeriod: 250,
 };
 const initialCss = `:root {
-    --color: rgba(168, 255, 236, 1);
+    --color: rgba(198, 255, 240, 1);
     --bg-color: black;
     --bg-opacity: 0;
   }
@@ -58,9 +60,11 @@ const initial: Settings = {
     css: initialCss,
     fixedColors: JSON.stringify(["#ffe8de", "#6e7cca", "#860d0e", "#21022a"]),
     dateStyle: "long",
+    favicon: "browser_default",
     segmentLength: 30,
     segmentThickness: 40,
     segmentShape: "diamond",
+    timezone: 0, // https://en.wikipedia.org/wiki/Time_zone
 
     storeId: getId(),
     origin: "unknown",
@@ -71,9 +75,11 @@ const reset: Partial<Settings> = {
     clockType: initial.clockType,
     css: initial.css,
     dateStyle: initial.dateStyle,
+    favicon: initial.favicon,
     segmentLength: initial.segmentLength,
     segmentShape: initial.segmentShape,
     segmentThickness: initial.segmentThickness,
+    timezone: initial.timezone,
 };
 
 class ExtensionSettingsStore implements SettingsStore {
@@ -82,10 +88,12 @@ class ExtensionSettingsStore implements SettingsStore {
     css = initial.css;
     dateStyle = initial.dateStyle;
     fixedColors = initial.fixedColors;
+    favicon = initial.favicon;
     segmentLength = initial.segmentLength;
     segmentThickness = initial.segmentThickness;
     segmentShape = initial.segmentShape;
-    skyBackgroundRepaintTimer = new Date();
+    timezone = initial.timezone;
+    skyBackgroundTime = new Date();
 
     storeId = initial.storeId; // handling different SettingsStores per newtab.html, popup.html and options.html
     origin = initial.origin;
@@ -95,31 +103,35 @@ class ExtensionSettingsStore implements SettingsStore {
 
     constructor() {
         makeObservable(this, {
-            skyBackgroundRepaintTimer: observable,
+            skyBackgroundTime: observable,
             clockType: observable,
             colorSchema: observable,
             css: observable,
             dateStyle: observable,
+            favicon: observable,
             hasChanges: computed,
             segmentLength: observable,
             segmentThickness: observable,
             segmentShape: observable,
-            setBackgroundRepaint: action,
+            timezone: observable,
+            updateSkyBackground: action,
             setClockType: action,
             setColorSchema: action,
             setCss: action,
             setDateStyle: action,
             setFixedColors: action,
+            setFavicon: action,
             setLength: action,
             setThickness: action,
             setShape: action,
+            setTimezone: action,
             status: computed,
             reset: action,
         });
 
         setInterval(() => {
-            this.setBackgroundRepaint();
-        }, config.skyBackgroundRepaintPeriod);
+            this.updateSkyBackground();
+        }, config.skyUpdatePeriod);
 
         this.storage
             .get({ clockType: this.clockType })
@@ -127,6 +139,18 @@ class ExtensionSettingsStore implements SettingsStore {
         this.storage
             .get({ colorSchema: this.colorSchema })
             .then((res) => this.setColorSchema(res, false));
+        this.storage
+            .get({ css: this.css })
+            .then((res) => this.setCss(res, false));
+        this.storage
+            .get({ dateStyle: this.dateStyle })
+            .then((res) => this.setDateStyle(res, false));
+        this.storage
+            .get({ favicon: this.favicon })
+            .then((res) => this.setFavicon(res, false));
+        this.storage
+            .get({ fixedColors: this.fixedColors })
+            .then((res) => this.setFixedColors(res, false));
         this.storage
             .get({ segmentLength: this.segmentLength })
             .then((res) => this.setLength(res, false));
@@ -137,28 +161,25 @@ class ExtensionSettingsStore implements SettingsStore {
             .get({ segmentShape: this.segmentShape })
             .then((res) => this.setShape(res, false));
         this.storage
-            .get({ css: this.css })
-            .then((res) => this.setCss(res, false));
-        this.storage
-            .get({ dateStyle: this.dateStyle })
-            .then((res) => this.setDateStyle(res, false));
-        this.storage
-            .get({ fixedColors: this.fixedColors })
-            .then((res) => this.setFixedColors(res, false));
+            .get({ timezone: this.timezone })
+            .then((res) => this.setTimezone(res, false));
 
         this.storage.addListener(this.handleStorageChange.bind(this));
     }
 
     get status(): string {
         const status = `
-            backgroundRepaintTimer: ${this.skyBackgroundRepaintTimer},
+            skyBackgroundTime: ${this.skyBackgroundTime},
             clockType: ${this.clockType},
             colorSchema: ${this.colorSchema},
+            css: ${this.css},
             dateStyle: ${this.dateStyle},
+            favicon: ${this.favicon}
+            fixedColors: ${this.fixedColors}
             segmentLength: ${this.segmentLength},
             segmentShape: ${this.segmentShape},
             segmentThickness: ${this.segmentThickness},
-            fixedColors: ${this.fixedColors}
+            timezone: ${this.timezone},            
             origin: ${this.origin}
         `;
         return status;
@@ -179,9 +200,11 @@ class ExtensionSettingsStore implements SettingsStore {
             if (key === "css") this.setCss(newValue, false);
             if (key === "dateStyle") this.setDateStyle(newValue, false);
             if (key === "fixedColors") this.setFixedColors(newValue, false);
+            if (key === "favicon") this.setFavicon(newValue, false);
             if (key === "segmentLength") this.setLength(newValue, false);
             if (key === "segmentShape") this.setShape(newValue, false);
             if (key === "segmentThickness") this.setThickness(newValue, false);
+            if (key === "timezone") this.setTimezone(newValue, false);
         }
     }
 
@@ -189,13 +212,14 @@ class ExtensionSettingsStore implements SettingsStore {
         if (this.clockType === val) return;
         this.clockType = val;
         if (useStorage)
-            this.storage.throttledSet({ clockType: this.clockType });
+            this.storage.debouncedSet({ clockType: this.clockType });
     }
 
     setColorSchema(val: Settings["colorSchema"], useStorage = true) {
         if (this.colorSchema === val) return;
         this.colorSchema = val;
-        if (useStorage) this.storage.set({ colorSchema: this.colorSchema });
+        if (useStorage)
+            this.storage.debouncedSet({ colorSchema: this.colorSchema });
     }
 
     setLength(val: Settings["segmentLength"], useStorage = true) {
@@ -204,7 +228,7 @@ class ExtensionSettingsStore implements SettingsStore {
             ? (this.segmentLength = val)
             : (this.segmentLength = initial.segmentLength);
         if (useStorage)
-            this.storage.throttledSet({ segmentLength: this.segmentLength });
+            this.storage.debouncedSet({ segmentLength: this.segmentLength });
     }
 
     setThickness(val: Settings["segmentThickness"], useStorage = true) {
@@ -214,7 +238,7 @@ class ExtensionSettingsStore implements SettingsStore {
             ? (this.segmentThickness = val)
             : (this.segmentThickness = initial.segmentThickness);
         if (useStorage)
-            this.storage.throttledSet({
+            this.storage.debouncedSet({
                 segmentThickness: this.segmentThickness,
             });
     }
@@ -223,35 +247,48 @@ class ExtensionSettingsStore implements SettingsStore {
         if (this.segmentShape === val) return;
         this.segmentShape = val;
         if (useStorage)
-            this.storage.throttledSet({ segmentShape: this.segmentShape });
+            this.storage.debouncedSet({ segmentShape: this.segmentShape });
+    }
+
+    setFavicon(val: Settings["favicon"], useStorage = true) {
+        if (this.favicon === val) return;
+        this.favicon = val;
+        if (useStorage) this.storage.debouncedSet({ favicon: this.favicon });
     }
 
     setCss(val: Settings["css"], useStorage = true) {
         if (this.css === val) return;
         this.css = val;
-        if (useStorage) this.storage.throttledSet({ css: this.css });
+        if (useStorage) this.storage.debouncedSet({ css: this.css });
     }
 
     setDateStyle(val: Settings["dateStyle"], useStorage = true) {
         if (this.dateStyle === val) return;
         this.dateStyle = val;
         if (useStorage)
-            this.storage.throttledSet({ dateStyle: this.dateStyle });
+            this.storage.debouncedSet({ dateStyle: this.dateStyle });
     }
-    setBackgroundRepaint() {
-        this.skyBackgroundRepaintTimer = new Date();
+
+    setTimezone(val: Settings["timezone"], useStorage = true) {
+        if (this.timezone === val) return;
+        this.timezone = val;
+        this.updateSkyBackground();
+        if (useStorage) this.storage.debouncedSet({ timezone: this.timezone });
     }
+
     setFixedColors(val: string, useStorage = true) {
         if (!hasValidColors(val)) return;
         this.fixedColors = val;
         if (useStorage && this.isActive) {
-            this.storage.throttledSet({ fixedColors: val });
+            this.storage.debouncedSet({ fixedColors: val });
         }
     }
+
     setOrigin(val: Settings["origin"]) {
         this.origin = val;
         if (val !== "tab") this.isActive = false;
     }
+
     setActiveStore(id: Settings["storeId"], useStorage = true) {
         if (this.storeId !== id) {
             this.isActive = false;
@@ -263,11 +300,19 @@ class ExtensionSettingsStore implements SettingsStore {
             }
         }
     }
+
+    updateSkyBackground() {
+        const now = new Date();
+        now.setTime(now.getTime() + this.timezone * 60 * 1000);
+        this.skyBackgroundTime = now;
+    }
+
     reset() {
         for (const k in reset) {
             (this as any)[k] = (reset as any)[k];
         }
         this.storage.set(reset);
+        this.updateSkyBackground();
     }
 }
 

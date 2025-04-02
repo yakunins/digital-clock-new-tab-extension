@@ -1,4 +1,4 @@
-import { debouncedCallback, parseDigits } from "../../utils";
+import { debouncedCallback, parseDigits } from "../utils";
 
 declare const browser: typeof chrome;
 type StorageObject<V> = {
@@ -132,6 +132,6 @@ export const storage = (debouncePeriod = 100) => {
         get,
         set,
         addListener,
-        throttledSet: debouncedCallback(set, debouncePeriod),
+        debouncedSet: debouncedCallback(set, debouncePeriod),
     };
 };

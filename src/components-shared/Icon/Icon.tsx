@@ -1,5 +1,6 @@
 import React from "react";
 import { clsx } from "clsx";
+import "./icon.css";
 
 type IconName = keyof typeof iconNames;
 type SpanProps = React.HTMLAttributes<HTMLSpanElement>;
@@ -78,14 +79,41 @@ const help = (
     </svg>
 );
 
+const earth = (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M17.9,17.39C17.64,16.59 16.89,16 16,16H15V13A1,1 0 0,0 14,12H8V10H10A1,1 0 0,0 11,9V7H13A2,2 0 0,0 15,5V4.59C17.93,5.77 20,8.64 20,12C20,14.08 19.2,15.97 17.9,17.39M11,19.93C7.05,19.44 4,16.08 4,12C4,11.38 4.08,10.78 4.21,10.21L9,15V16A2,2 0 0,0 11,18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+    </svg>
+);
+
+const eight = (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M10,2.1L8.5,3.6L10,5.1H14l1.5-1.5L14,2.1H10z" />
+        <path d="M10,10.5L8.5,12l1.5,1.5H14l1.5-1.5L14,10.5H10z" />
+        <path d="M10,18.9l-1.5,1.5l1.5,1.5H14l1.5-1.5L14,18.9H10z" />
+        <path d="M17.9,14.3l-1.5-1.5l-1.5,1.5v3.9l1.5,1.5l1.5-1.5V14.3z" />
+        <path d="M9.1,14.3l-1.5-1.5l-1.5,1.5v3.9l1.5,1.5l1.5-1.5V14.3z" />
+        <path d="M17.9,5.7l-1.5-1.5l-1.5,1.5v3.9l1.5,1.5l1.5-1.5V5.7z" />
+        <path d="M9.1,5.7L7.6,4.2L6.1,5.7v3.9l1.5,1.5l1.5-1.5V5.7z" />
+    </svg>
+);
+
+const square = (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <rect x="2" y="2" width="20" height="20" />
+    </svg>
+);
+
 const iconNames = {
     chevronDown,
     closeIcon1px,
     closeIcon2px,
+    earth,
+    eight,
     help,
     menuIcon,
     shapeDiamond,
     shapeSegment,
     shapeRectangle,
     shapePill,
+    square,
 };

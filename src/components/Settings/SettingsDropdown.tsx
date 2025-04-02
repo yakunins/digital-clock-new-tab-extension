@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { SettingsForm } from "./SettingsForm";
-import { SettingsStore as Settings } from "./settings.store";
-import { Icon, Innout } from "../../components-shared";
+import { SettingsStore as Settings } from "../../stores/settings.store";
+import { Icon, Innout, Tooltip } from "../../components-shared";
 import "./settings-dropdown.css";
 
 const sessionStorageItem = "digital_clock_newtab__settings_opened";
@@ -13,7 +13,7 @@ export const SettingsDropdown = ({ ...rest }: DivProps) => {
     const dropdownElement = useRef<HTMLDivElement>(null);
     const [opened, setOpened] = useState(initialOpened);
 
-    const toggle = () => setOpened(!opened);
+    const toggle = () => setOpened((prev) => !prev);
     const close = useCallback(() => setOpened(false), []);
     const handleEscape = (e: KeyboardEvent) => e.key === "Escape" && toggle();
     const handleClickOutside = (e: MouseEvent) => {
@@ -44,7 +44,10 @@ export const SettingsDropdown = ({ ...rest }: DivProps) => {
     return (
         <div {...rest} className="settings-dropdown" ref={dropdownElement}>
             <SetActiveStore origin="tab" />
-            <SettingsToggleButton onClick={toggle} opened={opened} />
+            <SettingsToggleButton
+                onClick={toggle}
+                icon={opened ? "close" : "dots"}
+            />
             <Innout out={!opened}>
                 <div className="settings-overlay">
                     <div className="scroll-wrapper">
@@ -59,28 +62,38 @@ export const SettingsDropdown = ({ ...rest }: DivProps) => {
 type ButtonProps = React.HTMLAttributes<HTMLButtonElement>;
 type SettingsToggleButton = ButtonProps & {
     onClick: () => void;
-    opened: boolean;
+    icon: "close" | "dots";
 };
 export const SettingsToggleButton = ({
     onClick,
-    opened,
+    icon,
     ...rest
 }: SettingsToggleButton) => {
     return (
-        <button
-            {...rest}
-            className="settings-toggle button"
-            onClick={onClick}
-            aria-label="Settings"
+        <Tooltip
+            text="Esc"
+            direction="left"
+            delay={[600, 250]}
+            className="settings-toggle"
+            useFocus={false}
+            useStopMove={true}
+            offset="-0.5em"
         >
-            <span className="hover-layer"></span>
-            <Innout out={!opened}>
-                <Icon name="closeIcon2px" />
-            </Innout>
-            <Innout out={opened}>
-                <Icon name="menuIcon" />
-            </Innout>
-        </button>
+            <button
+                {...rest}
+                className="button"
+                onClick={onClick}
+                aria-label="Settings"
+            >
+                <span className="hover-layer"></span>
+                <Innout out={icon === "dots"}>
+                    <Icon name="closeIcon2px" />
+                </Innout>
+                <Innout out={icon === "close"}>
+                    <Icon name="menuIcon" />
+                </Innout>
+            </button>
+        </Tooltip>
     );
 };
 

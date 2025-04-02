@@ -1,4 +1,4 @@
-.in-n-out {
+.innout {
     &.stage-0-in,
     &.stage-0-out {
         transition-property: opacity;
@@ -16,4 +16,7 @@
         opacity: 0;
         pointer-events: none;
     }
+}
+.innout-into-view {
+    display: none;
 }

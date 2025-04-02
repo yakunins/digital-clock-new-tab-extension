@@ -7,16 +7,16 @@ import { Innout } from "../../components-shared";
 
 import "./clock.css";
 
-const blinker = new Blinker(); // singleton
+const blinker = new Blinker(); // singleton to update in sync with others
 
 export const Clock = observer(
     ({ ...rest }: React.HTMLAttributes<HTMLTimeElement>) => {
         const [timeString, setTimeString] = useState(
-            getTimeString(locale(Settings.clockType))
+            getTime(Settings.clockType, Settings.timezone)
         );
 
         const handleBlink = useCallback(() => {
-            const time = getTimeString(locale(Settings.clockType));
+            const time = getTime(Settings.clockType, Settings.timezone);
             setTimeString(time);
         }, []);
 
@@ -123,7 +123,7 @@ const ampmAnimationStages = [
     },
 ];
 
-function locale(clockFormat: Settings["clockType"]) {
+const toLocale = (clockFormat: Settings["clockType"]) => {
     switch (clockFormat) {
         case "24-hour":
             return "en-GB";
@@ -132,4 +132,9 @@ function locale(clockFormat: Settings["clockType"]) {
         default:
             return getLocale();
     }
-}
+};
+
+const getTime = (
+    clockType: Settings["clockType"],
+    timezone: Settings["timezone"]
+) => getTimeString(toLocale(clockType), timezone);

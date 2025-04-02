@@ -1,7 +1,7 @@
-import React, { useState, useEffect, memo } from "react";
+import React, { useCallback, useState, useEffect, memo } from "react";
 import { observer } from "mobx-react";
 import { Blinker } from "react-led-digit";
-import { getLocale, popularLocales } from "../../utils";
+import { getDateString, getLocale, popularLocales } from "../../utils";
 import { SettingsStore as Settings } from "../";
 import { Innout } from "../../components-shared";
 import "./date-info.css";
@@ -11,18 +11,26 @@ import "./work-sans-200.css";
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
 type DateInfo = DivProps & {};
 
-const blinker = new Blinker(); // singleton
+const blinker = new Blinker(); // singleton to update in sync with others
 
 export const DateInfo = observer(({ ...rest }: DateInfo) => {
-    const dateStyle = Settings.dateStyle;
-    const format = React.useRef(dateStyle === "none" ? "long" : dateStyle);
-
     const locale = getLocale(); // popularLocales[15]
-    const getDateString = (fmt = format.current) =>
-        getLocaleString(fmt, new Date(), locale);
-    const handleBlink = () => setDateString(getDateString());
+    const dateLong = () => getDateString(locale, "long", Settings.timezone);
+    const dateShort = () => getDateString(locale, "short", Settings.timezone);
+    const dateStyled = () =>
+        Settings.dateStyle === "short" ? dateShort : dateLong;
 
-    const [dateString, setDateString] = useState<string>(getDateString());
+    const [dateString, setDateString] = useState<string>(dateStyled());
+
+    // const handleBlink = () => setDateString(getDateString());
+    const handleBlink = useCallback(() => {
+        const date = getDateString(
+            locale,
+            Settings.dateStyle,
+            Settings.timezone
+        );
+        setDateString(date);
+    }, [Settings.dateStyle]);
 
     useEffect(() => {
         blinker.subscribe(handleBlink);
@@ -30,30 +38,23 @@ export const DateInfo = observer(({ ...rest }: DateInfo) => {
     });
     useEffect(() => {
         handleBlink();
-        if (dateStyle !== "none") format.current = dateStyle;
-    }, [dateStyle]);
+    }, [Settings.dateStyle]);
 
     return (
         <div {...rest} className={`date-info locale-${locale}`}>
             <Innout
                 key="1"
-                out={dateStyle !== "short"}
+                out={Settings.dateStyle !== "short"}
                 stages={dateAnimationStages}
             >
-                <FormattedDate
-                    dateString={getDateString("short")}
-                    format={"short"}
-                />
+                <FormattedDate dateString={dateShort()} format={"short"} />
             </Innout>
             <Innout
                 key="2"
-                out={dateStyle !== "long"}
+                out={Settings.dateStyle !== "long"}
                 stages={dateAnimationStages}
             >
-                <FormattedDate
-                    dateString={getDateString("long")}
-                    format={"long"}
-                />
+                <FormattedDate dateString={dateLong()} format={"long"} />
             </Innout>
         </div>
     );
@@ -78,19 +79,6 @@ const FormattedDate = memo(({ dateString, format }: FormattedDateProps) => {
         </div>
     );
 });
-
-export const getLocaleString = (
-    format: "long" | "short",
-    date = new Date(),
-    locale = getLocale() // popularLocales[15]
-): string => {
-    const localeString = date.toLocaleString(locale, {
-        weekday: format,
-        day: "numeric",
-        month: format,
-    });
-    return localeString;
-};
 
 type WrappedNumsProps = {
     text: string;

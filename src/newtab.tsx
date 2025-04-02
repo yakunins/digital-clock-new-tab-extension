@@ -3,10 +3,12 @@ import { createRoot } from "react-dom/client";
 import {
     BackgroundFill,
     Clock,
+    CustomStyle,
     DateInfo,
     SettingsDropdown,
-    CustomStyle,
 } from "./components";
+import { Favicon } from "./components-shared";
+
 import "./global.css";
 import "./mobile.css";
 
@@ -22,6 +24,7 @@ const app = (
             <DateInfo />
         </div>
         <SettingsDropdown />
+        <Favicon />
         <CustomStyle />
     </>
 );

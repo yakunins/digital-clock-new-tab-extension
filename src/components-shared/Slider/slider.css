@@ -1,5 +1,5 @@
 .react-aria-Slider {
-    --accent-color: var(--primary-color, currentColor);
+    --accent-color: var(--text-color, currentColor);
     --accent-color-88: color-mix(in srgb, var(--accent-color), transparent 88%);
     --accent-color-76: color-mix(in srgb, var(--accent-color), transparent 76%);
     --accent-color-50: color-mix(in srgb, var(--accent-color), transparent 50%);

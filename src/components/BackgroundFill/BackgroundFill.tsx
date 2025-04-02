@@ -1,6 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { SettingsStore as Settings } from "../Settings/settings.store";
+import { SettingsStore as Settings } from "../../stores/settings.store";
 import { randomColors } from "./randomColors";
 import { naturalColors } from "./naturalColors";
 import { lightenColor, saturateFourColors, mixHexColors } from "./colorUtils";
@@ -33,7 +33,7 @@ const BackgroundFillStyle = observer(() => {
 
     switch (Settings.colorSchema) {
         case "sky":
-            colors = naturalColors(Settings.skyBackgroundRepaintTimer);
+            colors = naturalColors(Settings.skyBackgroundTime);
             colors = saturateFourColors(colors, 1.35);
             Settings.setFixedColors(JSON.stringify(colors), true);
             break;

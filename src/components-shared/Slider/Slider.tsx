@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import {
     Label,
     Slider as AriaSlider,
@@ -7,15 +7,22 @@ import {
     SliderThumb,
     SliderTrack,
 } from "react-aria-components";
+import { SliderState } from "@react-stately/slider";
 
 import "./slider.css";
 
 export type Slider = Omit<AriaSliderProps, "onChange"> & {
     label?: string;
     onChange?: (value: number) => void;
+    outputFormatter?: (state: SliderState) => ReactNode;
 };
 
-export const Slider = ({ label, onChange, ...rest }: Slider) => {
+export const Slider = ({
+    label,
+    onChange,
+    outputFormatter,
+    ...rest
+}: Slider) => {
     const handleChange = (value: number | number[]) => {
         if (typeof value === "number" && onChange) {
             onChange(value);
@@ -25,7 +32,13 @@ export const Slider = ({ label, onChange, ...rest }: Slider) => {
     return (
         <AriaSlider {...rest} onChange={handleChange}>
             {label && <Label>{label}</Label>}
-            <SliderOutput />
+            {outputFormatter ? (
+                <SliderOutput>
+                    {({ state }) => outputFormatter(state)}
+                </SliderOutput>
+            ) : (
+                <SliderOutput />
+            )}
             <SliderTrack>
                 <SliderThumb />
             </SliderTrack>
