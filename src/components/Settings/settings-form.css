@@ -62,5 +62,8 @@
             text-decoration-color: transparent;
             cursor: default;
         }
+        &:focus-visible {
+            outline-offset: var(--s-4px);
+        }
     }
 }
