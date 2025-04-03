@@ -41,7 +41,10 @@ export const DateInfo = observer(({ ...rest }: DateInfo) => {
     }, [Settings.dateStyle]);
 
     return (
-        <div {...rest} className={`date-info locale-${locale}`}>
+        <div
+            {...rest}
+            className={`date-info locale-${locale} date-style-${Settings.dateStyle}`}
+        >
             <Innout
                 key="1"
                 out={Settings.dateStyle !== "short"}

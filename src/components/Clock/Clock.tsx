@@ -30,8 +30,12 @@ export const Clock = observer(
             handleBlink();
         }, [Settings.clockType]);
 
-        const thickness = (Settings.segmentThickness / 100) * 2.5;
-        const length = (Settings.segmentLength / 100) * 12;
+        const l = Settings.segmentLength / 100; // min=0.1, def=0.3, max=1
+        const t = Settings.segmentThickness / 100; // min=0.1, def=0.4, max=1
+        const length = l * 12;
+        const tadjust = ((l - 0.1) / (l + 0.5)) ** 2 * 2 - 0.125; // min=-0.125, def=0, max=0.6
+        const thickness = (t + tadjust) * 2.5;
+
         const shape = ["natural", "diamond"].includes(Settings.segmentShape)
             ? "default"
             : (Settings.segmentShape as Digit["shape"]);

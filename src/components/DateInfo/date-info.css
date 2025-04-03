@@ -6,10 +6,15 @@
     font-family: "Work Sans", WorkSansEmbedded, "Segoe UI", Segoe, sans-serif;
     font-size: var(--date-size);
     letter-spacing: 0.05em;
-    margin: calc(var(--date-size) + 1.5vmin) 0;
-    margin-bottom: 5em;
+    margin-top: calc(var(--date-size) + 1.5vmin);
+    margin-bottom: calc(var(--date-size) * 2.5 + 1.5vmin);
     transform: scaleX(0.98);
-    opacity: 0.75;
+    transition-property: margin-bottom;
+    transition-duration: var(--duration, 0.2s);
+
+    &.date-style-none {
+        margin-bottom: 1.5vmin;
+    }
 
     .date-long,
     .date-short {

@@ -66,6 +66,8 @@
         transition-duration: var(--duration, 1s);
     }
     .digit {
+        --transition-duration: var(--duration. 0.2s);
+
         filter: drop-shadow(0 0 calc(var(--glow-size) / 2) var(--glow-color-25))
             blur(var(--blur-size));
     }
