@@ -14,7 +14,7 @@
     right: 0;
     top: 0;
 
-    .button {
+    button.button {
         background: none;
         border: none;
         border-radius: 100rem;
@@ -55,11 +55,13 @@
             transition-duration: var(--duration, 0.25s);
             z-index: 0;
         }
+
         &:hover {
             & .hover-layer {
                 opacity: 0.1;
             }
         }
+
         &:focus-visible {
             outline-color: var(--color, currentColor);
             outline-offset: calc(var(--s-4px) * -1);
