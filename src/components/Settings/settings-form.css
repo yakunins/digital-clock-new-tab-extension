@@ -49,7 +49,7 @@
         text-decoration-thickness: calc(0.125em * 0.5);
         text-underline-offset: 0.125em;
         transition-property: opacity, color, text-decoration-color;
-        transition-duration: var(--duration, 0.25s);
+        transition-duration: var(--duration, 0.2s);
         padding: 0;
 
         &:hover {

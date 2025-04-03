@@ -52,7 +52,7 @@
             border-radius: 100rem;
             filter: blur(0.5em);
             transition-property: opacity;
-            transition-duration: var(--duration, 0.25s);
+            transition-duration: var(--duration, 0.2s);
             z-index: 0;
         }
 
