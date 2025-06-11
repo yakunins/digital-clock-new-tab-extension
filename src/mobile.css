@@ -9,7 +9,7 @@
         font-size: 5vmin;
         margin: 2.5vmin 0;
     }
-    .settings-toggle.button,
+    .settings-toggle,
     .settings-dropdown {
         top: auto;
         bottom: 0;
@@ -20,13 +20,13 @@
     .settings-overlay {
         --c-1: var(--bg-color-2); /* upper strip */
         --c-2: var(--bg-color-3); /* lower strip */
-        --scroll-height: 50vh;
+        --scroll-height: 50dvh;
         top: auto;
         bottom: calc(var(--button-size) * 0.9);
     }
     [data-settings-opened="true"] {
         .content {
-            height: 60vh;
+            height: 60dvh;
         }
         .background-fill {
             --h1: calc(23.5% + 5%);
@@ -38,14 +38,14 @@
 
 @media (pointer: coarse) and (orientation: landscape) {
     .settings-overlay {
-        --scroll-height: 80vh;
+        --scroll-height: 80dvh;
         top: auto;
         bottom: calc(var(--button-size) * 0.9);
     }
     [data-settings-opened="true"] {
         .content {
-            height: 100vh;
-            width: 60vw;
+            height: 100dvh;
+            width: 60dvw;
         }
     }
 }

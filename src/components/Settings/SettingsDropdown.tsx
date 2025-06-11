@@ -84,6 +84,8 @@ export const SettingsToggleButton = ({
                 className="button"
                 onClick={onClick}
                 aria-label="Settings"
+                aria-haspopup="menu"
+                aria-expanded={icon === "close"}
             >
                 <span className="hover-layer"></span>
                 <Innout out={icon === "dots"}>

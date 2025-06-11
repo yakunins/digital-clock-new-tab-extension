@@ -82,7 +82,7 @@
     --shadow-dark-l: 0 0.6em 6em rgba(0, 0, 0, 0.05);
 
     --scroll-height: 75vh;
-    --scroll-gradient-size: 0vh;
+    --scroll-gradient-size: 0dvh;
 
     backdrop-filter: saturate(125%) blur(0.25em);
     background-image: linear-gradient(

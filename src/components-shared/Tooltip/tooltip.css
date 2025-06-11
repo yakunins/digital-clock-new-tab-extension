@@ -30,6 +30,7 @@
 
         max-width: 8em;
         width: max-content;
+        height: min-content;
         word-wrap: break-word;
         overflow-wrap: break-word;
         position: absolute;

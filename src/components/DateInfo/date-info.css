@@ -5,7 +5,7 @@
 
     font-family: "Work Sans", WorkSansEmbedded, "Segoe UI", Segoe, sans-serif;
     font-size: var(--date-size);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.035em;
     margin-top: calc(var(--date-size) + 1.5vmin);
     margin-bottom: calc(var(--date-size) * 2.5 + 1.5vmin);
     transform: scaleX(0.98);
