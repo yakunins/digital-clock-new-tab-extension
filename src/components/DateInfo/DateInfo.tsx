@@ -15,8 +15,8 @@ const blinker = new Blinker(); // singleton to update in sync with others
 
 export const DateInfo = observer(({ ...rest }: DateInfo) => {
     const locale = getLocale(); // popularLocales[15]
-    const dateLong = () => getDateString(locale, "long", Settings.timezone);
-    const dateShort = () => getDateString(locale, "short", Settings.timezone);
+    const dateLong = () => getDateString(locale, "long", Settings.timeShift);
+    const dateShort = () => getDateString(locale, "short", Settings.timeShift);
     const dateStyled = () =>
         Settings.dateStyle === "short" ? dateShort : dateLong;
 
@@ -27,7 +27,7 @@ export const DateInfo = observer(({ ...rest }: DateInfo) => {
         const date = getDateString(
             locale,
             Settings.dateStyle,
-            Settings.timezone
+            Settings.timeShift
         );
         setDateString(date);
     }, [Settings.dateStyle]);

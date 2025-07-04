@@ -20,7 +20,7 @@ type Settings = {
     segmentThickness: number;
     segmentShape: "diamond" | "natural" | "rect" | "pill";
     status?: string;
-    timezone: number;
+    timeShift: number;
     storeId: string; // multiple stores handling
     origin: "unknown" | "tab" | "popup" | "options";
     isActive: boolean; // store belongs to last active tab
@@ -35,7 +35,7 @@ export type SettingsStore = Settings & {
     setLength: (val: Settings["segmentLength"]) => void;
     setThickness: (val: Settings["segmentThickness"]) => void;
     setShape: (val: Settings["segmentShape"]) => void;
-    setTimezone: (minutes: Settings["timezone"]) => void;
+    setTimeShift: (minutes: Settings["timeShift"]) => void;
     updateSkyBackground: () => void;
     reset: () => void;
 };
@@ -64,7 +64,7 @@ const initial: Settings = {
     segmentLength: 30,
     segmentThickness: 40,
     segmentShape: "diamond",
-    timezone: 0, // https://en.wikipedia.org/wiki/Time_zone
+    timeShift: 0,
 
     storeId: getId(),
     origin: "unknown",
@@ -79,7 +79,7 @@ const reset: Partial<Settings> = {
     segmentLength: initial.segmentLength,
     segmentShape: initial.segmentShape,
     segmentThickness: initial.segmentThickness,
-    timezone: initial.timezone,
+    timeShift: initial.timeShift,
 };
 
 class ExtensionSettingsStore implements SettingsStore {
@@ -92,7 +92,7 @@ class ExtensionSettingsStore implements SettingsStore {
     segmentLength = initial.segmentLength;
     segmentThickness = initial.segmentThickness;
     segmentShape = initial.segmentShape;
-    timezone = initial.timezone;
+    timeShift = initial.timeShift;
     skyBackgroundTime = new Date();
 
     storeId = initial.storeId; // handling different SettingsStores per newtab.html, popup.html and options.html
@@ -113,7 +113,7 @@ class ExtensionSettingsStore implements SettingsStore {
             segmentLength: observable,
             segmentThickness: observable,
             segmentShape: observable,
-            timezone: observable,
+            timeShift: observable,
             updateSkyBackground: action,
             setClockType: action,
             setColorSchema: action,
@@ -124,7 +124,7 @@ class ExtensionSettingsStore implements SettingsStore {
             setLength: action,
             setThickness: action,
             setShape: action,
-            setTimezone: action,
+            setTimeShift: action,
             status: computed,
             reset: action,
         });
@@ -161,8 +161,8 @@ class ExtensionSettingsStore implements SettingsStore {
             .get({ segmentShape: this.segmentShape })
             .then((res) => this.setShape(res, false));
         this.storage
-            .get({ timezone: this.timezone })
-            .then((res) => this.setTimezone(res, false));
+            .get({ timeShift: this.timeShift })
+            .then((res) => this.setTimeShift(res, false));
 
         this.storage.addListener(this.handleStorageChange.bind(this));
     }
@@ -179,7 +179,7 @@ class ExtensionSettingsStore implements SettingsStore {
             segmentLength: ${this.segmentLength},
             segmentShape: ${this.segmentShape},
             segmentThickness: ${this.segmentThickness},
-            timezone: ${this.timezone},            
+            timeShift: ${this.timeShift},            
             origin: ${this.origin}
         `;
         return status;
@@ -204,7 +204,7 @@ class ExtensionSettingsStore implements SettingsStore {
             if (key === "segmentLength") this.setLength(newValue, false);
             if (key === "segmentShape") this.setShape(newValue, false);
             if (key === "segmentThickness") this.setThickness(newValue, false);
-            if (key === "timezone") this.setTimezone(newValue, false);
+            if (key === "timeShift") this.setTimeShift(newValue, false);
         }
     }
 
@@ -269,11 +269,12 @@ class ExtensionSettingsStore implements SettingsStore {
             this.storage.debouncedSet({ dateStyle: this.dateStyle });
     }
 
-    setTimezone(val: Settings["timezone"], useStorage = true) {
-        if (this.timezone === val) return;
-        this.timezone = val;
+    setTimeShift(val: Settings["timeShift"], useStorage = true) {
+        if (this.timeShift === val) return;
+        this.timeShift = val;
         this.updateSkyBackground();
-        if (useStorage) this.storage.debouncedSet({ timezone: this.timezone });
+        if (useStorage)
+            this.storage.debouncedSet({ timeShift: this.timeShift });
     }
 
     setFixedColors(val: string, useStorage = true) {
@@ -303,7 +304,7 @@ class ExtensionSettingsStore implements SettingsStore {
 
     updateSkyBackground() {
         const now = new Date();
-        now.setTime(now.getTime() + this.timezone * 60 * 1000);
+        now.setTime(now.getTime() + this.timeShift * 60 * 1000);
         this.skyBackgroundTime = now;
     }
 

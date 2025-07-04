@@ -7,16 +7,16 @@ import { Innout } from "../../components-shared";
 
 import "./clock.css";
 
-const blinker = new Blinker(); // singleton to update in sync with others
+const blinker = new Blinker(); // singleton to blink in sync with others
 
 export const Clock = observer(
     ({ ...rest }: React.HTMLAttributes<HTMLTimeElement>) => {
         const [timeString, setTimeString] = useState(
-            getTime(Settings.clockType, Settings.timezone)
+            getTime(Settings.clockType, Settings.timeShift)
         );
 
         const handleBlink = useCallback(() => {
-            const time = getTime(Settings.clockType, Settings.timezone);
+            const time = getTime(Settings.clockType, Settings.timeShift);
             setTimeString(time);
         }, []);
 
@@ -140,5 +140,5 @@ const toLocale = (clockFormat: Settings["clockType"]) => {
 
 const getTime = (
     clockType: Settings["clockType"],
-    timezone: Settings["timezone"]
-) => getTimeString(toLocale(clockType), timezone);
+    timeShift: Settings["timeShift"]
+) => getTimeString(toLocale(clockType), timeShift);

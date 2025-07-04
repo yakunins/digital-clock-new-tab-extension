@@ -50,10 +50,10 @@ export const SettingsForm = observer(
             Settings.setFavicon(next as Settings["favicon"]);
         }, []);
 
-        const timezoneChange = useCallback<
+        const timeShiftChange = useCallback<
             Exclude<Slider["onChange"], undefined>
         >((minutes: number) => {
-            Settings.setTimezone(minutes);
+            Settings.setTimeShift(minutes);
         }, []);
 
         const cssChange = useCallback(
@@ -190,9 +190,9 @@ export const SettingsForm = observer(
                             onChange={faviconChange}
                         />
                         <SliderControlled
-                            label="Time Zone Shift"
-                            defaultValue={Settings.timezone / 15}
-                            onChange={(val) => timezoneChange(val * 15)}
+                            label="Time Shift"
+                            defaultValue={Settings.timeShift / 15}
+                            onChange={(val) => timeShiftChange(val * 15)}
                             minValue={4 * -12}
                             maxValue={4 * 12}
                             outputFormatter={(s) => {
