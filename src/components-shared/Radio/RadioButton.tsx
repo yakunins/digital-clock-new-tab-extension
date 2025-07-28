@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef, memo } from "react";
+import React, { useState, useEffect, useRef, useId, memo } from "react";
 import { clsx } from "clsx";
-import { getId } from "../../utils";
 
 type InputProps = React.HTMLAttributes<HTMLInputElement>;
 export type RadioButton = InputProps & {
-    children: any;
+    children?: React.ReactNode;
     value: string;
     checked?: boolean;
     name?: string;
@@ -14,11 +13,11 @@ export const RadioButton = memo(
     ({ children, checked, className, name, value, ...rest }: RadioButton) => {
         const inputRef = useRef<HTMLInputElement>(null);
         const [focused, setFocused] = useState(false);
-        const id = rest.id || getId();
+        const id = rest.id || useId();
 
         useEffect(() => {
             focused && inputRef?.current?.focus();
-        });
+        }, [focused]);
 
         return (
             <div className={clsx("radio-button", className, { checked })}>

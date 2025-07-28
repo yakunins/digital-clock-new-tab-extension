@@ -1,4 +1,5 @@
 export * from "./Collapsible";
+export * from "./Checkbox";
 export * from "./Favicon";
 export * from "./Icon";
 export * from "./Innout";

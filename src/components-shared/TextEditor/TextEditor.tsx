@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useId } from "react";
 import { clsx } from "clsx";
 
-import { getId } from "../../utils";
 import "./text-editor.css";
 
 type TextAreaProps = React.HTMLAttributes<HTMLTextAreaElement>;
@@ -19,7 +18,7 @@ export const TextEditor = ({
     errorMessage,
     label,
     onChange,
-    id = getId(),
+    id = useId(),
     ...rest
 }: TextEditor) => {
     const [text, setText] = React.useState(defaultValue);

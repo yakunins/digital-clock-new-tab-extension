@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef, memo } from "react";
+import React, { useState, useEffect, useRef, useId, memo } from "react";
 import { clsx } from "clsx";
 
 import { RadioButton } from "./RadioButton";
-import { getId } from "../../utils";
 import { useSize } from "../../hooks";
 import "./radio.css";
 
@@ -17,7 +16,7 @@ export type Radio = Omit<FieldSetProps, "onChange"> & {
 
 export const Radio = memo(
     ({ defaultValue, options, onChange, legend, name, ...rest }: Radio) => {
-        const id = useRef(name || getId());
+        const id = name || useId();
         const container = useRef<HTMLDivElement>(null);
         const { width } = useSize(container);
         const [value, setValue] = useState<RadioButton["value"]>(
@@ -81,8 +80,8 @@ export const Radio = memo(
                             .map((i, idx) => {
                                 return {
                                     ...i,
-                                    id: `id_${id.current}_${idx}`,
-                                    name: id.current,
+                                    id: `id_${id}_${idx}`,
+                                    name: id,
                                     checked: i.value === value,
                                 };
                             })
