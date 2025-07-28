@@ -11,28 +11,34 @@ const author = {
 };
 
 declare const browser: typeof chrome;
-let version = "unknown";
-try {
-    if (chrome?.runtime) {
-        version = chrome?.runtime?.getManifest().version;
+
+const getExtensionVersion = () => {
+    let version = undefined;
+    try {
+        if (chrome?.runtime) {
+            return (version = chrome?.runtime?.getManifest().version); // chrome, edge
+        }
+        if (browser?.runtime) {
+            return (version = browser?.runtime?.getManifest().version); // firefox, safari
+        }
+    } catch (error) {
+        console.log(error);
     }
-    if (browser?.runtime) {
-        version = browser?.runtime?.getManifest().version;
-    }
-} catch (error) {
-    console.log(error);
-}
+    return version;
+};
 
 type ExtensionOptionsProps = {
     origin?: SettingsForm["origin"];
 };
 
 export const ExtensionOptions = ({ origin }: ExtensionOptionsProps) => {
+    const version = getExtensionVersion();
+
     return (
         <div className="extension-options">
             <SettingsForm origin={origin} />
             <p className="copy-info">
-                v{version} · 2025 · <a {...author} />
+                {version ? <>v{version} · </> : null}2025 · <a {...author} />
                 <br />
             </p>
         </div>
