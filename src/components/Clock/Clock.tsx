@@ -12,11 +12,19 @@ const blinker = new Blinker(); // singleton to blink in sync with others
 export const Clock = observer(
     ({ ...rest }: React.HTMLAttributes<HTMLTimeElement>) => {
         const [timeString, setTimeString] = useState(
-            getTime(Settings.clockType, Settings.timeShift)
+            getTime(
+                Settings.clockType,
+                Settings.timeShift,
+                Settings.clockLeadingZero
+            )
         );
 
         const handleBlink = useCallback(() => {
-            const time = getTime(Settings.clockType, Settings.timeShift);
+            const time = getTime(
+                Settings.clockType,
+                Settings.timeShift,
+                Settings.clockLeadingZero
+            );
             setTimeString(time);
         }, []);
 
@@ -86,7 +94,7 @@ export const Clock = observer(
                                 segmentStyle={segmentStyle}
                             />
                         );
-                    if ("0123456789".includes(i))
+                    if (" 0123456789".includes(i))
                         return (
                             <Digit
                                 key={idx}
@@ -140,5 +148,12 @@ const toLocale = (clockFormat: Settings["clockType"]) => {
 
 const getTime = (
     clockType: Settings["clockType"],
-    timeShift: Settings["timeShift"]
-) => getTimeString(toLocale(clockType), timeShift);
+    timeShift: Settings["timeShift"],
+    showLeadingZero: Settings["clockLeadingZero"] = true
+) => {
+    const time = getTimeString(toLocale(clockType), timeShift).replace(" ", ""); // "01:23pm"
+    if (!showLeadingZero && time.charAt(0) === "0") {
+        return " " + time.slice(1); // " 1:23pm"
+    }
+    return time;
+};

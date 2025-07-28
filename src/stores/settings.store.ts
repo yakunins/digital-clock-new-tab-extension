@@ -11,6 +11,7 @@ import {
 
 type Settings = {
     clockType: "24-hour" | "ampm";
+    clockLeadingZero: boolean;
     colorSchema: "sky" | "random" | "fixed";
     css: string;
     dateStyle: "long" | "short" | "none";
@@ -29,6 +30,7 @@ type Settings = {
 export type SettingsStore = Settings & {
     handleStorageChange: StorageChangeHandler;
     setClockType: (val: Settings["clockType"]) => void;
+    setClockLeadingZero: (val: Settings["clockLeadingZero"]) => void;
     setColorSchema: (val: Settings["colorSchema"]) => void;
     setCss: (val: Settings["css"]) => void;
     setDateStyle: (val: Settings["dateStyle"]) => void;
@@ -56,6 +58,7 @@ const initialCss = `:root {
   }`;
 const initial: Settings = {
     clockType: getLocaleAmpm() ? "ampm" : "24-hour",
+    clockLeadingZero: true,
     colorSchema: "sky",
     css: initialCss,
     fixedColors: JSON.stringify(["#ffe8de", "#6e7cca", "#860d0e", "#21022a"]),
@@ -71,8 +74,9 @@ const initial: Settings = {
     isActive: true,
 };
 const reset: Partial<Settings> = {
-    colorSchema: initial.colorSchema,
     clockType: initial.clockType,
+    clockLeadingZero: initial.clockLeadingZero,
+    colorSchema: initial.colorSchema,
     css: initial.css,
     dateStyle: initial.dateStyle,
     favicon: initial.favicon,
@@ -84,6 +88,7 @@ const reset: Partial<Settings> = {
 
 class ExtensionSettingsStore implements SettingsStore {
     clockType = initial.clockType;
+    clockLeadingZero = initial.clockLeadingZero;
     colorSchema = initial.colorSchema;
     css = initial.css;
     dateStyle = initial.dateStyle;
@@ -105,6 +110,7 @@ class ExtensionSettingsStore implements SettingsStore {
         makeObservable(this, {
             skyBackgroundTime: observable,
             clockType: observable,
+            clockLeadingZero: observable,
             colorSchema: observable,
             css: observable,
             dateStyle: observable,
@@ -116,6 +122,7 @@ class ExtensionSettingsStore implements SettingsStore {
             timeShift: observable,
             updateSkyBackground: action,
             setClockType: action,
+            setClockLeadingZero: action,
             setColorSchema: action,
             setCss: action,
             setDateStyle: action,
@@ -136,6 +143,9 @@ class ExtensionSettingsStore implements SettingsStore {
         this.storage
             .get({ clockType: this.clockType })
             .then((res) => this.setClockType(res, false));
+        this.storage
+            .get({ clockLeadingZero: this.clockLeadingZero })
+            .then((res) => this.setClockLeadingZero(res, false));
         this.storage
             .get({ colorSchema: this.colorSchema })
             .then((res) => this.setColorSchema(res, false));
@@ -164,6 +174,7 @@ class ExtensionSettingsStore implements SettingsStore {
             .get({ timeShift: this.timeShift })
             .then((res) => this.setTimeShift(res, false));
 
+        // listen for changes from other tabs
         this.storage.addListener(this.handleStorageChange.bind(this));
     }
 
@@ -171,6 +182,7 @@ class ExtensionSettingsStore implements SettingsStore {
         const status = `
             skyBackgroundTime: ${this.skyBackgroundTime},
             clockType: ${this.clockType},
+            clockLeadingZero: ${this.clockLeadingZero},
             colorSchema: ${this.colorSchema},
             css: ${this.css},
             dateStyle: ${this.dateStyle},
@@ -186,16 +198,20 @@ class ExtensionSettingsStore implements SettingsStore {
     }
 
     get hasChanges(): boolean {
-        return Object.keys(reset).some(
-            (k) => (this as any)[k] !== (reset as any)[k]
-        );
+        return Object.keys(reset).some((k) => {
+            const res = (this as any)[k] !== (reset as any)[k];
+            return res;
+        });
     }
 
     handleStorageChange(changes: Changes, namespace: Namespace) {
         for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
             if (oldValue === newValue) return;
+
             if (key === "lastActiveStore") this.setActiveStore(newValue, false);
             if (key === "clockType") this.setClockType(newValue, false);
+            if (key === "clockLeadingZero")
+                this.setClockLeadingZero(newValue, false);
             if (key === "colorSchema") this.setColorSchema(newValue, false);
             if (key === "css") this.setCss(newValue, false);
             if (key === "dateStyle") this.setDateStyle(newValue, false);
@@ -213,6 +229,16 @@ class ExtensionSettingsStore implements SettingsStore {
         this.clockType = val;
         if (useStorage)
             this.storage.debouncedSet({ clockType: this.clockType });
+    }
+
+    setClockLeadingZero(val: Settings["clockLeadingZero"], useStorage = true) {
+        const v = toBoolean(val);
+        if (this.clockLeadingZero === v) return;
+        this.clockLeadingZero = v;
+        if (useStorage)
+            this.storage.debouncedSet({
+                clockLeadingZero: this.clockLeadingZero,
+            });
     }
 
     setColorSchema(val: Settings["colorSchema"], useStorage = true) {
@@ -336,6 +362,19 @@ const isValidJSON = (str: string) => {
         return false;
     }
     return true;
+};
+
+const toBoolean = (val: boolean | undefined | "true" | "false") => {
+    switch (val) {
+        case false:
+        case "false":
+            return false;
+        case true:
+        case "true":
+            return true;
+        default:
+            return false;
+    }
 };
 
 export const SettingsStore = new ExtensionSettingsStore();

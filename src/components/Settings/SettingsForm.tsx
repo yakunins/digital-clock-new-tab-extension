@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import { SettingsStore as Settings } from "../../stores/settings.store";
 import {
     Collapsible,
+    Checkbox,
     Icon,
     Radio,
     SliderControlled,
@@ -22,9 +23,19 @@ export const SettingsForm = observer(
     ({ close, origin, ...rest }: SettingsForm) => {
         origin && Settings.setOrigin(origin);
 
-        const clockChange = useCallback<Radio["onChange"]>((next) => {
+        const clockTypeChange = useCallback<Radio["onChange"]>((next) => {
             Settings.setClockType(next as Settings["clockType"]);
         }, []);
+
+        const clockLeadingZeroChange = useCallback(
+            (e: React.ChangeEvent<HTMLInputElement>) => {
+                Settings.setClockLeadingZero(
+                    e.target.checked as Settings["clockLeadingZero"]
+                );
+            },
+            []
+        );
+
         const schemaChange = useCallback<Radio["onChange"]>((next) => {
             Settings.setColorSchema(next as Settings["colorSchema"]);
         }, []);
@@ -34,11 +45,13 @@ export const SettingsForm = observer(
         >((next: number) => {
             Settings.setLength(next);
         }, []);
+
         const thicknessChange = useCallback<
             Exclude<Slider["onChange"], undefined>
         >((next: number) => {
             Settings.setThickness(next);
         }, []);
+
         const shapeChange = useCallback<Radio["onChange"]>((next) => {
             Settings.setShape(next as Settings["segmentShape"]);
         }, []);
@@ -46,6 +59,7 @@ export const SettingsForm = observer(
         const dateChange = useCallback<Radio["onChange"]>((next) => {
             Settings.setDateStyle(next as Settings["dateStyle"]);
         }, []);
+
         const faviconChange = useCallback<Radio["onChange"]>((next) => {
             Settings.setFavicon(next as Settings["favicon"]);
         }, []);
@@ -63,6 +77,7 @@ export const SettingsForm = observer(
             },
             []
         );
+
         const resetToDefaults = () => {
             Settings.reset();
         };
@@ -88,7 +103,7 @@ export const SettingsForm = observer(
                         { value: "24-hour", children: "24-hour" },
                         { value: "ampm", children: "AM-PM" },
                     ]}
-                    onChange={clockChange}
+                    onChange={clockTypeChange}
                 />
                 <SliderControlled
                     label="Segment Length"
@@ -204,6 +219,11 @@ export const SettingsForm = observer(
                                 const m = (hours % 1) * 60;
                                 return `${sign}${h}:${m === 0 ? "00" : m}`;
                             }}
+                        />
+                        <Checkbox
+                            children="Clock Leading Zero"
+                            defaultValue={Settings.clockLeadingZero}
+                            onChange={clockLeadingZeroChange}
                         />
                         <TextEditor
                             label="Custom Styles"
