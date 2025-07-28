@@ -8,7 +8,8 @@
     letter-spacing: 0.035em;
     margin-top: calc(var(--date-size) + 1.5vmin);
     margin-bottom: calc(var(--date-size) * 2.5 + 1.5vmin);
-    transform: scaleX(0.98);
+    transform: rotate3d(1, -1, 0, -1deg) rotate3d(-1, 1, 0, 6deg)
+        rotate3d(0, 0, 1, 0.25deg) scaleX(0.98);
     transition-property: margin-bottom;
     transition-duration: var(--duration, 0.2s);
 
@@ -27,10 +28,10 @@
 
     /* numbers style */
     em {
-        font-size: 125%;
+        font-size: 115%;
         font-style: normal;
         line-height: 100%;
-        font-weight: 100;
+        opacity: 0.88;
         vertical-align: -0.065em;
     }
     .date-short {
