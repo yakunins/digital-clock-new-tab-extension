@@ -39,7 +39,6 @@ export const Checkbox = memo(
 
         useEffect(() => {
             setChecked(defaultValue);
-            console.log("id", id);
         }, [defaultValue]);
 
         return (

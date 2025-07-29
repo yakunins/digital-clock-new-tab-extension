@@ -15,7 +15,6 @@
         "url": "https://github.com/yakunins/digital-clock-new-tab-extension.git"
     },
     "dependencies": {
-        "clsx": "^2.1.1",
         "mobx": "^6.13.7",
         "mobx-react": "^9.2.0",
         "nanoid": "^5.1.5",
