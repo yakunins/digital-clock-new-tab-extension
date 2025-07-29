@@ -24,6 +24,7 @@ test("getTimeString", () => {
 test("cx (merges class names correctly)", () => {
     const result = cx(
         "btn",
+        "btn",
         "btn-primary",
         { active: true, disabled: false },
         ["extra", { visible: true, hidden: false }],

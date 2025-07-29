@@ -152,28 +152,28 @@ type ClassValue =
     | { [key: string]: boolean | undefined | null };
 
 export function cx(...args: ClassValue[]): string {
-    const classes: string[] = [];
+    const classes: Set<string> = new Set();
 
     for (const arg of args) {
         if (typeof arg === "string" || typeof arg === "number") {
-            classes.push(String(arg));
+            classes.add(String(arg));
             continue;
         }
 
         if (!arg) continue;
 
         if (Array.isArray(arg)) {
-            classes.push(cx(...arg));
+            classes.add(cx(...arg));
             continue;
         }
 
         if (typeof arg === "object") {
             for (const [key, value] of Object.entries(arg)) {
-                if (value) classes.push(key);
+                if (value) classes.add(key);
             }
             continue;
         }
     }
 
-    return classes.join(" ");
+    return Array.from(classes).join(" ");
 }
