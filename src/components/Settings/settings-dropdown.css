@@ -69,14 +69,13 @@
     }
 }
 .settings-overlay {
+    --c-dialog-bg: white;
+    --c-fill: color-mix(in srgb, var(--c-dialog-bg), transparent 17.5%);
+
     --c-1: var(--bg-color-1); /* upper strip */
     --c-2: var(--bg-color-3); /* lower strip */
-    --mix-1: white;
-    --c-grad-01: color-mix(in srgb, var(--c-1), var(--mix-1) 65%);
-    --c-grad-02: color-mix(in srgb, var(--c-2), var(--mix-1) 65%);
-    --mix-2: transparent;
-    --c-grad-11: color-mix(in srgb, var(--c-grad-01), var(--mix-2) 17.5%);
-    --c-grad-12: color-mix(in srgb, var(--c-grad-02), var(--mix-2) 17.5%);
+    --c-grad-01: color-mix(in srgb, var(--c-1), transparent 65%);
+    --c-grad-02: color-mix(in srgb, var(--c-2), transparent 65%);
     --shadow-border: 0 0 0.125em rgba(0, 0, 0, 0.05);
     --shadow-dark-s: 0 0.2em 2em rgba(0, 0, 0, 0.05);
     --shadow-dark-l: 0 0.6em 6em rgba(0, 0, 0, 0.05);
@@ -85,13 +84,15 @@
     --scroll-gradient-size: 0dvh;
 
     backdrop-filter: saturate(125%) blur(0.25em);
+    background-color: var(--c-fill);
     background-image: linear-gradient(
-        -10deg,
-        var(--c-grad-12),
-        var(--c-grad-11)
+        170deg,
+        var(--c-grad-01),
+        var(--c-grad-02)
     );
     border-radius: calc(var(--radius) * 1.5);
-    box-shadow: var(--shadow-border), var(--shadow-dark-s), var(--shadow-dark-l);
+    box-shadow:
+        var(--shadow-border), var(--shadow-dark-s), var(--shadow-dark-l);
 
     position: absolute;
     top: calc(var(--button-size) * 0.9);
@@ -116,5 +117,6 @@
         max-height: var(--scroll-height);
         overflow-x: hidden;
         overflow-y: auto;
+        position: relative;
     }
 }

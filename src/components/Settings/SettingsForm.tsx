@@ -220,11 +220,6 @@ export const SettingsForm = observer(
                                 return `${sign}${h}:${m === 0 ? "00" : m}`;
                             }}
                         />
-                        <Checkbox
-                            children="Clock Leading Zero"
-                            defaultValue={Settings.clockLeadingZero}
-                            onChange={clockLeadingZeroChange}
-                        />
                         <TextEditor
                             label="Custom Styles"
                             id="css_edit"
@@ -232,6 +227,11 @@ export const SettingsForm = observer(
                             defaultValue={Settings.css}
                             style={{ resize: "vertical" }}
                             rows={5}
+                        />
+                        <Checkbox
+                            children="Clock Leading Zero"
+                            defaultValue={Settings.clockLeadingZero}
+                            onChange={clockLeadingZeroChange}
                         />
                     </div>
                 </Collapsible>

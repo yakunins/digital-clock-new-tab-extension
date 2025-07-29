@@ -14,22 +14,21 @@ export const usePosition = (ref: React.RefObject<HTMLElement>): Pos => {
     const [pos, setPos] = useState<Pos>({ top: 0, left: 0 });
 
     const updatePos = () => {
-        if (ref.current) {
-            const rect = ref.current.getBoundingClientRect();
-            const next = {
-                top: rect.top + window.scrollY,
-                left: rect.left + window.scrollX,
-            };
+        if (!ref.current) return;
 
-            if (pos?.top !== next.top || pos?.left !== next.left) {
-                setPos(next);
-            }
+        const rect = ref.current.getBoundingClientRect();
+        const next = {
+            top: rect.top + window.scrollY,
+            left: rect.left + window.scrollX,
+        };
+
+        if (pos?.top !== next.top || pos?.left !== next.left) {
+            setPos(next);
         }
     };
 
     useLayoutEffect(() => {
-        const anchor = ref.current;
-        if (!anchor) return;
+        if (!ref.current) return;
 
         const resizeObserver = new ResizeObserver(updatePos);
         const mutationObserver = new MutationObserver(updatePos);

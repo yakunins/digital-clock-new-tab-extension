@@ -1,5 +1,5 @@
 import React, { useId } from "react";
-import { clsx } from "clsx";
+import { cx } from "../../utils";
 
 import "./text-editor.css";
 
@@ -34,9 +34,7 @@ export const TextEditor = ({
     }, [defaultValue]);
 
     return (
-        <div
-            className={clsx(`text-editor`, className, errorMessage && "error")}
-        >
+        <div className={cx(`text-editor`, className, errorMessage && "error")}>
             {label && <label htmlFor={id}>{label}</label>}
             <div className="wrapper focus-within">
                 <textarea

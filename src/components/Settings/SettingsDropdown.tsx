@@ -10,7 +10,7 @@ const initialOpened = sessionStorage.getItem(sessionStorageItem) === "true";
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const SettingsDropdown = ({ ...rest }: DivProps) => {
-    const dropdownElement = useRef<HTMLDivElement>(null);
+    const dropdownElement = useRef<HTMLDivElement>(null!);
     const [opened, setOpened] = useState(initialOpened);
 
     const toggle = () => setOpened((prev) => !prev);

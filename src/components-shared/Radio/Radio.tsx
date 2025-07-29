@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useId, memo } from "react";
-import { clsx } from "clsx";
 
+import { cx } from "../../utils";
 import { RadioButton } from "./RadioButton";
 import { useSize } from "../../hooks";
 import "./radio.css";
@@ -17,7 +17,7 @@ export type Radio = Omit<FieldSetProps, "onChange"> & {
 export const Radio = memo(
     ({ defaultValue, options, onChange, legend, name, ...rest }: Radio) => {
         const id = name || useId();
-        const container = useRef<HTMLDivElement>(null);
+        const container = useRef<HTMLDivElement>(null!);
         const { width } = useSize(container);
         const [value, setValue] = useState<RadioButton["value"]>(
             defaultValue || getValue(options)
@@ -66,13 +66,13 @@ export const Radio = memo(
         return (
             <fieldset
                 {...rest}
-                className={clsx("radio", rest.className)}
+                className={cx("radio", rest.className)}
                 onChange={handleChange}
             >
                 <div className="fieldset-style-wrapper">
                     {legend && <legend onClick={focusValue}>{legend}</legend>}
                     <div
-                        className={clsx("radio-options", getCheckedClassName())}
+                        className={cx("radio-options", getCheckedClassName())}
                         ref={container}
                     >
                         <div className="checked-indicator" />

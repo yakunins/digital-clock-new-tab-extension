@@ -1,4 +1,4 @@
-import { getDateString, getTimeString } from "../utils";
+import { getDateString, getTimeString, cx } from "../utils";
 
 const day = new Date("28 September 2022");
 
@@ -19,4 +19,24 @@ test("getTimeString", () => {
     expect(getTimeString(locale, 0, day)).toBe("12:00 am");
     expect(getTimeString(locale, 15, day)).toBe("12:15 am");
     expect(getTimeString(locale, -15, day)).toBe("11:45 pm");
+});
+
+test("cx (merges class names correctly)", () => {
+    const result = cx(
+        "btn",
+        "btn-primary",
+        { active: true, disabled: false },
+        ["extra", { visible: true, hidden: false }],
+        null,
+        undefined,
+        false,
+        0,
+        -123,
+        ["nested", ["deeplyNested", { deep: true }]],
+        { tested: undefined }
+    );
+
+    expect(result).toBe(
+        "btn btn-primary active extra visible 0 -123 nested deeplyNested deep"
+    );
 });

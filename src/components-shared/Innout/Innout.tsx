@@ -1,5 +1,12 @@
-import React, { useState, useRef, useEffect, CSSProperties } from "react";
+import React, {
+    useState,
+    useRef,
+    useEffect,
+    useMemo,
+    CSSProperties,
+} from "react";
 
+import { cx } from "../../utils";
 import "./innout.css";
 
 type Stage = {
@@ -56,31 +63,34 @@ export const Innout = ({
     scrollIntoView = false,
     ...rest
 }: Innout) => {
-    const allStages = [...unmountStages, ...stages, ...mountStages];
+    const allStages = useMemo(
+        () => [...unmountStages, ...stages, ...mountStages],
+        [stages]
+    );
     const lastStage = allStages.length - 1;
     const dir = out ? "out" : "in";
     const [stage, setStage] = useState<number>(out ? 0 : lastStage);
     const prevStage = useRef<number>(out ? 0 : lastStage);
-    const tid = useRef<ReturnType<typeof setTimeout>>();
-    const innoutWrapperElement = useRef<HTMLDivElement>(null);
+    const tid = useRef<ReturnType<typeof setTimeout>>(-1);
+    const innoutWrapperElement = useRef<HTMLDivElement>(null!);
 
-    const durations = {} as any;
-    stages.forEach((i, idx) => {
-        durations[`--stage-${idx}-duration`] = i.duration + "ms";
-    });
+    const durations = stages.reduce(
+        (acc, i, idx) => {
+            acc[`--stage-${idx}-duration`] = `${i.duration}ms`;
+            return acc;
+        },
+        {} as Record<string, string>
+    );
+
     const styles = {
         ...durations,
         ...rest.style,
     } as CSSProperties;
 
-    const getClassName = React.useCallback(() => {
-        const cx = allStages[stage][`class_${dir}`];
-        if (out) {
-            return addClass(cx, "out");
-        } else {
-            return addClass(cx, "in");
-        }
-    }, [out, stage, stages.length]);
+    const className = useMemo(() => {
+        const baseClass = allStages[stage][`class_${dir}`];
+        return cx(baseClass, dir);
+    }, [allStages, dir, stage]);
 
     const handleScrollIntoView = () => {
         if (!scrollIntoView) return;
@@ -133,15 +143,9 @@ export const Innout = ({
     return (
         <div
             {...rest}
-            className={`innout animation ${getClassName()}`}
+            className={cx("innout animation", className)}
             style={styles}
             ref={innoutWrapperElement}
         />
     );
-};
-
-const addClass = (cx: string, cls: string) => {
-    const parts = cx.split(" ");
-    if (parts.includes(cls)) return cx;
-    return cls + " " + cx;
 };

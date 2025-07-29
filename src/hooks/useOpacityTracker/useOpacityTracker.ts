@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 export const useOpacityTracker = (ref: React.RefObject<HTMLElement>) => {
     const [opacity, setOpacity] = useState<number>(1);
-    const animationFrameRef = useRef<number | null>(null);
+    const animationFrameRef = useRef<number>(null!);
 
     useEffect(() => {
         const element = ref.current;
@@ -18,7 +18,7 @@ export const useOpacityTracker = (ref: React.RefObject<HTMLElement>) => {
         animationFrameRef.current = requestAnimationFrame(updateOpacity);
 
         return () => {
-            if (animationFrameRef.current) {
+            if (animationFrameRef.current !== null) {
                 cancelAnimationFrame(animationFrameRef.current);
             }
         };

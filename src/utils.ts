@@ -141,3 +141,39 @@ export const getLocaleString = (
     });
     return localeString;
 };
+
+type ClassValue =
+    | string
+    | number
+    | boolean
+    | null
+    | undefined
+    | ClassValue[]
+    | { [key: string]: boolean | undefined | null };
+
+export function cx(...args: ClassValue[]): string {
+    const classes: string[] = [];
+
+    for (const arg of args) {
+        if (typeof arg === "string" || typeof arg === "number") {
+            classes.push(String(arg));
+            continue;
+        }
+
+        if (!arg) continue;
+
+        if (Array.isArray(arg)) {
+            classes.push(cx(...arg));
+            continue;
+        }
+
+        if (typeof arg === "object") {
+            for (const [key, value] of Object.entries(arg)) {
+                if (value) classes.push(key);
+            }
+            continue;
+        }
+    }
+
+    return classes.join(" ");
+}

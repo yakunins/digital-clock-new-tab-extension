@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import React, { useCallback, useState, useEffect, memo } from "react";
 import { observer } from "mobx-react";
 import { Blinker } from "react-led-digit";

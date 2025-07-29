@@ -1,35 +1,37 @@
 import { useEffect, useState, RefObject } from "react";
 
+const passive: AddEventListenerOptions = { passive: true };
+
 export const useFocusWithin = (ref: RefObject<HTMLElement>): boolean => {
     const [isFocusWithin, setIsFocusWithin] = useState(false);
 
     useEffect(() => {
-        const element = ref.current;
+        const el = ref.current;
+        if (!el) return;
 
         const handleFocusIn = (event: FocusEvent) => {
-            if (element && element.contains(event.target as Node)) {
+            if (el.contains(event.target as Node)) {
                 setIsFocusWithin(true);
             }
         };
 
         const handleFocusOut = (event: FocusEvent) => {
-            if (element && !element.contains(event.relatedTarget as Node)) {
+            if (
+                !event.relatedTarget ||
+                !el.contains(event.relatedTarget as Node)
+            ) {
                 setIsFocusWithin(false);
             }
         };
 
-        if (element) {
-            element.addEventListener("focusin", handleFocusIn);
-            element.addEventListener("focusout", handleFocusOut);
-        }
+        el.addEventListener("focusin", handleFocusIn, passive);
+        el.addEventListener("focusout", handleFocusOut, passive);
 
         return () => {
-            if (element) {
-                element.removeEventListener("focusin", handleFocusIn);
-                element.removeEventListener("focusout", handleFocusOut);
-            }
+            el.removeEventListener("focusin", handleFocusIn);
+            el.removeEventListener("focusout", handleFocusOut);
         };
-    }, [ref]);
+    }, []);
 
     return isFocusWithin;
 };

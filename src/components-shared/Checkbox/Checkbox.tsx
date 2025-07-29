@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useId, memo } from "react";
-import { Icon, Innout } from "../../components-shared";
-import { clsx } from "clsx";
 
+import { cx } from "../../utils";
 import "./checkbox.css";
 
 export interface Checkbox
@@ -20,7 +19,7 @@ export const Checkbox = memo(
         const [isChecked, setChecked] = useState(defaultValue);
         const [isFocused, setFocused] = useState(false);
 
-        const inputRef = useRef<HTMLInputElement>(null);
+        const inputRef = useRef<HTMLInputElement>(null!);
         const id = rest.id || useId();
 
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,11 +39,12 @@ export const Checkbox = memo(
 
         useEffect(() => {
             setChecked(defaultValue);
+            console.log("id", id);
         }, [defaultValue]);
 
         return (
             <div
-                className={clsx(
+                className={cx(
                     "checkbox",
                     { checked: isChecked },
                     { focused: isFocused },

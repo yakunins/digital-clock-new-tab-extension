@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useId, memo } from "react";
-import { clsx } from "clsx";
+import { cx } from "../../utils";
 
 type InputProps = React.HTMLAttributes<HTMLInputElement>;
 export type RadioButton = InputProps & {
@@ -11,7 +11,7 @@ export type RadioButton = InputProps & {
 
 export const RadioButton = memo(
     ({ children, checked, className, name, value, ...rest }: RadioButton) => {
-        const inputRef = useRef<HTMLInputElement>(null);
+        const inputRef = useRef<HTMLInputElement>(null!);
         const [focused, setFocused] = useState(false);
         const id = rest.id || useId();
 
@@ -20,7 +20,9 @@ export const RadioButton = memo(
         }, [focused]);
 
         return (
-            <div className={clsx("radio-button", className, { checked })}>
+            <div
+                className={cx("radio-button", className, checked && "checked")}
+            >
                 <input
                     {...rest}
                     className="visually-hidden"

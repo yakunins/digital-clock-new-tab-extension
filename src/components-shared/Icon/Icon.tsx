@@ -1,5 +1,5 @@
 import React from "react";
-import { clsx } from "clsx";
+import { cx } from "../../utils";
 import "./icon.css";
 
 type IconName = keyof typeof iconNames;
@@ -10,7 +10,7 @@ export type Icon = SpanProps & {
 
 export const Icon = ({ name, ...rest }: Icon) => {
     return (
-        <span {...rest} className={clsx("icon", rest.className)}>
+        <span {...rest} className={cx("icon", rest.className)}>
             {iconNames[name]}
         </span>
     );

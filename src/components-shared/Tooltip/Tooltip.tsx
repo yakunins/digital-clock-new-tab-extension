@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { clsx } from "clsx";
 
+import { cx } from "../../utils";
 import { Innout } from "../Innout";
 import {
     useSize,
@@ -48,9 +48,9 @@ export const Tooltip = ({
     autoFlipDistance = 150,
     ...rest
 }: Tooltip) => {
-    const anchor = React.useRef<HTMLDivElement>(null);
-    const ship = React.useRef<HTMLDivElement>(null);
-    const t = React.useRef<ReturnType<typeof setTimeout>>();
+    const anchor = useRef<HTMLDivElement>(null!);
+    const ship = useRef<HTMLDivElement>(null!);
+    const t = useRef<ReturnType<typeof setTimeout>>(-1);
 
     const { width, height } = useSize(anchor);
     const { top, left } = usePosition(anchor);
@@ -58,8 +58,8 @@ export const Tooltip = ({
     const opacity = useOpacityTracker(anchor);
     const hasFocusable = useHasFocusable(anchor);
 
-    const [hidden, setHidden] = React.useState(true);
-    const [dir, setDir] = React.useState(direction); // effective direction based on autoFlipOffset
+    const [hidden, setHidden] = useState(true);
+    const [dir, setDir] = useState(direction); // effective direction based on autoFlipOffset
 
     const hide = (e?: Event) => {
         // ignore synthetic mouse events from touch
@@ -160,7 +160,7 @@ export const Tooltip = ({
         <>
             <div
                 ref={anchor}
-                className={clsx(
+                className={cx(
                     "tooltip-anchor",
                     hidden && "hidden",
                     !hasFocusable && "focusable",
@@ -171,11 +171,11 @@ export const Tooltip = ({
                 {children}
             </div>
             {createPortal(
-                <div ref={ship} className={clsx("tooltip-ship")}>
+                <div ref={ship} className="tooltip-ship">
                     <Innout out={hidden}>
                         <div
                             {...rest}
-                            className={clsx("tooltip", dir, rest.className)}
+                            className={cx("tooltip", dir, rest.className)}
                         >
                             {text}
                         </div>

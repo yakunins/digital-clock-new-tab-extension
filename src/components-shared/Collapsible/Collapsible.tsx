@@ -1,6 +1,6 @@
 import React from "react";
-import { clsx } from "clsx";
 
+import { cx } from "../../utils";
 import { Icon } from "../Icon";
 import { Innout } from "../Innout";
 import { useSessionState } from "../../hooks";
@@ -44,7 +44,7 @@ export const Collapsible = ({
         <details
             {...rest}
             open={!collapsed || fading}
-            className={clsx(
+            className={cx(
                 "collapsible",
                 collapsed && !fading ? "collapsed" : "expanded",
                 rest.className
