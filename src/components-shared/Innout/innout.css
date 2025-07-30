@@ -1,22 +1,19 @@
 .innout {
-    &.stage-0-in,
-    &.stage-0-out {
-        transition-property: opacity;
-        transition-duration: var(--stage-0-duration, 0.25s);
-    }
+    transition-property: opacity;
+    transition-duration: var(--duration-step, 0.25s);
 
-    &.in-end,
-    &.out-start,
-    &.stage-0-in {
-        opacity: 1;
-    }
-    &.out-end,
-    &.in-start,
-    &.stage-0-out {
+    &.mounted,
+    &.step.out {
         opacity: 0;
         pointer-events: none;
     }
+
+    &.finished,
+    &.step.in {
+        opacity: 1;
+    }
 }
+
 .innout-into-view {
     display: none;
 }

@@ -14,6 +14,11 @@
         top: auto;
         bottom: 0;
     }
+    .settings-overlay {
+        --translate-move:
+            calc(var(--button-size) * 0.1), calc(var(--button-size) * 0.1);
+        transform-origin: bottom right;
+    }
 }
 
 @media (pointer: coarse) and (orientation: portrait) {
@@ -21,8 +26,8 @@
         --c-1: var(--bg-color-2); /* upper strip */
         --c-2: var(--bg-color-3); /* lower strip */
         --scroll-height: 50dvh;
-        top: auto;
         bottom: calc(var(--button-size) * 0.9);
+        top: auto;
     }
     [data-settings-opened="true"] {
         .content {

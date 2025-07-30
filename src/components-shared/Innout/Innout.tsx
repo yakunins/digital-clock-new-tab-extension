@@ -9,74 +9,48 @@ import React, {
 import { cx } from "../../utils";
 import "./innout.css";
 
-type Stage = {
+type Step = {
     duration: number;
-    class_in: string;
-    class_out: string;
+    name?: string;
 };
-type Stages = Stage[];
+type Steps = Step[];
 
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
 type Innout = DivProps & {
     out: boolean;
-    stages?: Stages;
-    minimumDuration?: number;
-    scrollIntoView?: boolean; // show full element on last stage of in animation
+    classNameSteps?: Steps;
+    minStepDuration?: number;
+    scrollIntoView?: boolean; // show entire element on last step of in animation
 };
 
-const unmountStages = [
-    {
-        duration: 0,
-        class_in: "out", // unmounted
-        class_out: "out", // unmounted
-    },
-    {
-        duration: 10,
-        class_in: "in-start", // just mounted
-        class_out: "out-end", // to be unmounted
-    },
-];
-const defaultStages = [
-    {
-        duration: 250,
-        class_in: "stage-0-in", // revealing
-        class_out: "stage-0-out", // hiding
-    },
-];
-const mountStages = [
-    {
-        duration: 10,
-        class_in: "in-end",
-        class_out: "out-start",
-    },
-    {
-        duration: 0,
-        class_in: "in", // fully mounted
-        class_out: "in", // fully mounted
-    },
+const unmounted = { duration: -1, name: "unmounted" }; // never rendered
+const defaultSteps: Steps = [
+    { duration: 1, name: "mounted" },
+    { duration: 250, name: "step" },
+    { duration: 1, name: "finished" },
 ];
 
 export const Innout = ({
     out,
-    stages = defaultStages,
-    minimumDuration = 25,
+    classNameSteps = defaultSteps,
+    minStepDuration = 25,
     scrollIntoView = false,
     ...rest
 }: Innout) => {
-    const allStages = useMemo(
-        () => [...unmountStages, ...stages, ...mountStages],
-        [stages]
-    );
-    const lastStage = allStages.length - 1;
     const dir = out ? "out" : "in";
-    const [stage, setStage] = useState<number>(out ? 0 : lastStage);
-    const prevStage = useRef<number>(out ? 0 : lastStage);
+    const steps: Steps = useMemo(
+        () => [unmounted, ...classNameSteps],
+        [classNameSteps]
+    );
+    const [step, setStep] = useState<number>(() => (out ? 0 : last(steps)));
     const tid = useRef<ReturnType<typeof setTimeout>>(-1);
-    const innoutWrapperElement = useRef<HTMLDivElement>(null!);
+    const wrapperElement = useRef<HTMLDivElement>(null!);
 
-    const durations = stages.reduce(
-        (acc, i, idx) => {
-            acc[`--stage-${idx}-duration`] = `${i.duration}ms`;
+    const durations = classNameSteps.reduce(
+        (acc, i) => {
+            if (i?.name && i?.duration > 0) {
+                acc[`--duration-${i.name}`] = `${i.duration}ms`;
+            }
             return acc;
         },
         {} as Record<string, string>
@@ -87,65 +61,82 @@ export const Innout = ({
         ...rest.style,
     } as CSSProperties;
 
-    const className = useMemo(() => {
-        const baseClass = allStages[stage][`class_${dir}`];
-        return cx(baseClass, dir);
-    }, [allStages, dir, stage]);
+    const stepClassName = useMemo(() => {
+        const name = steps[step]?.name;
+        const duration = steps[step]?.duration;
+        const stepClassName = duration > 0 && name;
+
+        const isAnimating =
+            (dir === "in" && step !== last(steps)) ||
+            (dir === "out" && step !== 0);
+        const animationClassName = isAnimating && `animation ${dir}`; // e.g. "animation in"
+
+        return cx(stepClassName, animationClassName);
+    }, [toStr(steps), dir, step]);
 
     const handleScrollIntoView = () => {
         if (!scrollIntoView) return;
-        if (stage === prevStage.current) return; // prevent scrollIntoView on render without staging
-        if (stage === lastStage) {
-            innoutWrapperElement.current?.scrollIntoView({
+        if (tid.current < 0) return; // prevents scrollIntoView on first render
+        if (step === last(steps)) {
+            wrapperElement.current?.scrollIntoView({
                 behavior: "smooth",
             });
         }
     };
 
-    function nextStage() {
-        if (out) {
-            if (stage - 1 >= 0) {
-                prevStage.current = stage;
-                setStage(stage - 1);
-            }
-        } else {
-            if (stage + 1 <= lastStage) {
-                prevStage.current = stage;
-                setStage(stage + 1);
-            }
-        }
+    function moveIn() {
+        setStep((p) => p + 1);
+    }
+    function moveOut() {
+        setStep((p) => p - 1);
     }
 
-    function scheduleNextStage() {
+    function scheduleNext() {
+        if (dir === "in" && step === last(steps)) return;
+        if (dir === "out" && step === 0) return;
+
         clearTimeout(tid.current);
+
         const duration =
-            allStages[stage].duration === 0
+            steps[step].duration < 1
                 ? 0
-                : allStages[stage].duration > minimumDuration
-                  ? allStages[stage].duration
-                  : minimumDuration;
-        tid.current = setTimeout(() => {
-            nextStage();
-        }, duration);
+                : steps[step].duration > minStepDuration
+                  ? steps[step].duration
+                  : minStepDuration;
+
+        dir === "in"
+            ? (tid.current = setTimeout(moveIn, duration))
+            : (tid.current = setTimeout(moveOut, duration));
     }
 
     useEffect(() => {
-        scheduleNextStage();
+        scheduleNext();
         return () => clearTimeout(tid.current);
-    }, [out, stage, stages.length]);
+    }, [out, step, toStr(steps)]);
 
     useEffect(() => {
         handleScrollIntoView();
-    }, [out, scrollIntoView, stage]);
+    }, [out, scrollIntoView, step]);
 
-    if (stage === 0) return null;
+    if (step === 0) return null;
 
     return (
         <div
             {...rest}
-            className={cx("innout animation", className)}
+            className={cx("innout", rest.className, stepClassName)}
             style={styles}
-            ref={innoutWrapperElement}
+            ref={wrapperElement}
         />
     );
 };
+
+const toStr = (...args: any) => {
+    try {
+        const res = JSON.stringify(args);
+        return res;
+    } catch (err) {
+        console.warn(err);
+    }
+};
+
+const last = (arr: any[]) => arr.length - 1;

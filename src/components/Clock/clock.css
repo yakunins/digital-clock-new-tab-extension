@@ -86,40 +86,29 @@
     }
 
     .innout {
-        &.fade-in,
-        &.fade-out {
-            transition-property: opacity;
-            transition-duration: var(--stage-1-duration, 0.2s);
-        }
-
-        &.in-end,
-        &.out-start,
-        &.fade-in {
+        &.finished,
+        &.fade.in {
             opacity: 1;
         }
-        &.out-end,
-        &.in-start,
-        &.fade-out {
+        &.mounted,
+        &.fade.digit.ampm {
             opacity: 0;
             pointer-events: none;
         }
-
-        &.width-in,
-        &.width-out {
+        &.width.in,
+        &.width.out {
             opacity: 0;
         }
-        &.in-end,
-        &.out-start,
-        &.width-in {
+        &.finished,
+        &.width.in {
             margin-left: 0;
 
             .digit.ampm {
                 margin-right: -1.5em;
             }
         }
-        &.out-end,
-        &.in-start,
-        &.width-out {
+        &.mounted.in,
+        &.width.out {
             margin-left: calc(var(--clock-gap) * -1);
 
             .digit.ampm {
@@ -129,8 +118,8 @@
     }
     .digit.ampm,
     .innout {
-        transition-property: margin-right, margin-left;
-        transition-duration: var(--stage-0-duration, 0.2s);
+        transition-property: margin-right, margin-left, opacity;
+        transition-duration: var(--duration-width, 0.2s);
     }
 }
 

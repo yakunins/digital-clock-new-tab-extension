@@ -101,13 +101,6 @@
     overflow: hidden;
     max-height: var(--scroll-height);
 
-    _mask-image: linear-gradient(
-        transparent 0%,
-        black var(--scroll-gradient-size),
-        black calc(100% - var(--scroll-gradient-size)),
-        transparent 100%
-    );
-
     .scroll-wrapper {
         --padding-x: calc(var(--padding) * 2);
         --padding-y: calc(var(--padding) * 1.5 + var(--radius) * 0.5);
@@ -118,5 +111,30 @@
         overflow-x: hidden;
         overflow-y: auto;
         position: relative;
+    }
+}
+
+/* animation */
+.settings-overlay {
+    --translate-move:
+        calc(var(--button-size) * 0.1), calc(var(--button-size) * -0.1);
+
+    transform: scale(100%) translate(0);
+    transform-origin: top right;
+    transition-property: transform;
+    transition-duration: var(--duration-step, 0.25s);
+}
+
+.innout {
+    &.step.in {
+        .settings-overlay {
+            transform: scale(100%) translate(0);
+        }
+    }
+    &.mounted.in,
+    &.step.out {
+        .settings-overlay {
+            transform: scale(96%) translate(var(--translate-move));
+        }
     }
 }

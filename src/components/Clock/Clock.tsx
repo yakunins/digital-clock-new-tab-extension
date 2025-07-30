@@ -107,7 +107,7 @@ export const Clock = observer(
                 })}
                 <Innout
                     out={!ampm}
-                    stages={ampmAnimationStages}
+                    classNameSteps={ampmAnimationSteps}
                     style={{ display: "flex" }}
                 >
                     <Digit
@@ -122,17 +122,11 @@ export const Clock = observer(
     }
 );
 
-const ampmAnimationStages = [
-    {
-        duration: 250,
-        class_in: "width-in",
-        class_out: "width-out",
-    },
-    {
-        duration: 250,
-        class_in: "fade-in",
-        class_out: "fade-out",
-    },
+const ampmAnimationSteps = [
+    { duration: 1, name: "mounted" },
+    { duration: 250, name: "width" },
+    { duration: 250, name: "fade" },
+    { duration: 1, name: "finished" },
 ];
 
 const toLocale = (clockFormat: Settings["clockType"]) => {

@@ -49,14 +49,14 @@ export const DateInfo = observer(({ ...rest }: DateInfo) => {
             <Innout
                 key="1"
                 out={Settings.dateStyle !== "short"}
-                stages={dateAnimationStages}
+                classNameSteps={dateAnimationSteps}
             >
                 <FormattedDate dateString={dateShort()} format={"short"} />
             </Innout>
             <Innout
                 key="2"
                 out={Settings.dateStyle !== "long"}
-                stages={dateAnimationStages}
+                classNameSteps={dateAnimationSteps}
             >
                 <FormattedDate dateString={dateLong()} format={"long"} />
             </Innout>
@@ -64,12 +64,10 @@ export const DateInfo = observer(({ ...rest }: DateInfo) => {
     );
 });
 
-const dateAnimationStages = [
-    {
-        duration: 500,
-        class_in: "stage-0-in",
-        class_out: "stage-0-out",
-    },
+const dateAnimationSteps = [
+    { duration: 1, name: "mounted" },
+    { duration: 500, name: "step" },
+    { duration: 1, name: "finished" },
 ];
 
 type FormattedDateProps = {
