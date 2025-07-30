@@ -175,5 +175,5 @@ export function cx(...args: ClassValue[]): string {
         }
     }
 
-    return Array.from(classes).join(" ");
+    return Array.from(classes).join(" ").trim();
 }
