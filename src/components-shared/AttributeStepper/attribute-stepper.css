@@ -1,0 +1,19 @@
+.innout {
+    transition-property: opacity;
+    transition-duration: var(--duration-step, 0.25s);
+
+    &.mounted,
+    &.step.out {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    &.finished,
+    &.step.in {
+        opacity: 1;
+    }
+}
+
+.innout-into-view {
+    display: none;
+}
