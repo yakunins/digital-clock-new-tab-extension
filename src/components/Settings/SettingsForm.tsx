@@ -146,62 +146,9 @@ export const SettingsForm = observer(
                         style={{ marginTop: "calc(var(--gap-y) / 2)" }}
                     >
                         <Radio
-                            className="favicon-radio"
                             legend="Favicon"
                             defaultValue={Settings.favicon}
-                            options={[
-                                {
-                                    value: "browser_default",
-                                    children: (
-                                        <div>
-                                            <Icon
-                                                name="earth"
-                                                style={{
-                                                    width: "16px",
-                                                    height: "16px",
-                                                    opacity: 0.5,
-                                                    display: "none",
-                                                }}
-                                            />
-                                            Default
-                                        </div>
-                                    ),
-                                },
-                                {
-                                    value: "digit",
-                                    children: (
-                                        <div>
-                                            <Icon
-                                                name="eight"
-                                                style={{
-                                                    width: "16px",
-                                                    height: "16px",
-                                                    opacity: 0.5,
-                                                    display: "none",
-                                                }}
-                                            />
-                                            Digit
-                                        </div>
-                                    ),
-                                },
-                                {
-                                    value: "transparent",
-                                    children: (
-                                        <div>
-                                            <Icon
-                                                name="square"
-                                                style={{
-                                                    width: "16px",
-                                                    height: "16px",
-                                                    opacity: 0.1,
-                                                    display: "none",
-                                                }}
-                                            />
-                                            None
-                                        </div>
-                                    ),
-                                },
-                            ]}
+                            options={faviconOptions}
                             onChange={faviconChange}
                         />
                         <SliderControlled
@@ -248,6 +195,21 @@ export const SettingsForm = observer(
         );
     }
 );
+
+const faviconOptions = [
+    {
+        value: "browser_default",
+        children: "Default",
+    },
+    {
+        value: "digit",
+        children: "Digit",
+    },
+    {
+        value: "transparent",
+        children: "None",
+    },
+];
 
 const helpIconStyle = {
     display: "inline-block",

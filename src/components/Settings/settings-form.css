@@ -19,14 +19,6 @@
             margin-bottom: calc(var(--padding) * -1);
         }
     }
-
-    .favicon-radio label {
-        mix-blend-mode: multiply;
-
-        img[alt="transparent"] {
-            background-color: rgba(127, 127, 127, 0.1);
-        }
-    }
 }
 
 .reset-to-defaults {
