@@ -69,27 +69,33 @@
     }
 }
 .settings-overlay {
-    --c-dialog-bg: white;
-    --c-fill: color-mix(in srgb, var(--c-dialog-bg), transparent 17.5%);
+    --o-dialog: 17.5%;
+    --c-dialog: white;
+    --c-dialog-fill: color-mix(
+        in srgb,
+        var(--c-dialog),
+        transparent var(--o-dialog)
+    );
 
     --c-1: var(--bg-color-1); /* upper strip */
     --c-2: var(--bg-color-3); /* lower strip */
     --c-grad-01: color-mix(in srgb, var(--c-1), transparent 65%);
     --c-grad-02: color-mix(in srgb, var(--c-2), transparent 65%);
+
+    --c-grad-average: color-mix(in srgb, var(--c-1), var(--c-2) 50%);
+    --c-dialog-average: color-mix(
+        in srgb,
+        var(--c-dialog),
+        var(--c-grad-average) 35%
+    );
+
     --shadow-border: 0 0 0.125em rgba(0, 0, 0, 0.05);
     --shadow-dark-s: 0 0.2em 2em rgba(0, 0, 0, 0.05);
     --shadow-dark-l: 0 0.6em 6em rgba(0, 0, 0, 0.05);
 
-    --scroll-height: 75vh;
+    --scroll-height: 75dvh;
     --scroll-gradient-size: 0dvh;
 
-    backdrop-filter: saturate(125%) blur(0.25em);
-    background-color: var(--c-fill);
-    background-image: linear-gradient(
-        170deg,
-        var(--c-grad-01),
-        var(--c-grad-02)
-    );
     border-radius: calc(var(--radius) * 1.5);
     box-shadow:
         var(--shadow-border), var(--shadow-dark-s), var(--shadow-dark-l);
@@ -101,6 +107,20 @@
     overflow: hidden;
     max-height: var(--scroll-height);
 
+    .backdrop-fill {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        isolation: isolate;
+        backdrop-filter: blur(0.25em) saturate(125%);
+        background-color: var(--c-dialog-fill);
+        background-image: linear-gradient(
+            170deg,
+            var(--c-grad-01),
+            var(--c-grad-02)
+        );
+    }
     .scroll-wrapper {
         --padding-x: calc(var(--padding) * 2);
         --padding-y: calc(var(--padding) * 1.5 + var(--radius) * 0.5);

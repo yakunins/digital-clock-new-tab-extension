@@ -23,7 +23,7 @@
             }
         }
         &:focus-visible {
-            outline: 2px solid var(--text-color, currentColor);
+            outline: var(--s-2px) solid var(--c-text, currentColor);
         }
     }
     &.collapsed {

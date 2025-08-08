@@ -50,6 +50,7 @@ export const SettingsDropdown = ({ ...rest }: DivProps) => {
             />
             <Innout out={!opened}>
                 <div className="settings-overlay">
+                    <div className="backdrop-fill"></div>
                     <div className="scroll-wrapper">
                         <SettingsForm close={close} origin="tab" />
                     </div>

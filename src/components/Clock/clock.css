@@ -1,5 +1,5 @@
 .clock {
-    --clock-color: var(--color, currentColor);
+    --c-clock: var(--color, currentColor);
     --clock-font-size: 1rem;
     --clock-frame-offset: calc(var(--clock-font-size) * -2.5);
     --clock-frame-opacity: 0.1;
@@ -9,18 +9,18 @@
     --blur-size: calc(var(--s-1px) * 0.65);
     --glow-size: 3em;
     --glow-opacity: 100%;
-    --glow-color: color-mix(
+    --c-glow: color-mix(
         in srgb,
         transparent,
-        var(--clock-color) var(--glow-opacity)
+        var(--c-clock) var(--glow-opacity)
     );
-    --glow-color-10: color-mix(in srgb, transparent, var(--glow-color) 10%);
-    --glow-color-25: color-mix(in srgb, transparent, var(--glow-color) 25%);
-    --glow-color-33: color-mix(in srgb, transparent, var(--glow-color) 33%);
-    --glow-color-50: color-mix(in srgb, transparent, var(--glow-color) 50%);
-    --glow-color-75: color-mix(in srgb, transparent, var(--glow-color) 75%);
+    --c-glow-10: color-mix(in srgb, transparent, var(--c-glow) 10%);
+    --c-glow-25: color-mix(in srgb, transparent, var(--c-glow) 25%);
+    --c-glow-33: color-mix(in srgb, transparent, var(--c-glow) 33%);
+    --c-glow-50: color-mix(in srgb, transparent, var(--c-glow) 50%);
+    --c-glow-75: color-mix(in srgb, transparent, var(--c-glow) 75%);
 
-    color: var(--clock-color);
+    color: var(--c-clock);
     display: flex;
     font-size: var(--clock-font-size);
     gap: var(--clock-gap);
@@ -30,7 +30,7 @@
         rotate3d(0, 0, 1, 0.25deg);
 
     .clock-frame {
-        border: var(--s-1px) solid var(--clock-color);
+        border: var(--s-1px) solid var(--c-clock);
         border-radius: calc(-1 * var(--clock-frame-offset) + 0.5em);
         opacity: var(--clock-frame-opacity, 0.2);
         position: absolute;
@@ -45,12 +45,12 @@
     .clock-glow {
         --g-1: radial-gradient(
             circle at 25% 50%,
-            var(--clock-color) 0%,
+            var(--c-clock) 0%,
             transparent 25%
         );
         --g-2: radial-gradient(
             circle at 75% 50%,
-            var(--clock-color) 0%,
+            var(--c-clock) 0%,
             transparent 25%
         );
         background: var(--g-1), var(--g-2);
@@ -68,7 +68,7 @@
     .digit {
         --transition-duration: var(--duration. 0.2s);
 
-        filter: drop-shadow(0 0 calc(var(--glow-size) / 2) var(--glow-color-25))
+        filter: drop-shadow(0 0 calc(var(--glow-size) / 2) var(--c-glow-25))
             blur(var(--blur-size));
     }
 
@@ -81,7 +81,7 @@
         margin-right: -1.5em;
     }
     .digit.colon.blinking {
-        filter: drop-shadow(0 0 calc(var(--glow-size) * 2) var(--glow-color-50))
+        filter: drop-shadow(0 0 calc(var(--glow-size) * 2) var(--c-glow-50))
             blur(var(--blur-size));
     }
 

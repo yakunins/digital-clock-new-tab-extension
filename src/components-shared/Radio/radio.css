@@ -26,48 +26,57 @@
     }
 
     .radio-options {
-        --accent-color: var(--text-color, currentColor);
-        --border-color: var(--accent-color);
+        --c-accent: var(--c-text, currentColor);
+        --c-border: var(--c-accent);
+        --c-fill: color-mix(in srgb, var(--c-accent), transparent 90%);
+        --c-shade: color-mix(in srgb, var(--c-accent), transparent 75%);
+        --c-bg: var(--c-dialog-average, white); /* SettingsDropdown.tsx */
+        --c-hover: color-mix(in srgb, var(--c-bg), transparent 86%);
         --border-width: var(--s-2px);
-
-        --fill-color: color-mix(in srgb, var(--accent-color), transparent 90%);
-        --shade-color: color-mix(in srgb, var(--accent-color), transparent 75%);
-        --hover-color: color-mix(in srgb, white, transparent 96%);
 
         border-radius: var(--rad);
         display: flex;
         position: relative;
 
         .radio-button {
+            border-radius: var(--rad);
             flex-grow: 1;
-            transition-property: background-image;
-            transition-duration: var(--duration, 0.2s);
-            z-index: 1;
+            position: relative;
 
-            &:hover {
-                background-image:
+            &:before {
+                border-radius: var(--radius);
+                content: "";
+                position: absolute;
+                top: var(--border-width);
+                bottom: var(--border-width);
+                left: var(--border-width);
+                right: var(--border-width);
+
+                backdrop-filter: brightness(100%);
+                transition-property: backdrop-filter;
+                transition-duration: var(--duration, 0.2s);
+                mask-image:
                     linear-gradient(
                         90deg,
-                        transparent 0%,
-                        transparent 5%,
-                        var(--hover-color) 25%,
-                        var(--hover-color) 75%,
-                        transparent 95%,
-                        transparent 100%
+                        transparent,
+                        black,
+                        black,
+                        transparent
                     ),
                     linear-gradient(
                         0deg,
-                        transparent 0%,
-                        transparent 5%,
-                        var(--hover-color) 25%,
-                        var(--hover-color) 75%,
-                        transparent 95%,
-                        transparent 100%
+                        transparent,
+                        black,
+                        black,
+                        transparent
                     );
             }
-
-            &.checked:hover {
-                background: none;
+            &:hover:before {
+                backdrop-filter: brightness(105%);
+            }
+            &.checked:before,
+            &.checked:hover:before {
+                backdrop-filter: brightness(100%);
             }
         }
 
@@ -122,11 +131,11 @@
 
             /* indicator's shape */
             &:after {
-                border-radius: var(--radius);
                 outline: var(--border-width) solid transparent; /* focus ring */
+                border-radius: var(--radius);
                 box-shadow:
-                    0 0 0 100vmax var(--fill-color),
-                    0 0 2vmax var(--border-width) var(--shade-color);
+                    0 0 0 100vmax var(--c-fill),
+                    0 0 2vmax var(--border-width) var(--c-shade);
                 content: "";
                 position: absolute;
                 top: var(--border-width);
@@ -134,13 +143,13 @@
                 width: calc(var(--checked-width) - var(--border-width) * 2);
                 height: calc(100% - var(--border-width) * 2);
                 box-sizing: border-box;
-                transition-property: left, width, border-radius, outline;
+                transition-property: left, width, outline, transform;
                 transition-duration: var(--duration, 0.2s);
             }
         }
 
         &:focus-within .checked-indicator:after {
-            outline: var(--border-width) solid var(--border-color); /* focus ring */
+            outline: var(--border-width) solid var(--c-border); /* focus ring */
         }
     }
 }

@@ -10,15 +10,14 @@
     --s-16px: 1rem;
 
     /* clock's digit color */
-    --color: rgba(168, 255, 236, 1);
     --color: rgba(198, 255, 240, 1); /* overriden in settings.store.ts */
 
     --typeface: "Segoe UI", Tahoma, sans-serif;
-    --text-color: black;
+    --c-text: black;
     --duration: 0.25s;
     --radius: var(--s-6px);
     --padding: var(--s-8px);
-    --scrollbar-color: color-mix(in srgb, transparent, currentColor 25%);
+    --c-scrollbar: color-mix(in srgb, transparent, currentColor 25%);
 }
 
 html,
@@ -30,7 +29,7 @@ body {
 body {
     font-family: var(--typeface);
     font-size: 1rem;
-    color: var(--text-color);
+    color: var(--c-text);
 }
 
 body.extension-newtab {
@@ -69,7 +68,7 @@ input,
 textarea {
     &.focus-within:focus-within,
     &:focus-visible {
-        outline-color: var(--text-color, currentColor);
+        outline-color: var(--c-text, currentColor);
         outline-style: solid;
         outline-width: var(--s-2px);
         outline-offset: calc(var(--s-1px) * -1);
@@ -111,14 +110,14 @@ textarea {
     background-color: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: var(--scrollbar-color);
+    background-color: var(--c-scrollbar);
     cursor: default;
 }
 
 @-moz-document url-prefix() {
     * {
         scrollbar-width: thin;
-        scrollbar-color: var(--scrollbar-color) transparent;
+        scrollbar-color: var(--c-scrollbar) transparent;
     }
     textarea {
         border-width: 1px;

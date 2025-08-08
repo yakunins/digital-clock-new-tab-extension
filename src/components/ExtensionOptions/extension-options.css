@@ -24,13 +24,13 @@ body.extension-options-modal {
 }
 
 .copy-info {
-    --color-25: color-mix(in srgb, var(--text-color), transparent 75%);
+    --c-text-35: color-mix(in srgb, var(--c-text), transparent 65%);
 
     margin-top: calc(var(--padding) * 1.25);
     padding-bottom: calc(var(--padding) * 0.25);
 
     a {
         color: black;
-        text-decoration-color: var(--color-25);
+        text-decoration-color: var(--c-text-35);
     }
 }

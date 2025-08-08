@@ -6,7 +6,6 @@
 
 .settings-form {
     --padding: var(var(--padding), 0.5em); /* 8px */
-    --text-color: black;
     --gap-y: 0.75em;
 
     min-width: 15em;
@@ -23,7 +22,7 @@
 
 .reset-to-defaults {
     button {
-        color: var(--text-color);
+        color: var(--c-text);
         cursor: pointer;
         background-color: transparent;
         border: none;
@@ -49,7 +48,7 @@
         }
         &.danger:disabled,
         &:disabled {
-            color: var(--text-color);
+            color: var(--c-text);
             opacity: 0.4;
             text-decoration-color: transparent;
             cursor: default;
