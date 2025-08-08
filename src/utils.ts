@@ -59,25 +59,26 @@ export const popularLocales = [
     "ar-EG", // 15
 ];
 
-type State = {
-    t: null | number;
-    collectedArgs: any[];
-};
+type MergeFunction<T = any> = (prev: T | undefined, next: T) => T;
+export function debouncedCallback<T extends any[]>(
+    fn: (...args: T) => void,
+    debouncePeriod = 100,
+    mergeItem: MergeFunction = sumObj
+) {
+    let timerId: ReturnType<typeof setTimeout> | null = null;
+    let accumulatedArgs: any[] = [];
 
-export function debouncedCallback(fn: Function, debouncePeriod = 100) {
-    const state: State = {
-        t: null,
-        collectedArgs: [],
-    };
-    return (...args: any) => {
-        if (state.t) {
-            clearTimeout(state.t); // cancel scheduled execution
-        }
-        state.collectedArgs = mergeArgs(state.collectedArgs, args);
-        (state.t as any) = setTimeout(() => {
-            fn(...state.collectedArgs);
-            state.t = null;
-            state.collectedArgs = [];
+    const mergeArgs = (prev: any[], next: any[]): any[] =>
+        next.map((item, i) => mergeItem(prev[i], item));
+
+    return (...args: T) => {
+        if (timerId) clearTimeout(timerId);
+        accumulatedArgs = mergeArgs(accumulatedArgs, args);
+
+        timerId = setTimeout(() => {
+            fn(...(accumulatedArgs as T));
+            timerId = null;
+            accumulatedArgs = [];
         }, debouncePeriod);
     };
 }
@@ -85,14 +86,6 @@ export function debouncedCallback(fn: Function, debouncePeriod = 100) {
 const digits = /^\d+$/;
 export const parseDigits = (str: string): string | number =>
     digits.test(str) ? parseInt(str, 10) : str;
-
-const mergeArgs = (prev: any[], next: any[]): any[] => {
-    const res: any[] = [];
-    next.forEach((i, idx) => {
-        res.push(sumObj(prev[idx], i));
-    });
-    return res;
-};
 
 const sumObj = (o1: unknown, o2: unknown) => {
     const t1 = typeof o1;
