@@ -40,7 +40,17 @@ export const Slider = ({
                 <SliderOutput />
             )}
             <SliderTrack>
-                <SliderThumb />
+                {({ state }) => (
+                    <>
+                        <div
+                            className="react-aria-SliderTrack-filled"
+                            style={{
+                                width: state.getThumbPercent(0) * 100 + "%",
+                            }}
+                        />
+                        <SliderThumb />
+                    </>
+                )}
             </SliderTrack>
         </AriaSlider>
     );

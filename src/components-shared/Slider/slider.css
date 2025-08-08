@@ -1,8 +1,14 @@
 .react-aria-Slider {
-    --accent-color: var(--text-color, currentColor);
-    --accent-color-88: color-mix(in srgb, var(--accent-color), transparent 88%);
-    --accent-color-76: color-mix(in srgb, var(--accent-color), transparent 76%);
-    --accent-color-50: color-mix(in srgb, var(--accent-color), transparent 50%);
+    --s-1px: 0.0625rem;
+    --s-2px: 0.125rem;
+    --s-3px: 0.1875rem;
+    --s-4px: 0.25rem;
+
+    --c-accent: var(--c-text, currentColor);
+    --c-accent-88: color-mix(in srgb, var(--c-accent), transparent 88%);
+    --c-accent-76: color-mix(in srgb, var(--c-accent), transparent 76%);
+    --c-accent-50: color-mix(in srgb, var(--c-accent), transparent 50%);
+    --c-bg: var(--c-dialog-average, white);
 
     display: grid;
     grid-template-areas:
@@ -20,67 +26,83 @@
     }
 
     .react-aria-SliderTrack {
+        --track-height: 1.25em;
+        --track-thickness: calc(var(--s-1px) * 10);
+        --c-track: color-mix(in srgb, var(--c-accent), transparent 88%);
+        --c-track-filled: color-mix(in srgb, var(--c-accent), transparent 76%);
+
         grid-area: track;
         position: relative;
         cursor: pointer;
 
         /* track line */
         &:before {
+            background-color: var(--c-track);
             content: "";
             display: block;
+            opacity: 1;
             position: absolute;
-            background-color: var(--accent-color);
         }
     }
 
     .react-aria-SliderThumb {
-        --thumb-size: calc(var(--s-1px) * 22); /* 20px */
+        --stroke-width: var(--s-2px);
+        --thumb-size: calc(var(--track-thickness) * 2 + var(--s-2px));
+        --c-thumb: color-mix(in srgb, var(--c-accent), transparent 75%);
+        --dur: var(--duration, 0.2s);
 
+        border-radius: 100vmax;
+        box-sizing: border-box;
+        outline: 0 solid transparent;
         width: var(--thumb-size);
         height: var(--thumb-size);
 
-        border-radius: var(--radius);
-        background-color: transparent;
         cursor: pointer;
         forced-color-adjust: none;
-        outline: var(--s-1px) solid var(--accent-color);
-        transition-property: background-color, border, border-color;
-        transition-duration: var(--duration, 0.2s);
+        transition-property:
+            outline-color, outline-width, background-color, opacity;
+        transition-duration:
+            calc(var(--dur) * 0.5), calc(var(--dur) * 0.1), var(--dur),
+            var(--dur);
 
-        /* +2px to hover area size */
-        &::after {
+        /* larger hover area */
+        &:after {
+            --offset: calc(var(--s-4px) * -1);
+
             content: "";
             position: absolute;
-            top: calc(var(--s-2px) * -1);
-            bottom: calc(var(--s-2px) * -1);
-            left: calc(var(--s-2px) * -1);
-            right: calc(var(--s-2px) * -1);
+            top: var(--offset);
+            bottom: var(--offset);
+            left: var(--offset);
+            right: var(--offset);
         }
-        /* center dot */
-        &::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            border-radius: 1em;
-            outline: var(--s-2px) solid var(--accent-color-76);
-            outline-color: transparent;
-        }
-
-        &:hover {
-            background-color: var(--accent-color-88);
-        }
-        &[data-dragging] {
+        &&&[data-dragging] {
             background-color: transparent;
+            outline-width: var(--stroke-width);
+            opacity: 1;
         }
-        &[data-focused],
-        &[data-focus-visible] {
-            outline: var(--s-2px) solid var(--accent-color);
+        &&[data-focused],
+        &&[data-focus-visible] {
+            background-color: transparent;
+            outline-color: var(--c-accent);
+            outline-width: var(--stroke-width);
+            opacity: 1;
 
-            &::before {
-                outline-color: var(--accent-color);
+            &:hover {
+                opacity: 0.65;
             }
         }
+    }
+    &:hover .react-aria-SliderThumb {
+        background-color: var(--c-thumb);
+        outline-width: 0;
+        opacity: 0.65;
+    }
+    & .react-aria-SliderThumb:hover {
+        background-color: var(--c-thumb);
+        outline-color: var(--c-thumb);
+        outline-width: var(--stroke-width);
+        opacity: 1;
     }
 
     &[data-orientation="horizontal"] {
@@ -88,13 +110,30 @@
         width: 100%;
 
         .react-aria-SliderTrack {
-            height: 1.25em;
+            height: var(--track-height);
             width: 100%;
 
+            /* track line */
             &:before {
-                opacity: 0.35;
-                height: 0.25em;
+                background-color: var(--c-track);
+                height: var(--track-thickness);
                 width: 100%;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .react-aria-SliderTrack-filled {
+                background-image: linear-gradient(
+                    90deg,
+                    transparent,
+                    var(--c-track-filled) calc(100% - var(--track-thickness)),
+                    var(--c-track-filled)
+                );
+                height: var(--track-thickness);
+                width: 100%;
+                min-width: var(--s-2px);
+                position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
             }
