@@ -77,6 +77,7 @@ export const Innout = ({
     const handleScrollIntoView = () => {
         if (!scrollIntoView) return;
         if (tid.current < 0) return; // prevents scrollIntoView on first render
+        if (dir === "out") return;
         if (step === last(steps)) {
             wrapperElement.current?.scrollIntoView({
                 behavior: "smooth",

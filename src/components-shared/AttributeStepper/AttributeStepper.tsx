@@ -72,6 +72,7 @@ export const AttributeStepper = ({
     const handleScrollIntoView = () => {
         if (!scrollIntoView) return;
         if (tid.current < 0) return; // prevents scrollIntoView on first render
+        if (dir() === "backward") return;
         if (step === last(steps)) {
             wrapperElement.current?.scrollIntoView({
                 behavior: "smooth",
