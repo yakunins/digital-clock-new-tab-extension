@@ -18,6 +18,7 @@
     --radius: var(--s-6px);
     --padding: var(--s-8px);
     --c-scrollbar: color-mix(in srgb, transparent, currentColor 25%);
+    --scrollbar-width: var(--s-8px);
 }
 
 html,
@@ -96,7 +97,7 @@ textarea {
 ::-webkit-scrollbar {
     background-color: transparent;
     outline: none;
-    width: 0.5rem;
+    width: var(--scrollbar-width);
 }
 ::-webkit-scrollbar-track {
     outline: none;

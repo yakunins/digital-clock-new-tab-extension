@@ -1,5 +1,6 @@
 export * from "./useFocusWithin";
 export * from "./useHasFocusable";
+export * from "./useHasScrollbar";
 export * from "./useOpacityTracker";
 export * from "./usePosition";
 export * from "./useSessionState";

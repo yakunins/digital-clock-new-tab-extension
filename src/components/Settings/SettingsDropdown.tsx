@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { SettingsForm } from "./SettingsForm";
 import { SettingsStore as Settings } from "../../stores/settings.store";
 import { Icon, Innout, Tooltip } from "../../components-shared";
+import { useHasScrollbar } from "../../hooks";
 import "./settings-dropdown.css";
 
 const sessionStorageItem = "digital_clock_newtab__settings_opened";
@@ -10,14 +11,15 @@ const initialOpened = sessionStorage.getItem(sessionStorageItem) === "true";
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const SettingsDropdown = ({ ...rest }: DivProps) => {
-    const dropdownElement = useRef<HTMLDivElement>(null!);
     const [opened, setOpened] = useState(initialOpened);
+
+    const dropdownElement = useRef<HTMLDivElement>(null!);
 
     const toggle = () => setOpened((prev) => !prev);
     const close = useCallback(() => setOpened(false), []);
     const handleEscape = (e: KeyboardEvent) => e.key === "Escape" && toggle();
     const handleClickOutside = (e: MouseEvent) => {
-        if (e?.button !== 0) return; // left mouse button
+        if (e?.button !== 0) return;
         if (!dropdownElement.current?.contains(e.target as any)) {
             close();
         }
@@ -31,7 +33,6 @@ export const SettingsDropdown = ({ ...rest }: DivProps) => {
     };
 
     useEffect(handleEffects, [opened]);
-
     useEffect(() => {
         document.addEventListener("keydown", handleEscape);
         document.addEventListener("mousedown", handleClickOutside);
@@ -48,14 +49,35 @@ export const SettingsDropdown = ({ ...rest }: DivProps) => {
                 onClick={toggle}
                 icon={opened ? "close" : "dots"}
             />
-            <Innout out={!opened}>
+            <Innout out={!opened} className="settings-innout">
                 <div className="settings-overlay">
-                    <div className="backdrop-fill"></div>
-                    <div className="scroll-wrapper">
+                    <div className="bg-filter"></div>
+                    <div className="bg-fill"></div>
+                    <ScrollbarWrapper>
                         <SettingsForm close={close} origin="tab" />
-                    </div>
+                    </ScrollbarWrapper>
                 </div>
             </Innout>
+        </div>
+    );
+};
+
+interface ScrollbarWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
+    children: React.ReactNode;
+}
+const ScrollbarWrapper = ({ children, ...rest }: ScrollbarWrapperProps) => {
+    const scrollbarWrapper = useRef<HTMLDivElement>(null!);
+    const [hasScrollbar, eventType] = useHasScrollbar(scrollbarWrapper);
+
+    return (
+        <div
+            className="scrollbar-wrapper"
+            ref={scrollbarWrapper}
+            data-vertical-scrollbar={hasScrollbar}
+            data-vertical-scrollbar-event={eventType}
+            {...rest}
+        >
+            {children}
         </div>
     );
 };

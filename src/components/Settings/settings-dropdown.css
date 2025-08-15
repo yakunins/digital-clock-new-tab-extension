@@ -68,37 +68,21 @@
         }
     }
 }
+
 .settings-overlay {
-    --o-dialog: 17.5%;
-    --c-dialog: white;
-    --c-dialog-fill: color-mix(
-        in srgb,
-        var(--c-dialog),
-        transparent var(--o-dialog)
-    );
+    --o-bg: 35%;
+    --c-bg: white;
+    --c-bg-fill: color-mix(in srgb, var(--c-bg), transparent var(--o-bg));
+    --c-shadow: rgba(0, 0, 0, 0.05);
 
-    --c-1: var(--bg-color-1); /* upper strip */
-    --c-2: var(--bg-color-3); /* lower strip */
-    --c-grad-01: color-mix(in srgb, var(--c-1), transparent 65%);
-    --c-grad-02: color-mix(in srgb, var(--c-2), transparent 65%);
-
-    --c-grad-average: color-mix(in srgb, var(--c-1), var(--c-2) 50%);
-    --c-dialog-average: color-mix(
-        in srgb,
-        var(--c-dialog),
-        var(--c-grad-average) 35%
-    );
-
-    --shadow-border: 0 0 0.125em rgba(0, 0, 0, 0.05);
-    --shadow-dark-s: 0 0.2em 2em rgba(0, 0, 0, 0.05);
-    --shadow-dark-l: 0 0.6em 6em rgba(0, 0, 0, 0.05);
+    --shadow-1: 0 0 0.125em;
+    --shadow-2: 0 0.2em 2em;
+    --shadow-3: 0 0.6em 6em;
 
     --scroll-height: 75dvh;
     --scroll-gradient-size: 0dvh;
 
     border-radius: calc(var(--radius) * 1.5);
-    box-shadow:
-        var(--shadow-border), var(--shadow-dark-s), var(--shadow-dark-l);
 
     position: absolute;
     top: calc(var(--button-size) * 0.9);
@@ -107,21 +91,21 @@
     overflow: hidden;
     max-height: var(--scroll-height);
 
-    .backdrop-fill {
+    .bg-fill,
+    .bg-filter {
         position: absolute;
         width: 100%;
         height: 100%;
-
-        isolation: isolate;
-        backdrop-filter: blur(0.25em) saturate(125%);
-        background-color: var(--c-dialog-fill);
+    }
+    .bg-fill {
+        background-color: var(--c-bg-fill);
         background-image: linear-gradient(
             170deg,
             var(--c-grad-01),
             var(--c-grad-02)
         );
     }
-    .scroll-wrapper {
+    .scrollbar-wrapper {
         --padding-x: calc(var(--padding) * 2);
         --padding-y: calc(var(--padding) * 1.5 + var(--radius) * 0.5);
 
@@ -131,6 +115,28 @@
         overflow-x: hidden;
         overflow-y: auto;
         position: relative;
+        scrollbar-gutter: stable;
+
+        &[data-vertical-scrollbar="true"],
+        &[data-vertical-scrollbar="false"] {
+            animation-fill-mode: forwards;
+            animation-duration: 0;
+        }
+        &[data-vertical-scrollbar="true"] {
+            animation-name: padding-right-inc;
+        }
+        &[data-vertical-scrollbar="false"] {
+            animation-name: padding-right-dec;
+        }
+        &[data-vertical-scrollbar-event="resize"],
+        &[data-vertical-scrollbar-event="mutation"] {
+            &[data-vertical-scrollbar="true"] {
+                animation-duration: var(--duration, 0.25s);
+            }
+            &[data-vertical-scrollbar="false"] {
+                animation-duration: var(--duration, 0.25s);
+            }
+        }
     }
 }
 
@@ -141,20 +147,84 @@
 
     transform: scale(100%) translate(0);
     transform-origin: top right;
-    transition-property: transform;
+
+    transition-property: transform, box-shadow;
     transition-duration: var(--duration-step, 0.25s);
+
+    .bg-filter {
+        transition-property: backdrop-filter;
+        transition-duration: var(--duration-step, 0.25s);
+    }
+    .bg-fill {
+        transition-property: opacity;
+        transition-duration: var(--duration-step, 0.25s);
+    }
+    .scrollbar-wrapper {
+        transition-property: opacity, padding;
+        transition-duration: var(--duration-step, 0.25s);
+    }
 }
 
-.innout {
+.innout.settings-innout {
+    opacity: 1 !important;
+
+    &.finished,
     &.step.in {
         .settings-overlay {
             transform: scale(100%) translate(0);
+            box-shadow:
+                var(--shadow-1) var(--c-shadow),
+                var(--shadow-2) var(--c-shadow),
+                var(--shadow-3) var(--c-shadow);
+
+            .bg-filter {
+                backdrop-filter: saturate(200%) hue-rotate(calc(90deg / 16))
+                    blur(0.5em);
+            }
+            .bg-fill {
+                opacity: 1;
+            }
+            .scrollbar-wrapper {
+                opacity: 1;
+            }
         }
     }
-    &.mounted.in,
+    &.mounted,
     &.step.out {
         .settings-overlay {
             transform: scale(96%) translate(var(--translate-move));
+            box-shadow:
+                var(--shadow-1) transparent,
+                var(--shadow-2) transparent,
+                var(--shadow-3) transparent;
+
+            .bg-filter {
+                backdrop-filter: blur(0) saturate(100%) hue-rotate(0deg);
+            }
+            .bg-fill {
+                opacity: 0;
+            }
+            .scrollbar-wrapper {
+                opacity: 0;
+            }
         }
+    }
+}
+
+@keyframes padding-right-dec {
+    from {
+        padding-right: var(--padding-x);
+    }
+    to {
+        padding-right: calc(var(--padding-x) - var(--scrollbar-width));
+    }
+}
+
+@keyframes padding-right-inc {
+    from {
+        padding-right: calc(var(--padding-x) - var(--scrollbar-width));
+    }
+    to {
+        padding-right: var(--padding-x);
     }
 }
