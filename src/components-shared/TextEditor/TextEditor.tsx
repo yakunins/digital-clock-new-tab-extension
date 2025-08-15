@@ -1,4 +1,4 @@
-import React, { useId } from "react";
+import React, { useEffect, useId, useRef } from "react";
 import { cx } from "../../utils";
 
 import "./text-editor.css";
@@ -29,7 +29,7 @@ export const TextEditor = ({
         e && onChange?.(e);
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         setText(defaultValue);
     }, [defaultValue]);
 

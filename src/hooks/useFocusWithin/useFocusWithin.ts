@@ -10,7 +10,7 @@ export const useFocusWithin = (ref: RefObject<HTMLElement>): boolean => {
         if (!el) return;
 
         const handleFocusIn = (event: FocusEvent) => {
-            if (el.contains(event.target as Node)) {
+            if (el.contains(event.target as Node) || el === event.target) {
                 setIsFocusWithin(true);
             }
         };
