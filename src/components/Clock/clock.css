@@ -72,54 +72,63 @@
             blur(var(--blur-size));
     }
 
-    .digit.ampm,
     .digit.colon {
         margin-left: -0.25em;
         margin-right: -0.25em;
-    }
-    .digit.ampm {
-        margin-right: -1.5em;
     }
     .digit.colon.blinking {
         filter: drop-shadow(0 0 calc(var(--glow-size) * 2) var(--c-glow-50))
             blur(var(--blur-size));
     }
 
-    .innout {
+    /* clock type change animation stages */
+    /* mounted ... ani-width ... ani-opacity ... finished */
+    .innout.animate-ampm {
+        display: flex; /* correct vertical alignment */
+
+        & {
+            transition-property: opacity, margin;
+            transition-duration:
+                var(--duration-ani-opacity, 0.2s),
+                var(--duration-ani-width, 0.2s);
+        }
+        & .ampm {
+            transition-property: margin;
+            transition-duration: var(--duration-ani-width, 0.2s);
+        }
+
+        /* width animation */
+        &.mounted .ampm,
+        &.ani-width.out .ampm {
+            margin-right: calc(var(--digit-width) * -1);
+        }
+        &.ani-width.in .ampm,
+        &.ani-opacity .ampm,
+        &.finished .ampm {
+            margin-right: calc(var(--digit-width) / -3);
+        }
+
+        /* gap animation */
+        &.mounted,
+        &.ani-width.out {
+            margin-left: calc(var(--clock-gap) * -1);
+        }
+        &.ani-width.in,
+        &.ani-opacity,
+        &.finished {
+            margin-left: calc(var(--clock-gap) / -3);
+        }
+
+        /* opacity animation */
+        &.mounted,
+        &.ani-width,
+        &.ani-opacity.out {
+            opacity: 0;
+        }
         &.finished,
-        &.fade.in {
+        &.ani-opacity.in {
             opacity: 1;
         }
-        &.mounted,
-        &.fade.digit.ampm {
-            opacity: 0;
-            pointer-events: none;
-        }
-        &.width.in,
-        &.width.out {
-            opacity: 0;
-        }
-        &.finished,
-        &.width.in {
-            margin-left: 0;
-
-            .digit.ampm {
-                margin-right: -1.5em;
-            }
-        }
-        &.mounted.in,
-        &.width.out {
-            margin-left: calc(var(--clock-gap) * -1);
-
-            .digit.ampm {
-                margin-right: calc(var(--length) * -1 + var(--thickness) * -1);
-            }
-        }
-    }
-    .digit.ampm,
-    .innout {
-        transition-property: margin-right, margin-left, opacity;
-        transition-duration: var(--duration-width, 0.2s);
     }
 }
 

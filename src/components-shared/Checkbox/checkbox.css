@@ -6,8 +6,9 @@
     --s-6px: 0.375rem;
 
     --c-accent: var(--c-text, currentColor);
-    --c-border: color-mix(in srgb, var(--c-accent), transparent 76%);
-    --c-border-focused: var(--c-accent);
+    --c-checkmark: var(--c-accent);
+    --c-border: var(--c-accent);
+    --c-fill: color-mix(in srgb, var(--c-accent), transparent 90%);
     --padding: var(var(--padding), 0.5rem); /* 8px */
 
     --size: calc(var(--s-1px) * 22);
@@ -18,17 +19,23 @@
     flex-direction: row;
     padding-block: var(--s-4px);
 
-    .checked-indicator {
-        --c-checkmark: var(--c-border-focused);
-
+    & > label {
+        display: flex;
+        gap: calc(var(--checkmark-shift) * 4);
+        cursor: pointer;
+        user-select: none;
+    }
+    .box {
         width: var(--size);
         height: var(--size);
 
         border-radius: var(--radius);
-        background-color: transparent;
-        outline: var(--checkmark-thickness) solid var(--c-border);
+        background-color: var(--c-fill);
+        outline: var(--checkmark-thickness) solid var(--c-fill);
         position: relative;
+        pointer-events: none;
 
+        /* check mark */
         &::after {
             content: "";
             border-bottom: var(--checkmark-thickness) solid var(--c-checkmark);
@@ -43,32 +50,25 @@
         }
         &,
         &::after {
-            transition-property: opacity, outline-color;
+            transition-property: opacity, outline-color, background-color;
             transition-duration: var(--duration, 0.2s);
         }
     }
 
     &.checked {
-        .checked-indicator {
+        .box {
             &::after {
                 opacity: 1;
             }
         }
     }
 
+    &:active,
     &.focused {
-        .checked-indicator {
-            outline-color: var(--c-focused-box);
+        .box {
+            outline-color: var(--c-border);
+            background-color: transparent;
         }
-    }
-
-    &,
-    & label {
-        cursor: pointer;
-    }
-    & label {
-        user-select: none;
-        margin-inline-start: calc(var(--checkmark-shift) * 4);
     }
 }
 

@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { CSSProperties, ReactNode } from "react";
 import {
     Label,
     Slider as AriaSlider,
@@ -29,6 +29,11 @@ export const Slider = ({
         }
     };
 
+    const getStyle = (s: SliderState) =>
+        ({
+            "--filled": s.getThumbPercent(0) * 100 + "%",
+        }) as CSSProperties;
+
     return (
         <AriaSlider {...rest} onChange={handleChange}>
             {label && <Label>{label}</Label>}
@@ -43,10 +48,8 @@ export const Slider = ({
                 {({ state }) => (
                     <>
                         <div
-                            className="react-aria-SliderTrack-filled"
-                            style={{
-                                width: state.getThumbPercent(0) * 100 + "%",
-                            }}
+                            className="react-aria-SliderTrack-gradients"
+                            style={getStyle(state)}
                         />
                         <SliderThumb />
                     </>

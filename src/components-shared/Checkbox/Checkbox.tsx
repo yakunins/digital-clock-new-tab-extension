@@ -63,8 +63,10 @@ export const Checkbox = memo(
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                 />
-                <span className="checked-indicator"></span>
-                <label htmlFor={id}>{children}</label>
+                <label htmlFor={id}>
+                    <div className="box"></div>
+                    <div className="label">{children}</div>
+                </label>
             </div>
         );
     }

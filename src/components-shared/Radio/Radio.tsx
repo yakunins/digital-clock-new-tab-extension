@@ -53,8 +53,8 @@ export const Radio = memo(
             if (!cc) return;
             const checked = cc.querySelector(".checked") as HTMLElement;
             const l = checked?.offsetLeft;
-            const w = checked?.offsetWidth;
-            // const w = checked?.getBoundingClientRect().width // offsetWidth could be not precise enough
+            const w = checked?.offsetWidth; // offsetWidth could be not precise enough
+            // const w = checked?.getBoundingClientRect().width;
             cc.style.setProperty("--checked-left", `${l}px`);
             cc.style.setProperty("--checked-width", `${w}px`);
         }, [value, width]);

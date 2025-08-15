@@ -30,8 +30,6 @@
         --c-border: var(--c-accent);
         --c-fill: color-mix(in srgb, var(--c-accent), transparent 90%);
         --c-shade: color-mix(in srgb, var(--c-accent), transparent 75%);
-        --c-bg: var(--c-dialog-average, white); /* SettingsDropdown.tsx */
-        --c-hover: color-mix(in srgb, var(--c-bg), transparent 86%);
         --border-width: var(--s-2px);
 
         border-radius: var(--rad);
@@ -52,31 +50,32 @@
                 left: var(--border-width);
                 right: var(--border-width);
 
-                backdrop-filter: brightness(100%);
                 transition-property: backdrop-filter;
                 transition-duration: var(--duration, 0.2s);
+
+                --c-mask: rgba(0, 0, 0, 0.5);
                 mask-image:
                     linear-gradient(
                         90deg,
                         transparent,
-                        black,
-                        black,
+                        var(--c-mask),
+                        var(--c-mask),
                         transparent
                     ),
                     linear-gradient(
                         0deg,
                         transparent,
-                        black,
-                        black,
+                        var(--c-mask),
+                        var(--c-mask),
                         transparent
                     );
             }
             &:hover:before {
-                backdrop-filter: brightness(105%);
+                backdrop-filter: saturate(1.075) brightness(1.075);
             }
             &.checked:before,
             &.checked:hover:before {
-                backdrop-filter: brightness(100%);
+                backdrop-filter: saturate(1) brightness(1);
             }
         }
 

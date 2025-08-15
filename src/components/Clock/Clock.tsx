@@ -12,19 +12,11 @@ const blinker = new Blinker(); // singleton to blink in sync with others
 export const Clock = observer(
     ({ ...rest }: React.HTMLAttributes<HTMLTimeElement>) => {
         const [timeString, setTimeString] = useState(
-            getTime(
-                Settings.clockType,
-                Settings.timeShift,
-                Settings.clockLeadingZero
-            )
+            getTime(Settings.clockType, Settings.timeShift)
         );
 
         const handleBlink = useCallback(() => {
-            const time = getTime(
-                Settings.clockType,
-                Settings.timeShift,
-                Settings.clockLeadingZero
-            );
+            const time = getTime(Settings.clockType, Settings.timeShift);
             setTimeString(time);
         }, []);
 
@@ -79,40 +71,42 @@ export const Clock = observer(
             : timeString.trim().endsWith("pm")
               ? "pm"
               : null;
+        const leadingZeroOff = (idx: number, c: string) =>
+            idx === 0 && c === "0" && !Settings.clockLeadingZero;
 
         return (
             <time className="clock" {...rest} style={clockStyle}>
                 <div className="clock-frame"></div>
                 <div className="clock-glow"></div>
-                {timeString.split("").map((i, idx) => {
-                    if (i == ":" || i === ".")
+                {timeString.split("").map((char, idx) => {
+                    if (char === ":" || char === ".")
                         return (
                             <BlinkingDigit
                                 key={idx}
-                                value={i}
+                                value={char}
                                 shape={shape}
                                 segmentStyle={segmentStyle}
                             />
                         );
-                    if (" 0123456789".includes(i))
+                    if ("0123456789".includes(char))
                         return (
                             <Digit
                                 key={idx}
-                                value={i as "0"}
+                                value={char as Digit["value"]}
                                 shape={shape}
+                                off={leadingZeroOff(idx, char)}
                                 segmentStyle={segmentStyle}
                             />
                         );
                     return null;
                 })}
                 <Innout
-                    out={!ampm}
+                    className="animate-ampm"
                     classNameSteps={ampmAnimationSteps}
-                    style={{ display: "flex" }}
+                    out={!ampm}
                 >
                     <Digit
                         key="ampm"
-                        off={!ampm}
                         value={ampm || "am"}
                         segmentStyle={segmentStyle}
                     />
@@ -124,8 +118,8 @@ export const Clock = observer(
 
 const ampmAnimationSteps = [
     { duration: 1, name: "mounted" },
-    { duration: 250, name: "width" },
-    { duration: 250, name: "fade" },
+    { duration: 250, name: "ani-width" },
+    { duration: 250, name: "ani-opacity" },
     { duration: 1, name: "finished" },
 ];
 
@@ -142,12 +136,8 @@ const toLocale = (clockFormat: Settings["clockType"]) => {
 
 const getTime = (
     clockType: Settings["clockType"],
-    timeShift: Settings["timeShift"],
-    showLeadingZero: Settings["clockLeadingZero"] = true
+    timeShift: Settings["timeShift"]
 ) => {
     const time = getTimeString(toLocale(clockType), timeShift).replace(" ", ""); // "01:23pm"
-    if (!showLeadingZero && time.charAt(0) === "0") {
-        return " " + time.slice(1); // " 1:23pm"
-    }
     return time;
 };
