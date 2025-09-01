@@ -85,8 +85,8 @@ export const Radio = memo(
                                     checked: i.value === value,
                                 };
                             })
-                            .map((props, idx) => (
-                                <RadioButton {...props} key={idx} />
+                            .map((optionProps, idx) => (
+                                <RadioButton {...optionProps} key={idx} />
                             ))}
                     </div>
                 </div>

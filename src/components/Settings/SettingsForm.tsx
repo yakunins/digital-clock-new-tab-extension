@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import { observer } from "mobx-react";
 import { SettingsStore as Settings } from "../../stores/settings.store";
 import {
@@ -23,6 +23,31 @@ export const SettingsForm = observer(
     ({ close, origin, ...rest }: SettingsForm) => {
         origin && Settings.setOrigin(origin);
 
+        const schemaChange = useCallback<Radio["onChange"]>((next) => {
+            Settings.setColorSchema(next as Settings["colorSchema"]);
+        }, []);
+        const randomSchemaClickCounter = useRef(0);
+        const schemaChangeClick = (e: React.MouseEvent) => {
+            const target = e.target as HTMLInputElement;
+
+            if (!target.value) return;
+            if (target.value === "random") {
+                randomSchemaClickCounter.current += 1;
+                if (randomSchemaClickCounter.current > 1) {
+                    Settings.setColorSchema("fixed");
+                    Settings.setColorSchema("random");
+                }
+            } else {
+                randomSchemaClickCounter.current = 0;
+            }
+        };
+        const schemaChangeKeyDown = (e: React.KeyboardEvent) => {
+            if (e.key !== "Enter") return;
+            const target = e.target as HTMLInputElement;
+            if (!target.value) return;
+            schemaChangeClick(e as unknown as React.MouseEvent);
+        };
+
         const clockTypeChange = useCallback<Radio["onChange"]>((next) => {
             Settings.setClockType(next as Settings["clockType"]);
         }, []);
@@ -35,10 +60,6 @@ export const SettingsForm = observer(
             },
             []
         );
-
-        const schemaChange = useCallback<Radio["onChange"]>((next) => {
-            Settings.setColorSchema(next as Settings["colorSchema"]);
-        }, []);
 
         const lengthChange = useCallback<
             Exclude<Slider["onChange"], undefined>
@@ -95,6 +116,8 @@ export const SettingsForm = observer(
                         { value: "fixed", children: "This" },
                     ]}
                     onChange={schemaChange}
+                    onClick={schemaChangeClick}
+                    onKeyDown={schemaChangeKeyDown}
                 />
                 <Radio
                     legend="Clock"
