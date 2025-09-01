@@ -29,7 +29,7 @@
         --c-accent: var(--c-text, currentColor);
         --c-border: var(--c-accent);
         --c-fill: color-mix(in srgb, var(--c-accent), transparent 90%);
-        --c-shade: color-mix(in srgb, var(--c-accent), transparent 75%);
+        --c-shade: color-mix(in srgb, var(--c-accent), transparent 65%);
         --border-width: var(--s-2px);
 
         border-radius: var(--rad);
@@ -134,6 +134,11 @@
                 border-radius: var(--radius);
                 box-shadow:
                     0 0 0 100vmax var(--c-fill),
+                    0 0 2vmax var(--border-width) var(--c-shade);
+                box-shadow:
+                    0 0 0 100vmax var(--c-fill),
+                    0 0 0 var(--border-width)
+                        color-mix(in srgb, var(--c-shade), transparent 96%),
                     0 0 2vmax var(--border-width) var(--c-shade);
                 content: "";
                 position: absolute;

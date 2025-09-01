@@ -39,9 +39,12 @@
         );
         text-decoration-thickness: calc(0.125em * 0.5);
         text-underline-offset: 0.125em;
-        transition-property: opacity, color, text-decoration-color;
-        transition-duration: var(--duration, 0.2s);
+        outline-offset: var(--s-4px);
         padding: 0;
+
+        transition-property:
+            opacity, color, text-decoration-color, outline-color;
+        transition-duration: var(--duration, 0.2s);
 
         &:hover {
             opacity: 0.8;
@@ -52,9 +55,6 @@
             opacity: 0.4;
             text-decoration-color: transparent;
             cursor: default;
-        }
-        &:focus-visible {
-            outline-offset: var(--s-4px);
         }
     }
 }

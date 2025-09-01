@@ -9,6 +9,10 @@
         place-items: center;
         padding: calc(var(--padding) / 2) 0;
 
+        outline-color: transparent;
+        transition-property: outline-color;
+        transition-duration: var(--duration);
+
         .icon {
             flex-shrink: 0;
             width: var(--icon-size);

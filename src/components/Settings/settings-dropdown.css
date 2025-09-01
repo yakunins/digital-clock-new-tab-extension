@@ -14,7 +14,7 @@
     right: 0;
     top: 0;
 
-    button.button {
+    .button {
         background: none;
         border: none;
         border-radius: 100rem;
@@ -199,7 +199,7 @@
                 var(--shadow-3) transparent;
 
             .bg-filter {
-                backdrop-filter: blur(0) saturate(100%) hue-rotate(0deg);
+                backdrop-filter: saturate(100%) hue-rotate(0deg) blur(0);
             }
             .bg-fill {
                 opacity: 0;

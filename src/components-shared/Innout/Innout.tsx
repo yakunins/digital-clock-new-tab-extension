@@ -26,7 +26,7 @@ type Innout = DivProps & {
 const unmounted = { duration: -1, name: "unmounted" }; // never rendered
 const defaultSteps: Steps = [
     { duration: 1, name: "mounted" },
-    { duration: 250, name: "step" },
+    { duration: 350, name: "step" },
     { duration: 1, name: "finished" },
 ];
 

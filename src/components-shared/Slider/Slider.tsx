@@ -28,10 +28,9 @@ export const Slider = ({
             onChange(value);
         }
     };
-
-    const getStyle = (s: SliderState) =>
+    const getTrackStyle = (state: SliderState) =>
         ({
-            "--filled": s.getThumbPercent(0) * 100 + "%",
+            "--filled": state.getThumbPercent(0) * 100 + "%",
         }) as CSSProperties;
 
     return (
@@ -46,13 +45,13 @@ export const Slider = ({
             )}
             <SliderTrack>
                 {({ state }) => (
-                    <>
-                        <div
-                            className="react-aria-SliderTrack-gradients"
-                            style={getStyle(state)}
-                        />
+                    <div style={getTrackStyle(state)}>
+                        <div className="react-aria-SliderTrack-pseudotrack">
+                            <div className="react-aria-SliderTrack-pseudothumb" />
+                        </div>
+                        <div className="react-aria-SliderTrack-pseudothumb-focus" />
                         <SliderThumb />
-                    </>
+                    </div>
                 )}
             </SliderTrack>
         </AriaSlider>

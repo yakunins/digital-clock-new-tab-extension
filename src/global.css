@@ -67,12 +67,18 @@ textarea {
 button,
 input,
 textarea {
+    outline-color: transparent;
+    outline-style: solid;
+    outline-width: var(--s-2px);
+
+    transition-property: outline-color, outline-offset, background-color;
+    transition-duration: var(--duration);
+
     &.focus-within:focus-within,
     &:focus-visible {
         outline-color: var(--c-text, currentColor);
         outline-style: solid;
         outline-width: var(--s-2px);
-        outline-offset: calc(var(--s-1px) * -1);
         text-decoration: none;
     }
 }

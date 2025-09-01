@@ -8,12 +8,11 @@
     --c-accent: var(--c-text, currentColor);
     --c-checkmark: var(--c-accent);
     --c-border: var(--c-accent);
-    --c-fill: color-mix(in srgb, var(--c-accent), transparent 90%);
+    --c-fill: color-mix(in srgb, var(--c-accent), transparent 88%);
     --padding: var(var(--padding), 0.5rem); /* 8px */
 
     --size: calc(var(--s-1px) * 22);
     --checkmark-thickness: var(--s-2px);
-    --checkmark-shift: var(--s-2px);
 
     display: flex;
     flex-direction: row;
@@ -21,7 +20,7 @@
 
     & > label {
         display: flex;
-        gap: calc(var(--checkmark-shift) * 4);
+        gap: var(--padding);
         cursor: pointer;
         user-select: none;
     }
@@ -42,11 +41,11 @@
             border-left: var(--checkmark-thickness) solid var(--c-checkmark);
             opacity: 0;
             position: absolute;
-            width: 100%;
-            height: 50%;
+            width: 70%;
+            height: 35%;
             transform: rotate(-45deg);
-            left: var(--checkmark-shift);
-            top: calc(var(--s-2px) * -1);
+            left: calc(var(--s-1px) * 3);
+            top: calc(var(--s-1px) * 3);
         }
         &,
         &::after {

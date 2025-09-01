@@ -25,95 +25,52 @@
     }
 
     .react-aria-SliderTrack {
-        --track-height: 1.25em;
-        --track-thickness: calc(var(--s-1px) * 12);
-        --c-track: color-mix(in srgb, var(--c-accent), transparent 94%);
-        --c-track-filled: color-mix(in srgb, var(--c-accent), transparent 76%);
-        --c-track-value: color-mix(in srgb, var(--c-accent), transparent 74%);
+        --slider-height: calc(var(--s-1px) * 24);
+        --track-thickness: calc(var(--s-1px) * 6);
+        --thumb-size: calc(var(--slider-height) - var(--s-2px));
+        --thumb-stroke: var(--s-2px);
+        --thumb-opacity: 0.25;
+        --c-thumb: var(--c-accent);
+        --duration: 0.2s;
 
         grid-area: track;
         position: relative;
         cursor: pointer;
-
-        /* track line */
-        &:before {
-            background-color: var(--c-track);
-            content: "";
-            display: block;
-            opacity: 1;
-            position: absolute;
-        }
+        background-color: transparent;
     }
 
     .react-aria-SliderThumb {
-        --stroke-width: var(--s-2px);
-        --thumb-size: calc(var(--track-thickness) * 2 - var(--s-2px));
-        --c-thumb: color-mix(in srgb, var(--c-accent), transparent 75%);
-        --dur: var(--duration, 0.2s);
         --hover-opacity: var(--dragging-thumb-hover-opacity, 1);
-
-        border-radius: 100vmax;
-        border: 0 solid transparent;
-        box-sizing: border-box;
-        outline: 0 solid transparent;
-        opacity: var(--hover-opacity);
-        width: var(--thumb-size);
-        height: var(--thumb-size);
 
         cursor: pointer;
         forced-color-adjust: none;
-        transition-property:
-            border-color, border-width, outline-color, outline-width,
-            background-color, opacity;
-        transition-duration:
-            var(--dur), calc(var(--dur) * 0.2), var(--dur),
-            calc(var(--dur) * 0.2), var(--dur), var(--dur);
+        width: var(--thumb-size);
+        height: var(--thumb-size);
 
-        /* larger hover area */
+        /* extended hover area */
         &:after {
-            --offset: calc(var(--s-4px) * -1);
+            --hover-extend: calc(var(--s-4px) * -1);
 
             content: "";
             position: absolute;
-            top: var(--offset);
-            bottom: var(--offset);
-            left: var(--offset);
-            right: var(--offset);
+            top: var(--hover-extend);
+            bottom: var(--hover-extend);
+            left: var(--hover-extend);
+            right: var(--hover-extend);
         }
-        &&&[data-dragging] {
-            background-color: transparent;
-            outline-width: var(--stroke-width);
-            opacity: 0.35;
-        }
-        &&[data-focused],
-        &&[data-focus-visible] {
-            background-color: transparent;
-            border-color: var(--c-accent);
-            border-width: var(--stroke-width);
-            outline-color: transparent;
-            outline-width: 0;
+    }
+    .react-aria-SliderTrack:has([data-focused].react-aria-SliderThumb),
+    .react-aria-SliderTrack:has([data-focus-visible].react-aria-SliderThumb) {
+        .react-aria-SliderTrack-pseudothumb-focus {
             opacity: 1;
-
-            &:hover {
-                border-color: transparent;
-                border-width: 0;
-                outline-color: var(--c-accent);
-                outline-width: var(--stroke-width);
-                opacity: 1;
-            }
+        }
+        .react-aria-SliderTrack-pseudothumb {
+            opacity: 0;
         }
     }
-    .react-aria-SliderTrack:hover .react-aria-SliderThumb {
-        background-color: var(--c-thumb);
-        outline-color: var(--c-thumb);
-        outline-width: 0;
-        opacity: var(--hover-opacity);
-    }
-    .react-aria-SliderTrack .react-aria-SliderThumb:hover {
-        background-color: var(--c-thumb);
-        outline-color: var(--c-thumb);
-        outline-width: var(--stroke-width);
-        opacity: var(--hover-opacity);
+    .react-aria-SliderTrack:has([data-focused].react-aria-SliderThumb),
+    .react-aria-SliderTrack:has([data-focus-visible].react-aria-SliderThumb),
+    .react-aria-SliderTrack:has([data-dragging].react-aria-SliderThumb) {
     }
 
     &[data-orientation="horizontal"] {
@@ -123,61 +80,109 @@
         .react-aria-SliderTrack {
             --min-filled: var(--s-2px);
 
-            height: var(--track-height);
+            height: var(--slider-height);
             width: 100%;
 
-            /* track line */
-            &:before {
-                background-color: var(--c-track);
-                height: var(--track-thickness);
-                width: 100%;
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-            }
+            .react-aria-SliderTrack-pseudotrack {
+                --c-track-end: color-mix(
+                    in srgb,
+                    var(--c-thumb),
+                    transparent 65%
+                );
+                --thumb-left-side: calc(var(--filled) - var(--thumb-size) / 2);
+                --thumb-right-side: calc(var(--filled) + var(--thumb-size) / 2);
 
-            .react-aria-SliderTrack-gradients {
                 position: absolute;
                 height: var(--track-thickness);
                 width: 100%;
                 top: 50%;
                 transform: translateY(-50%);
+                opacity: 0.35;
 
-                &:before {
-                    background-image: linear-gradient(
-                        90deg,
-                        var(--c-track),
-                        var(--c-track-filled) calc(100% - var(--min-filled)),
-                        var(--c-track-value)
-                    );
+                /* track */
+                &:before,
+                &:after {
                     content: "";
-                    position: absolute;
                     height: 100%;
-                    width: var(--filled);
+                    position: absolute;
+                }
+                &:before {
+                    --right: calc(100% - var(--thumb-left-side) - var(--s-1px));
+
+                    background-image: linear-gradient(
+                        -90deg,
+                        var(--c-thumb),
+                        var(--c-track-end) calc(var(--thumb-size) * 2),
+                        var(--c-track-end)
+                    );
+                    left: 0;
+                    right: var(--right);
                 }
                 &:after {
+                    --left: calc(var(--thumb-right-side) - var(--s-1px));
+
                     background-image: linear-gradient(
                         90deg,
-                        transparent,
-                        transparent var(--min-filled),
-                        var(--c-track) var(--min-filled),
-                        var(--c-track)
+                        var(--c-thumb),
+                        var(--c-track-end) calc(var(--thumb-size) * 2),
+                        var(--c-track-end)
                     );
-                    content: "";
-                    position: absolute;
-                    height: 100%;
-                    width: calc(100% - var(--filled));
-                    left: var(--filled);
+                    left: var(--left);
+                    right: 0;
                 }
+            }
+            .react-aria-SliderTrack-pseudotrack
+                .react-aria-SliderTrack-pseudothumb,
+            .react-aria-SliderTrack-pseudothumb-focus {
+                border-radius: 100vmax;
+                box-shadow:
+                    inset 0 0 0 var(--thumb-stroke) var(--c-thumb),
+                    0 0 0 0 var(--c-thumb);
+                box-sizing: border-box;
+                position: absolute;
+                top: calc(50% - var(--thumb-size) / 2);
+                left: calc(var(--filled) + var(--thumb-size) / -2);
+                width: var(--thumb-size);
+                height: var(--thumb-size);
+            }
+            .react-aria-SliderTrack-pseudothumb-focus {
+                opacity: 0;
             }
         }
 
         .react-aria-SliderThumb {
             top: 50%;
         }
+
+        .react-aria-SliderTrack-pseudothumb,
+        .react-aria-SliderTrack-pseudothumb-focus,
+        .react-aria-SliderTrack-pseudotrack:before,
+        .react-aria-SliderTrack-pseudotrack:after {
+            transition-property: box-shadow, opacity;
+            transition-duration: var(--duration);
+        }
     }
 }
 
 body:has(.react-aria-SliderThumb[data-dragging]) {
     --dragging-thumb-hover-opacity: 0;
+}
+
+body:not(:has([data-dragging])) {
+    .react-aria-Slider:has(.react-aria-SliderThumb:hover) {
+        .react-aria-SliderTrack-pseudothumb,
+        .react-aria-SliderTrack-pseudothumb-focus {
+            box-shadow:
+                inset 0 0 0 0 var(--c-thumb),
+                0 0 0 var(--thumb-stroke) var(--c-thumb) !important;
+        }
+        .react-aria-SliderTrack-pseudotrack {
+            &:before {
+                right: calc(var(--right) + var(--s-1px));
+            }
+            &:after {
+                left: calc(var(--left) + var(--s-1px));
+            }
+        }
+    }
 }
