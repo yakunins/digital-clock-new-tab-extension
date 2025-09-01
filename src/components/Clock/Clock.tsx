@@ -58,7 +58,7 @@ export const Clock = observer(
             length: `max(${length}em, ${thickness}em, 4px)`,
             opacityOff: 0.075,
             cornerShift: cornerShift,
-            spacing: spacing,
+            spacing,
         } as Digit["segmentStyle"];
 
         const clockStyle = {

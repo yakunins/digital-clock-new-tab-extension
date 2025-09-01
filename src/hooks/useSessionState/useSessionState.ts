@@ -13,7 +13,7 @@ export function useSessionState(
             const item = window.sessionStorage.getItem(key);
             return item ? JSON.parse(item) : initialValue;
         } catch (error) {
-            console.error(error);
+            console.warn(error);
             return initialValue;
         }
     });
@@ -22,7 +22,7 @@ export function useSessionState(
         try {
             window.sessionStorage.setItem(key, JSON.stringify(storedValue));
         } catch (error) {
-            console.error(error);
+            console.warn(error);
         }
     }, [key, storedValue]);
 

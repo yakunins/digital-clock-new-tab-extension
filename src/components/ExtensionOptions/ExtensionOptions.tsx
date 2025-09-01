@@ -22,7 +22,7 @@ const getExtensionVersion = () => {
             return (version = browser?.runtime?.getManifest().version); // firefox, safari
         }
     } catch (error) {
-        console.log(error);
+        console.warn(error);
     }
     return version;
 };

@@ -38,6 +38,7 @@
         bottom: calc(var(--clock-frame-offset) * 0.92);
         left: var(--clock-frame-offset);
         right: var(--clock-frame-offset);
+
         transition-property: all;
         transition-duration: var(--duration, 1s);
     }
@@ -62,12 +63,12 @@
         bottom: calc(var(--clock-glow-offset) * 0.92);
         left: var(--clock-glow-offset);
         right: var(--clock-glow-offset);
+
         transition-property: all;
         transition-duration: var(--duration, 1s);
     }
-    .digit {
-        --transition-duration: var(--duration. 0.2s);
 
+    .digit {
         filter: drop-shadow(0 0 calc(var(--glow-size) / 2) var(--c-glow-25))
             blur(var(--blur-size));
     }
@@ -132,32 +133,8 @@
     }
 }
 
-/* subpixel rendering emulation in Firefox */
-@-moz-document url-prefix() {
-    .clock {
-        --subpixel-scale: 4;
-        --growth: calc((var(--subpixel-scale) - 1));
-        --side-growth: calc(var(--growth) / 2);
-        --reduce: calc(var(--side-growth) / var(--subpixel-scale));
-
-        --glow-size: calc(3em * var(--subpixel-scale));
-
-        .digit {
-            --reduce-x: calc(var(--digit-width) * var(--reduce) * -1);
-            --reduce-y: calc(var(--digit-height) * var(--reduce) * -1);
-            font-size: calc(100% * var(--subpixel-scale));
-            margin: var(--reduce-y) var(--reduce-x);
-            transform: scale(calc(1 / var(--subpixel-scale)));
-        }
-        .digit.ampm,
-        .digit.colon {
-            margin-left: calc(var(--reduce-x) - 0.25em / var(--subpixel-scale));
-            margin-right: calc(
-                var(--reduce-x) - 0.25em / var(--subpixel-scale)
-            );
-        }
-        .digit.ampm {
-            margin-right: calc(var(--reduce-x) - 1.5em / var(--subpixel-scale));
-        }
-    }
+/* wtf? chrome transition issue? works fine in firefox */
+.digit.digit.digit.digit {
+    transition-property: all;
+    transition-duration: var(--duration, 0.2s);
 }

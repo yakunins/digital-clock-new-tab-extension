@@ -7,7 +7,8 @@
         user-select: none;
         display: flex;
         place-items: center;
-        padding: calc(var(--padding) / 2) 0;
+        padding-top: calc(var(--padding) / 2 - var(--s-1px));
+        padding-bottom: calc(var(--padding) / 2 + var(--s-1px));
 
         outline-color: transparent;
         transition-property: outline-color;

@@ -1,6 +1,6 @@
 .text-editor {
     --c-border: color-mix(in srgb, transparent, var(--c-text) 25%);
-    --c-fill: color-mix(in srgb, var(--c-text), transparent 94%);
+    --c-fill: color-mix(in srgb, var(--c-text), transparent 92%);
 
     display: flex;
     flex-direction: column;
