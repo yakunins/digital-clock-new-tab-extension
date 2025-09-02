@@ -11,7 +11,7 @@ export type Collapsible = DetailsProps & {
     children: React.ReactNode;
     collapsed?: boolean;
     label: React.ReactNode;
-    id?: string; // if provided, store state in seesion storage
+    id?: string; // to store state in session storage, if provided
 };
 
 export const Collapsible = ({

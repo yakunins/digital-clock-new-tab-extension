@@ -163,7 +163,7 @@ export const SettingsForm = observer(
                     ]}
                     onChange={dateChange}
                 />
-                <Collapsible label="More Settings">
+                <Collapsible label="More Settings" id="more_settings">
                     <div
                         className="col-gap"
                         style={{ marginTop: "calc(var(--gap-y) / 2)" }}
