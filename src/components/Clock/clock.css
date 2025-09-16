@@ -65,7 +65,7 @@
         right: var(--clock-glow-offset);
 
         transition-property: all;
-        transition-duration: var(--duration, 1s);
+        transition-duration: var(--duration, 0.2s);
     }
 
     .digit {
@@ -74,12 +74,12 @@
     }
 
     .digit.colon {
-        margin-left: -0.25em;
-        margin-right: -0.25em;
-    }
-    .digit.colon.blinking {
-        filter: drop-shadow(0 0 calc(var(--glow-size) * 2) var(--c-glow-50))
-            blur(var(--blur-size));
+        margin-inline: calc(var(--thickness) * -1 + 0.65em);
+
+        &.blinking {
+            filter: drop-shadow(0 0 calc(var(--glow-size) * 2) var(--c-glow-50))
+                blur(var(--blur-size));
+        }
     }
 
     /* clock type change animation stages */
@@ -133,8 +133,11 @@
     }
 }
 
-/* wtf? chrome transition issue? works fine in firefox */
-.digit.digit.digit.digit {
-    transition-property: all;
+/* chrome transition issue? works fine in firefox */
+.digit.digit.digit.digit,
+.digit.digit.digit.digit * {
+    --transition-duration: var(--duration, 0.2s);
+
     transition-duration: var(--duration, 0.2s);
+    transition-property: all;
 }
