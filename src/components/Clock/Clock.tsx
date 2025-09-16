@@ -41,11 +41,11 @@ export const Clock = observer(
             : (Settings.segmentShape as Digit["shape"]);
         const cornerShift =
             Settings.segmentShape === "natural"
-                ? `calc(${thickness}em * .25)`
+                ? `calc(${fix(thickness)}em * .25)`
                 : undefined;
 
-        const pillSpacing = `calc(${thickness}em * .35)`;
-        const rectSpacing = `calc(${thickness}em * .75)`;
+        const pillSpacing = `calc(${fix(thickness)}em * .35)`;
+        const rectSpacing = `calc(${fix(thickness)}em * .75)`;
         const spacing =
             Settings.segmentShape === "pill"
                 ? pillSpacing
@@ -54,8 +54,8 @@ export const Clock = observer(
                   : undefined;
 
         const segmentStyle = {
-            thickness: `max(${thickness}em, 2px)`,
-            length: `max(${length}em, ${thickness}em, 4px)`,
+            thickness: `max(${fix(thickness)}em, 2px)`,
+            length: `max(${fix(length)}em, ${fix(thickness)}em, 4px)`,
             opacityOff: 0.075,
             cornerShift: cornerShift,
             spacing,
@@ -140,4 +140,8 @@ const getTime = (
 ) => {
     const time = getTimeString(toLocale(clockType), timeShift).replace(" ", ""); // "01:23pm"
     return time;
+};
+
+const fix = (x: number | string, digits = 2): string => {
+    return Number.parseFloat(x as string).toFixed(digits);
 };
