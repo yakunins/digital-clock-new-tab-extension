@@ -61,6 +61,10 @@ export const Tooltip = ({
     const [hidden, setHidden] = useState(true);
     const [dir, setDir] = useState(direction); // effective direction based on autoFlipOffset
 
+    useEffect(() => {
+        return () => clearTimeout(t.current);
+    }, []);
+
     const hide = (e?: Event) => {
         // ignore synthetic mouse events from touch
         if ((e as TouchMouseEvent)?.sourceCapabilities?.firesTouchEvents)

@@ -32,8 +32,8 @@ export const dayProgress = (time = new Date()) => {
     const minutes = time.getMinutes();
     const seconds = time.getSeconds();
     const milliseconds = time.getMilliseconds();
-    const ms = ((hours * 60 + minutes) * 60 + seconds) * 100 + milliseconds;
-    const progressThroughDay = ms / (24 * 60 * 60 * 100);
+    const ms = ((hours * 60 + minutes) * 60 + seconds) * 1000 + milliseconds;
+    const progressThroughDay = ms / (24 * 60 * 60 * 1000);
 
     return progressThroughDay;
 };

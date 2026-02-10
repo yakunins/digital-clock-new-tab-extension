@@ -16,7 +16,8 @@ export type Radio = Omit<FieldSetProps, "onChange"> & {
 
 export const Radio = memo(
     ({ defaultValue, options, onChange, legend, name, ...rest }: Radio) => {
-        const id = name || useId();
+        const generatedId = useId();
+        const id = name || generatedId;
         const container = useRef<HTMLDivElement>(null!);
         const { width } = useSize(container);
         const [value, setValue] = useState<RadioButton["value"]>(
@@ -44,7 +45,7 @@ export const Radio = memo(
             const cc = container?.current || null;
             if (!cc) return;
             const input = cc.querySelector(".checked input") as HTMLElement;
-            input.focus();
+            input?.focus();
         };
 
         // calculate checked-indicator (caret) left and right position

@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from "react";
+import { useRef, useState, useLayoutEffect } from "react";
 
 type Pos = {
     top: number;
@@ -12,6 +12,7 @@ const mutationOptions = {
 
 export const usePosition = (ref: React.RefObject<HTMLElement>): Pos => {
     const [pos, setPos] = useState<Pos>({ top: 0, left: 0 });
+    const lastPos = useRef<Pos>({ top: 0, left: 0 });
 
     const updatePos = () => {
         if (!ref.current) return;
@@ -22,31 +23,29 @@ export const usePosition = (ref: React.RefObject<HTMLElement>): Pos => {
             left: rect.left + window.scrollX,
         };
 
-        if (pos?.top !== next.top || pos?.left !== next.left) {
+        if (lastPos.current.top !== next.top || lastPos.current.left !== next.left) {
+            lastPos.current = next;
             setPos(next);
         }
     };
 
     useLayoutEffect(() => {
-        if (!ref.current) return;
+        const el = ref.current;
+        if (!el) return;
 
         const resizeObserver = new ResizeObserver(updatePos);
         const mutationObserver = new MutationObserver(updatePos);
 
-        if (ref.current) {
-            resizeObserver.observe(ref.current);
-            mutationObserver.observe(document.body, mutationOptions);
-        }
+        resizeObserver.observe(el);
+        mutationObserver.observe(document.body, mutationOptions);
 
         updatePos();
         window.addEventListener("resize", updatePos);
         window.addEventListener("scroll", updatePos);
 
         return () => {
-            if (ref.current) {
-                resizeObserver.unobserve(ref.current);
-                mutationObserver.disconnect();
-            }
+            resizeObserver.disconnect();
+            mutationObserver.disconnect();
             window.removeEventListener("resize", updatePos);
             window.removeEventListener("scroll", updatePos);
         };

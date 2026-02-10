@@ -20,7 +20,8 @@ export const Checkbox = memo(
         const [isFocused, setFocused] = useState(false);
 
         const inputRef = useRef<HTMLInputElement>(null!);
-        const id = rest.id || useId();
+        const generatedId = useId();
+        const id = rest.id || generatedId;
 
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             setChecked(e.target.checked);

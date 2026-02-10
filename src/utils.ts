@@ -93,7 +93,7 @@ const sumObj = (o1: unknown, o2: unknown) => {
     if (t1 !== t2) return o2;
 
     // null
-    if (o2 === null) return o2;
+    if (o1 === null || o2 === null) return o2;
 
     // undefined
     if (t1 === "undefined") return o2;
@@ -105,7 +105,7 @@ const sumObj = (o1: unknown, o2: unknown) => {
     }
 
     // array merge
-    if (Array.isArray(t1) && Array.isArray(t2)) {
+    if (Array.isArray(o1) && Array.isArray(o2)) {
         return [o1, o2].flat();
     }
 

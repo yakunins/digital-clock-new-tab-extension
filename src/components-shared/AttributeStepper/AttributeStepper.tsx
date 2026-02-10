@@ -97,8 +97,10 @@ export const AttributeStepper = ({
         switch (dir()) {
             case "forward":
                 tid.current = setTimeout(moveForward, duration);
+                break;
             case "backward":
                 tid.current = setTimeout(moveBackward, duration);
+                break;
         }
     }
 

@@ -124,7 +124,10 @@ export const SettingsToggleButton = ({
 
 // taking care of proper value of Settings.isLastActive
 const SetActiveStore = ({ origin }: { origin: Settings["origin"] }) => {
-    origin && Settings.setOrigin(origin);
+    React.useEffect(() => {
+        if (origin) Settings.setOrigin(origin);
+    }, [origin]);
+
     const handleActive = (e?: Event) => {
         const visible = document.visibilityState === "visible";
         if (visible) {

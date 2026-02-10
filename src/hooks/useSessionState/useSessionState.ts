@@ -4,11 +4,8 @@ export function useSessionState(
     key: string | null,
     initialValue: boolean | number | string
 ) {
-    if (key === null) {
-        return useState(initialValue);
-    }
-
     const [storedValue, setStoredValue] = useState(() => {
+        if (key === null) return initialValue;
         try {
             const item = window.sessionStorage.getItem(key);
             return item ? JSON.parse(item) : initialValue;
@@ -19,6 +16,7 @@ export function useSessionState(
     });
 
     useEffect(() => {
+        if (key === null) return;
         try {
             window.sessionStorage.setItem(key, JSON.stringify(storedValue));
         } catch (error) {

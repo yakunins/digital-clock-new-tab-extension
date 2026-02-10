@@ -1,18 +1,18 @@
-import React, { useCallback, useState, useEffect } from "react";
-import { observer } from "mobx-react";
-import { Digit, BlinkingDigit, Blinker } from "react-led-digit";
-import { SettingsStore as Settings } from "../";
-import { getTimeString, getLocale } from "../../utils";
-import { Innout } from "../../components-shared";
+import React, { useCallback, useState, useEffect } from 'react';
+import { observer } from 'mobx-react';
+import { Digit, BlinkingDigit, Blinker } from 'react-led-digit';
+import { SettingsStore as Settings } from '../';
+import { getTimeString, getLocale } from '../../utils';
+import { Innout } from '../../components-shared';
 
-import "./clock.css";
+import './clock.css';
 
 const blinker = new Blinker(); // singleton to blink in sync with others
 
 export const Clock = observer(
     ({ ...rest }: React.HTMLAttributes<HTMLTimeElement>) => {
         const [timeString, setTimeString] = useState(
-            getTime(Settings.clockType, Settings.timeShift)
+            getTime(Settings.clockType, Settings.timeShift),
         );
 
         const handleBlink = useCallback(() => {
@@ -36,20 +36,20 @@ export const Clock = observer(
         const tadjust = ((l - 0.1) / (l + 0.5)) ** 2 * 2 - 0.125; // min=-0.125, def=0, max=0.6
         const thickness = (t + tadjust) * 2.5;
 
-        const shape = ["natural", "diamond"].includes(Settings.segmentShape)
-            ? "default"
-            : (Settings.segmentShape as Digit["shape"]);
-        const cornerShift =
-            Settings.segmentShape === "natural"
+        const shape = ['natural', 'diamond'].includes(Settings.segmentShape)
+            ? 'default'
+            : (Settings.segmentShape as Digit['shape']);
+        const cornerCutoff =
+            Settings.segmentShape === 'natural'
                 ? `calc(${fix(thickness)}em * .25)`
                 : undefined;
 
         const pillSpacing = `calc(${fix(thickness)}em * .35)`;
         const rectSpacing = `calc(${fix(thickness)}em * .75)`;
         const spacing =
-            Settings.segmentShape === "pill"
+            Settings.segmentShape === 'pill'
                 ? pillSpacing
-                : Settings.segmentShape === "rect"
+                : Settings.segmentShape === 'rect'
                   ? rectSpacing
                   : undefined;
 
@@ -57,29 +57,29 @@ export const Clock = observer(
             thickness: `max(${fix(thickness)}em, 2px)`,
             length: `max(${fix(length)}em, ${fix(thickness)}em, 4px)`,
             opacityOff: 0.075,
-            cornerShift: cornerShift,
+            cornerCutoff: cornerCutoff,
             spacing,
-        } as Digit["segmentStyle"];
+        } as Digit['segmentStyle'];
 
         const clockStyle = {
-            "--thickness": segmentStyle?.thickness,
-            "--length": segmentStyle?.length,
+            '--thickness': segmentStyle?.thickness,
+            '--length': segmentStyle?.length,
         } as React.CSSProperties;
 
-        const ampm = timeString.trim().endsWith("am")
-            ? "am"
-            : timeString.trim().endsWith("pm")
-              ? "pm"
+        const ampm = timeString.trim().endsWith('am')
+            ? 'am'
+            : timeString.trim().endsWith('pm')
+              ? 'pm'
               : null;
         const leadingZeroOff = (idx: number, c: string) =>
-            idx === 0 && c === "0" && !Settings.clockLeadingZero;
+            idx === 0 && c === '0' && !Settings.clockLeadingZero;
 
         return (
             <time className="clock" {...rest} style={clockStyle}>
                 <div className="clock-frame"></div>
                 <div className="clock-glow"></div>
-                {timeString.split("").map((char, idx) => {
-                    if (char === ":" || char === ".")
+                {timeString.split('').map((char, idx) => {
+                    if (char === ':' || char === '.')
                         return (
                             <BlinkingDigit
                                 key={idx}
@@ -88,11 +88,11 @@ export const Clock = observer(
                                 segmentStyle={segmentStyle}
                             />
                         );
-                    if ("0123456789".includes(char))
+                    if ('0123456789'.includes(char))
                         return (
                             <Digit
                                 key={idx}
-                                value={char as Digit["value"]}
+                                value={char as Digit['value']}
                                 shape={shape}
                                 off={leadingZeroOff(idx, char)}
                                 segmentStyle={segmentStyle}
@@ -107,38 +107,38 @@ export const Clock = observer(
                 >
                     <Digit
                         key="ampm"
-                        value={ampm || "am"}
+                        value={ampm || 'am'}
                         segmentStyle={segmentStyle}
                     />
                 </Innout>
             </time>
         );
-    }
+    },
 );
 
 const ampmAnimationSteps = [
-    { duration: 1, name: "mounted" },
-    { duration: 250, name: "ani-width" },
-    { duration: 250, name: "ani-opacity" },
-    { duration: 1, name: "finished" },
+    { duration: 1, name: 'mounted' },
+    { duration: 250, name: 'ani-width' },
+    { duration: 250, name: 'ani-opacity' },
+    { duration: 1, name: 'finished' },
 ];
 
-const toLocale = (clockFormat: Settings["clockType"]) => {
+const toLocale = (clockFormat: Settings['clockType']) => {
     switch (clockFormat) {
-        case "24-hour":
-            return "en-GB";
-        case "ampm":
-            return "en-US";
+        case '24-hour':
+            return 'en-GB';
+        case 'ampm':
+            return 'en-US';
         default:
             return getLocale();
     }
 };
 
 const getTime = (
-    clockType: Settings["clockType"],
-    timeShift: Settings["timeShift"]
+    clockType: Settings['clockType'],
+    timeShift: Settings['timeShift'],
 ) => {
-    const time = getTimeString(toLocale(clockType), timeShift).replace(" ", ""); // "01:23pm"
+    const time = getTimeString(toLocale(clockType), timeShift).replace(' ', ''); // "01:23pm"
     return time;
 };
 

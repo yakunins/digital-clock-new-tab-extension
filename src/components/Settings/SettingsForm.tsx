@@ -1,6 +1,7 @@
-import React, { useCallback, useRef } from "react";
-import { observer } from "mobx-react";
-import { SettingsStore as Settings } from "../../stores/settings.store";
+import React, { useCallback, useEffect, useRef } from 'react';
+import { observer } from 'mobx-react';
+import { SettingsStore as Settings } from '../../stores/settings.store';
+import { generateAndSetRandomColors } from '../BackgroundFill/BackgroundFill';
 import {
     Collapsible,
     Checkbox,
@@ -10,93 +11,94 @@ import {
     Slider,
     TextEditor,
     Tooltip,
-} from "../../components-shared";
+} from '../../components-shared';
 
-import "./settings-form.css";
+import './settings-form.css';
 
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
 export type SettingsForm = DivProps & {
     close?: () => void;
-    origin?: Settings["origin"];
+    origin?: Settings['origin'];
 };
 export const SettingsForm = observer(
     ({ close, origin, ...rest }: SettingsForm) => {
-        origin && Settings.setOrigin(origin);
+        useEffect(() => {
+            if (origin) Settings.setOrigin(origin);
+        }, [origin]);
 
-        const schemaChange = useCallback<Radio["onChange"]>((next) => {
-            Settings.setColorSchema(next as Settings["colorSchema"]);
+        const schemaChange = useCallback<Radio['onChange']>((next) => {
+            Settings.setColorSchema(next as Settings['colorSchema']);
         }, []);
         const randomSchemaClickCounter = useRef(0);
         const schemaChangeClick = (e: React.MouseEvent) => {
             const target = e.target as HTMLInputElement;
 
             if (!target.value) return;
-            if (target.value === "random") {
+            if (target.value === 'random') {
                 randomSchemaClickCounter.current += 1;
                 if (randomSchemaClickCounter.current > 1) {
-                    Settings.setColorSchema("fixed");
-                    Settings.setColorSchema("random");
+                    generateAndSetRandomColors();
                 }
             } else {
                 randomSchemaClickCounter.current = 0;
             }
         };
         const schemaChangeKeyDown = (e: React.KeyboardEvent) => {
-            if (e.key !== "Enter") return;
+            if (e.key !== 'Enter') return;
             const target = e.target as HTMLInputElement;
             if (!target.value) return;
             schemaChangeClick(e as unknown as React.MouseEvent);
         };
 
-        const clockTypeChange = useCallback<Radio["onChange"]>((next) => {
-            Settings.setClockType(next as Settings["clockType"]);
+        const clockTypeChange = useCallback<Radio['onChange']>((next) => {
+            Settings.setClockType(next as Settings['clockType']);
         }, []);
 
         const clockLeadingZeroChange = useCallback(
             (e: React.ChangeEvent<HTMLInputElement>) => {
                 Settings.setClockLeadingZero(
-                    e.target.checked as Settings["clockLeadingZero"]
+                    e.target.checked as Settings['clockLeadingZero'],
                 );
             },
-            []
+            [],
         );
 
         const lengthChange = useCallback<
-            Exclude<Slider["onChange"], undefined>
+            Exclude<Slider['onChange'], undefined>
         >((next: number) => {
             Settings.setLength(next);
         }, []);
 
         const thicknessChange = useCallback<
-            Exclude<Slider["onChange"], undefined>
+            Exclude<Slider['onChange'], undefined>
         >((next: number) => {
             Settings.setThickness(next);
         }, []);
 
-        const shapeChange = useCallback<Radio["onChange"]>((next) => {
-            Settings.setShape(next as Settings["segmentShape"]);
+        const shapeChange = useCallback<Radio['onChange']>((next) => {
+            Settings.setShape(next as Settings['segmentShape']);
         }, []);
 
-        const dateChange = useCallback<Radio["onChange"]>((next) => {
-            Settings.setDateStyle(next as Settings["dateStyle"]);
+        const dateChange = useCallback<Radio['onChange']>((next) => {
+            Settings.setDateStyle(next as Settings['dateStyle']);
         }, []);
 
-        const faviconChange = useCallback<Radio["onChange"]>((next) => {
-            Settings.setFavicon(next as Settings["favicon"]);
+        const faviconChange = useCallback<Radio['onChange']>((next) => {
+            Settings.setFavicon(next as Settings['favicon']);
         }, []);
 
         const timeShiftChange = useCallback<
-            Exclude<Slider["onChange"], undefined>
+            Exclude<Slider['onChange'], undefined>
         >((minutes: number) => {
             Settings.setTimeShift(minutes);
         }, []);
 
         const cssChange = useCallback(
             (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                const text = e?.target?.value || "";
+                const text = e?.target?.value || '';
                 Settings.setCss(text);
             },
-            []
+            [],
         );
 
         const resetToDefaults = () => {
@@ -107,13 +109,13 @@ export const SettingsForm = observer(
             <div className="settings-form col-gap" {...rest}>
                 <Radio
                     legend={
-                        <span style={{ marginRight: ".1em" }}>Background</span>
+                        <span style={{ marginRight: '.1em' }}>Background</span>
                     }
                     defaultValue={Settings.colorSchema}
                     options={[
-                        { value: "sky", children: "Sky" },
-                        { value: "random", children: "Random" },
-                        { value: "fixed", children: "This" },
+                        { value: 'sky', children: 'Sky' },
+                        { value: 'random', children: 'Random' },
+                        { value: 'fixed', children: 'This' },
                     ]}
                     onChange={schemaChange}
                     onClick={schemaChangeClick}
@@ -123,8 +125,8 @@ export const SettingsForm = observer(
                     legend="Clock"
                     defaultValue={Settings.clockType}
                     options={[
-                        { value: "24-hour", children: "24-hour" },
-                        { value: "ampm", children: "AM-PM" },
+                        { value: '24-hour', children: '24-hour' },
+                        { value: 'ampm', children: 'AM-PM' },
                     ]}
                     onChange={clockTypeChange}
                 />
@@ -146,10 +148,10 @@ export const SettingsForm = observer(
                     legend="Segment Shape"
                     defaultValue={Settings.segmentShape}
                     options={[
-                        { value: "diamond", children: cornerIcon1 },
-                        { value: "natural", children: cornerIcon2 },
-                        { value: "rect", children: cornerIcon3 },
-                        { value: "pill", children: cornerIcon4 },
+                        { value: 'diamond', children: cornerIcon1 },
+                        { value: 'natural', children: cornerIcon2 },
+                        { value: 'calculator', children: cornerIcon3 },
+                        { value: 'pill', children: cornerIcon4 },
                     ]}
                     onChange={shapeChange}
                 />
@@ -157,16 +159,16 @@ export const SettingsForm = observer(
                     legend="Date"
                     defaultValue={Settings.dateStyle}
                     options={[
-                        { value: "long", children: "Long" },
-                        { value: "short", children: "Short" },
-                        { value: "none", children: "None" },
+                        { value: 'long', children: 'Long' },
+                        { value: 'short', children: 'Short' },
+                        { value: 'none', children: 'None' },
                     ]}
                     onChange={dateChange}
                 />
                 <Collapsible label="More Settings" id="more_settings">
                     <div
                         className="col-gap"
-                        style={{ marginTop: "calc(var(--gap-y) / 2)" }}
+                        style={{ marginTop: 'calc(var(--gap-y) / 2)' }}
                     >
                         <Radio
                             legend="Favicon"
@@ -183,11 +185,11 @@ export const SettingsForm = observer(
                             outputFormatter={(s) => {
                                 const v = s.values[0];
                                 if (v === 0) return `0`;
-                                const sign = v < 0 ? "-" : "+";
+                                const sign = v < 0 ? '-' : '+';
                                 const hours = Math.abs(v / 4);
                                 const h = ~~hours;
                                 const m = (hours % 1) * 60;
-                                return `${sign}${h}:${m === 0 ? "00" : m}`;
+                                return `${sign}${h}:${m === 0 ? '00' : m}`;
                             }}
                         />
                         <TextEditor
@@ -195,7 +197,7 @@ export const SettingsForm = observer(
                             id="css_edit"
                             onChange={cssChange}
                             defaultValue={Settings.css}
-                            style={{ resize: "vertical" }}
+                            style={{ resize: 'vertical' }}
                             rows={5}
                         />
                         <Checkbox
@@ -216,43 +218,43 @@ export const SettingsForm = observer(
                 </div>
             </div>
         );
-    }
+    },
 );
 
 const faviconOptions = [
     {
-        value: "browser_default",
-        children: "Default",
+        value: 'browser_default',
+        children: 'Default',
     },
     {
-        value: "digit",
-        children: "Digit",
+        value: 'digit',
+        children: 'Digit',
     },
     {
-        value: "transparent",
-        children: "None",
+        value: 'transparent',
+        children: 'None',
     },
 ];
 
 const helpIconStyle = {
-    display: "inline-block",
-    width: "calc(var(--s-1px) * 18)",
-    height: "calc(var(--s-1px) * 18)",
-    marginLeft: "var(--s-1px)",
-    marginRight: "var(--s-1px)",
-    verticalAlign: "calc(var(--s-1px) * -3)",
-    maskImage: "linear-gradient(90deg, transparent 0%, black 100%)",
-    opacity: ".65",
+    display: 'inline-block',
+    width: 'calc(var(--s-1px) * 18)',
+    height: 'calc(var(--s-1px) * 18)',
+    marginLeft: 'var(--s-1px)',
+    marginRight: 'var(--s-1px)',
+    verticalAlign: 'calc(var(--s-1px) * -3)',
+    maskImage: 'linear-gradient(90deg, transparent 0%, black 100%)',
+    opacity: '.65',
 };
 
 const cornerIconStyle = {
-    display: "inline-block",
-    width: "calc(var(--s-1px) * 24)",
-    height: "calc(var(--s-1px) * 16)",
-    verticalAlign: "calc(var(--s-1px) * -1)",
-    maskImage: "linear-gradient(90deg, transparent 0%, black 100%)",
+    display: 'inline-block',
+    width: 'calc(var(--s-1px) * 24)',
+    height: 'calc(var(--s-1px) * 16)',
+    verticalAlign: 'calc(var(--s-1px) * -1)',
+    maskImage: 'linear-gradient(90deg, transparent 0%, black 100%)',
 };
 const cornerIcon1 = <Icon name="shapeDiamond" style={cornerIconStyle} />;
 const cornerIcon2 = <Icon name="shapeSegment" style={cornerIconStyle} />;
-const cornerIcon3 = <Icon name="shapeRectangle" style={cornerIconStyle} />;
+const cornerIcon3 = <Icon name="shapeCalculator" style={cornerIconStyle} />;
 const cornerIcon4 = <Icon name="shapePill" style={cornerIconStyle} />;

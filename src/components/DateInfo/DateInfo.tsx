@@ -19,7 +19,7 @@ export const DateInfo = observer(({ ...rest }: DateInfo) => {
     const dateLong = () => getDateString(locale, "long", Settings.timeShift);
     const dateShort = () => getDateString(locale, "short", Settings.timeShift);
     const dateStyled = () =>
-        Settings.dateStyle === "short" ? dateShort : dateLong;
+        Settings.dateStyle === "short" ? dateShort() : dateLong();
 
     const [dateString, setDateString] = useState<string>(dateStyled());
 
@@ -36,7 +36,7 @@ export const DateInfo = observer(({ ...rest }: DateInfo) => {
     useEffect(() => {
         blinker.subscribe(handleBlink);
         return () => blinker.unsubscribe(handleBlink);
-    });
+    }, [handleBlink]);
     useEffect(() => {
         handleBlink();
     }, [Settings.dateStyle]);

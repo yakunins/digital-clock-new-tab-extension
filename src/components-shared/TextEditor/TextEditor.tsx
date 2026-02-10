@@ -18,9 +18,11 @@ export const TextEditor = ({
     errorMessage,
     label,
     onChange,
-    id = useId(),
+    id: idProp,
     ...rest
 }: TextEditor) => {
+    const generatedId = useId();
+    const id = idProp || generatedId;
     const [text, setText] = React.useState(defaultValue);
 
     const onChangeFn = (e?: React.ChangeEvent<HTMLTextAreaElement>) => {

@@ -13,7 +13,8 @@ export const RadioButton = memo(
     ({ children, checked, className, name, value, ...rest }: RadioButton) => {
         const inputRef = useRef<HTMLInputElement>(null!);
         const [focused, setFocused] = useState(false);
-        const id = rest.id || useId();
+        const generatedId = useId();
+        const id = rest.id || generatedId;
 
         useEffect(() => {
             focused && inputRef?.current?.focus();

@@ -22,9 +22,7 @@ export const useSize = (ref: React.RefObject<HTMLElement>): Size => {
         }
 
         return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current);
-            }
+            observer.disconnect();
         };
     }, [ref]);
 

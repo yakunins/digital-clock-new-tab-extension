@@ -1,28 +1,37 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 export const useOpacityTracker = (ref: React.RefObject<HTMLElement>) => {
     const [opacity, setOpacity] = useState<number>(1);
-    const animationFrameRef = useRef<number>(null!);
+    const lastOpacity = useRef<number>(1);
+
+    const updateOpacity = useCallback(() => {
+        const computedOpacity = getEffectiveOpacity(ref);
+        if (computedOpacity !== lastOpacity.current) {
+            lastOpacity.current = computedOpacity;
+            setOpacity(computedOpacity);
+        }
+    }, [ref]);
 
     useEffect(() => {
         const element = ref.current;
-
         if (!element) return;
 
-        const updateOpacity = () => {
-            const computedOpacity = getEffectiveOpacity(ref);
-            setOpacity(computedOpacity);
-            animationFrameRef.current = requestAnimationFrame(updateOpacity);
-        };
+        updateOpacity();
 
-        animationFrameRef.current = requestAnimationFrame(updateOpacity);
+        const observer = new MutationObserver(updateOpacity);
 
-        return () => {
-            if (animationFrameRef.current !== null) {
-                cancelAnimationFrame(animationFrameRef.current);
-            }
-        };
-    }, [ref]);
+        // Observe style/class changes on the element and all ancestors
+        let current: HTMLElement | null = element;
+        while (current) {
+            observer.observe(current, {
+                attributes: true,
+                attributeFilter: ["style", "class"],
+            });
+            current = current.parentElement;
+        }
+
+        return () => observer.disconnect();
+    }, [ref, updateOpacity]);
 
     return opacity;
 };

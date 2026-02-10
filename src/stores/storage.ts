@@ -56,7 +56,7 @@ function chromeStorageGet<T>(
             if (chrome?.runtime?.lastError) {
                 reject(chrome?.runtime?.lastError);
             } else {
-                resolve(result);
+                resolve(result as { [key: string]: T });
             }
         });
     });
@@ -66,10 +66,10 @@ function browserStorageGet<T>(
 ): Promise<{ [key: string]: T }> {
     return new Promise((resolve, reject) => {
         browser?.storage?.sync.get(keys, (result) => {
-            if (chrome?.runtime?.lastError) {
-                reject(chrome?.runtime?.lastError);
+            if (browser?.runtime?.lastError) {
+                reject(browser?.runtime?.lastError);
             } else {
-                resolve(result);
+                resolve(result as { [key: string]: T });
             }
         });
     });

@@ -1,43 +1,43 @@
-import { makeObservable, observable, computed, action } from "mobx";
-import { getLocaleAmpm } from "../utils";
-import { getId } from "../utils";
+import { makeObservable, observable, computed, action } from 'mobx';
+import { getLocaleAmpm } from '../utils';
+import { getId } from '../utils';
 
 import {
     storage as getStorage,
     StorageChangeHandler,
     Changes,
     Namespace,
-} from "./storage";
+} from './storage';
 
 type Settings = {
-    clockType: "24-hour" | "ampm";
+    clockType: '24-hour' | 'ampm';
     clockLeadingZero: boolean;
-    colorSchema: "sky" | "random" | "fixed";
+    colorSchema: 'sky' | 'random' | 'fixed';
     css: string;
-    dateStyle: "long" | "short" | "none";
+    dateStyle: 'long' | 'short' | 'none';
     favicon: string;
     fixedColors: string;
     segmentLength: number;
     segmentThickness: number;
-    segmentShape: "diamond" | "natural" | "rect" | "pill";
+    segmentShape: 'diamond' | 'natural' | 'rect' | 'pill' | 'calculator';
     status?: string;
     timeShift: number;
     storeId: string; // multiple stores handling
-    origin: "unknown" | "tab" | "popup" | "options";
+    origin: 'unknown' | 'tab' | 'popup' | 'options';
     isActive: boolean; // store belongs to last active tab
 };
 
 export type SettingsStore = Settings & {
     handleStorageChange: StorageChangeHandler;
-    setClockType: (val: Settings["clockType"]) => void;
-    setClockLeadingZero: (val: Settings["clockLeadingZero"]) => void;
-    setColorSchema: (val: Settings["colorSchema"]) => void;
-    setCss: (val: Settings["css"]) => void;
-    setDateStyle: (val: Settings["dateStyle"]) => void;
-    setLength: (val: Settings["segmentLength"]) => void;
-    setThickness: (val: Settings["segmentThickness"]) => void;
-    setShape: (val: Settings["segmentShape"]) => void;
-    setTimeShift: (minutes: Settings["timeShift"]) => void;
+    setClockType: (val: Settings['clockType']) => void;
+    setClockLeadingZero: (val: Settings['clockLeadingZero']) => void;
+    setColorSchema: (val: Settings['colorSchema']) => void;
+    setCss: (val: Settings['css']) => void;
+    setDateStyle: (val: Settings['dateStyle']) => void;
+    setLength: (val: Settings['segmentLength']) => void;
+    setThickness: (val: Settings['segmentThickness']) => void;
+    setShape: (val: Settings['segmentShape']) => void;
+    setTimeShift: (minutes: Settings['timeShift']) => void;
     updateSkyBackground: () => void;
     reset: () => void;
 };
@@ -57,20 +57,20 @@ const initialCss = `:root {
     --clock-frame-opacity: 0;
   }`;
 const initial: Settings = {
-    clockType: getLocaleAmpm() ? "ampm" : "24-hour",
+    clockType: getLocaleAmpm() ? 'ampm' : '24-hour',
     clockLeadingZero: true,
-    colorSchema: "sky",
+    colorSchema: 'sky',
     css: initialCss,
-    fixedColors: JSON.stringify(["#ffe8de", "#6e7cca", "#860d0e", "#21022a"]),
-    dateStyle: "long",
-    favicon: "browser_default",
+    fixedColors: JSON.stringify(['#ffe8de', '#6e7cca', '#860d0e', '#21022a']),
+    dateStyle: 'long',
+    favicon: 'browser_default',
     segmentLength: 30,
     segmentThickness: 40,
-    segmentShape: "diamond",
+    segmentShape: 'diamond',
     timeShift: 0,
 
     storeId: getId(),
-    origin: "unknown",
+    origin: 'unknown',
     isActive: true,
 };
 const reset: Partial<Settings> = {
@@ -114,6 +114,7 @@ class ExtensionSettingsStore implements SettingsStore {
             colorSchema: observable,
             css: observable,
             dateStyle: observable,
+            fixedColors: observable,
             favicon: observable,
             hasChanges: computed,
             segmentLength: observable,
@@ -205,33 +206,42 @@ class ExtensionSettingsStore implements SettingsStore {
     }
 
     handleStorageChange(changes: Changes, namespace: Namespace) {
-        for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
-            if (oldValue === newValue) return;
+        // Process colorSchema first so dependent guards (e.g. fixedColors) see the updated value
+        if (changes.colorSchema) {
+            const { oldValue, newValue } = changes.colorSchema;
+            if (oldValue !== newValue)
+                this.setColorSchema(newValue as any, false);
+        }
 
-            if (key === "lastActiveStore") this.setActiveStore(newValue, false);
-            if (key === "clockType") this.setClockType(newValue, false);
-            if (key === "clockLeadingZero")
-                this.setClockLeadingZero(newValue, false);
-            if (key === "colorSchema") this.setColorSchema(newValue, false);
-            if (key === "css") this.setCss(newValue, false);
-            if (key === "dateStyle") this.setDateStyle(newValue, false);
-            if (key === "fixedColors") this.setFixedColors(newValue, false);
-            if (key === "favicon") this.setFavicon(newValue, false);
-            if (key === "segmentLength") this.setLength(newValue, false);
-            if (key === "segmentShape") this.setShape(newValue, false);
-            if (key === "segmentThickness") this.setThickness(newValue, false);
-            if (key === "timeShift") this.setTimeShift(newValue, false);
+        for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+            if (oldValue === newValue) continue;
+            if (key === 'colorSchema') continue; // already handled above
+            const val = newValue as any;
+
+            if (key === 'lastActiveStore') this.setActiveStore(val, false);
+            if (key === 'clockType') this.setClockType(val, false);
+            if (key === 'clockLeadingZero')
+                this.setClockLeadingZero(val, false);
+            if (key === 'css') this.setCss(val, false);
+            if (key === 'dateStyle') this.setDateStyle(val, false);
+            if (key === 'fixedColors' && this.colorSchema !== 'random')
+                this.setFixedColors(val, false);
+            if (key === 'favicon') this.setFavicon(val, false);
+            if (key === 'segmentLength') this.setLength(val, false);
+            if (key === 'segmentShape') this.setShape(val, false);
+            if (key === 'segmentThickness') this.setThickness(val, false);
+            if (key === 'timeShift') this.setTimeShift(val, false);
         }
     }
 
-    setClockType(val: Settings["clockType"], useStorage = true) {
+    setClockType(val: Settings['clockType'], useStorage = true) {
         if (this.clockType === val) return;
         this.clockType = val;
         if (useStorage)
             this.storage.debouncedSet({ clockType: this.clockType });
     }
 
-    setClockLeadingZero(val: Settings["clockLeadingZero"], useStorage = true) {
+    setClockLeadingZero(val: Settings['clockLeadingZero'], useStorage = true) {
         const v = toBoolean(val);
         if (this.clockLeadingZero === v) return;
         this.clockLeadingZero = v;
@@ -241,14 +251,24 @@ class ExtensionSettingsStore implements SettingsStore {
             });
     }
 
-    setColorSchema(val: Settings["colorSchema"], useStorage = true) {
+    setColorSchema(val: Settings['colorSchema'], useStorage = true) {
         if (this.colorSchema === val) return;
+        const wasRandom = this.colorSchema === 'random';
         this.colorSchema = val;
-        if (useStorage)
-            this.storage.debouncedSet({ colorSchema: this.colorSchema });
+        if (useStorage) {
+            if (wasRandom) {
+                // Leaving "random": sync both schema and current colors atomically
+                this.storage.debouncedSet({
+                    colorSchema: this.colorSchema,
+                    fixedColors: this.fixedColors,
+                });
+            } else {
+                this.storage.debouncedSet({ colorSchema: this.colorSchema });
+            }
+        }
     }
 
-    setLength(val: Settings["segmentLength"], useStorage = true) {
+    setLength(val: Settings['segmentLength'], useStorage = true) {
         if (this.segmentLength === val) return;
         val <= 100 && val >= 10
             ? (this.segmentLength = val)
@@ -257,7 +277,7 @@ class ExtensionSettingsStore implements SettingsStore {
             this.storage.debouncedSet({ segmentLength: this.segmentLength });
     }
 
-    setThickness(val: Settings["segmentThickness"], useStorage = true) {
+    setThickness(val: Settings['segmentThickness'], useStorage = true) {
         if (this.segmentThickness === val) return;
 
         val <= 100 && val >= 10
@@ -269,33 +289,33 @@ class ExtensionSettingsStore implements SettingsStore {
             });
     }
 
-    setShape(val: Settings["segmentShape"], useStorage = true) {
+    setShape(val: Settings['segmentShape'], useStorage = true) {
         if (this.segmentShape === val) return;
         this.segmentShape = val;
         if (useStorage)
             this.storage.debouncedSet({ segmentShape: this.segmentShape });
     }
 
-    setFavicon(val: Settings["favicon"], useStorage = true) {
+    setFavicon(val: Settings['favicon'], useStorage = true) {
         if (this.favicon === val) return;
         this.favicon = val;
         if (useStorage) this.storage.debouncedSet({ favicon: this.favicon });
     }
 
-    setCss(val: Settings["css"], useStorage = true) {
+    setCss(val: Settings['css'], useStorage = true) {
         if (this.css === val) return;
         this.css = val;
         if (useStorage) this.storage.debouncedSet({ css: this.css });
     }
 
-    setDateStyle(val: Settings["dateStyle"], useStorage = true) {
+    setDateStyle(val: Settings['dateStyle'], useStorage = true) {
         if (this.dateStyle === val) return;
         this.dateStyle = val;
         if (useStorage)
             this.storage.debouncedSet({ dateStyle: this.dateStyle });
     }
 
-    setTimeShift(val: Settings["timeShift"], useStorage = true) {
+    setTimeShift(val: Settings['timeShift'], useStorage = true) {
         if (this.timeShift === val) return;
         this.timeShift = val;
         this.updateSkyBackground();
@@ -305,24 +325,25 @@ class ExtensionSettingsStore implements SettingsStore {
 
     setFixedColors(val: string, useStorage = true) {
         if (!hasValidColors(val)) return;
+        if (this.fixedColors === val) return;
         this.fixedColors = val;
         if (useStorage && this.isActive) {
             this.storage.debouncedSet({ fixedColors: val });
         }
     }
 
-    setOrigin(val: Settings["origin"]) {
+    setOrigin(val: Settings['origin']) {
         this.origin = val;
-        if (val !== "tab") this.isActive = false;
+        if (val !== 'tab') this.isActive = false;
     }
 
-    setActiveStore(id: Settings["storeId"], useStorage = true) {
+    setActiveStore(id: Settings['storeId'], useStorage = true) {
         if (this.storeId !== id) {
             this.isActive = false;
             return;
         } else {
             this.isActive = true;
-            if (useStorage && this.origin === "tab") {
+            if (useStorage && this.origin === 'tab') {
                 this.storage.set({ lastActiveStore: this.storeId });
             }
         }
@@ -364,13 +385,13 @@ const isValidJSON = (str: string) => {
     return true;
 };
 
-const toBoolean = (val: boolean | undefined | "true" | "false") => {
+const toBoolean = (val: boolean | undefined | 'true' | 'false') => {
     switch (val) {
         case false:
-        case "false":
+        case 'false':
             return false;
         case true:
-        case "true":
+        case 'true':
             return true;
         default:
             return false;

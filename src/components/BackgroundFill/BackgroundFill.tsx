@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { SettingsStore as Settings } from "../../stores/settings.store";
 import { randomColors } from "./randomColors";
@@ -29,25 +29,31 @@ export const BackgroundFill = ({ children, ...rest }: BackgroundFill) => {
 };
 
 const BackgroundFillStyle = observer(() => {
-    let colors = JSON.parse(Settings.fixedColors);
+    // Generate random colors once when switching to "random"
+    useEffect(() => {
+        if (Settings.colorSchema === "random") {
+            generateAndSetRandomColors();
+        }
+    }, [Settings.colorSchema]);
 
-    switch (Settings.colorSchema) {
-        case "sky":
-            colors = naturalColors(Settings.skyBackgroundTime);
-            colors = saturateFourColors(colors, 1.35);
-            Settings.setFixedColors(JSON.stringify(colors), true);
-            break;
-        case "random":
-            colors = randomColors();
-            colors[0] = lightenColor(colors[0], 1);
-            colors[1] = lightenColor(colors[1], 0.8);
-            colors[2] = mixHexColors(colors[2], colors[1], 0.2);
-            colors[2] = lightenColor(colors[2], 0.6);
-            colors[3] = mixHexColors(colors[3], colors[2], 0.6);
-            colors[3] = lightenColor(colors[3], 0.4);
-            Settings.setFixedColors(JSON.stringify(colors), true);
-            break;
+    // Compute display colors
+    let colors: string[];
+    if (Settings.colorSchema === "sky") {
+        colors = saturateFourColors(naturalColors(Settings.skyBackgroundTime), 1.35);
+    } else {
+        try {
+            colors = JSON.parse(Settings.fixedColors);
+        } catch {
+            colors = ["#ffe8de", "#6e7cca", "#860d0e", "#21022a"];
+        }
     }
+
+    // Persist sky colors for cross-tab sync
+    useEffect(() => {
+        if (Settings.colorSchema === "sky") {
+            Settings.setFixedColors(JSON.stringify(colors), true);
+        }
+    });
 
     const cssVariables = `:root {
         --theme: ${Settings.colorSchema};
@@ -59,6 +65,17 @@ const BackgroundFillStyle = observer(() => {
 
     return <style>{cssVariables}</style>;
 });
+
+export function generateAndSetRandomColors() {
+    const c = randomColors();
+    c[0] = lightenColor(c[0], 1);
+    c[1] = lightenColor(c[1], 0.8);
+    c[2] = mixHexColors(c[2], c[1], 0.2);
+    c[2] = lightenColor(c[2], 0.6);
+    c[3] = mixHexColors(c[3], c[2], 0.6);
+    c[3] = lightenColor(c[3], 0.4);
+    Settings.setFixedColors(JSON.stringify(c), false);
+}
 
 const Strips = () => (
     <>

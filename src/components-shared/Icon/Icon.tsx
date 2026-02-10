@@ -1,6 +1,6 @@
-import React from "react";
-import { cx } from "../../utils";
-import "./icon.css";
+import React from 'react';
+import { cx } from '../../utils';
+import './icon.css';
 
 type IconName = keyof typeof iconNames;
 type SpanProps = React.HTMLAttributes<HTMLSpanElement>;
@@ -10,7 +10,7 @@ export type Icon = SpanProps & {
 
 export const Icon = ({ name, ...rest }: Icon) => {
     return (
-        <span {...rest} className={cx("icon", rest.className)}>
+        <span {...rest} className={cx('icon', rest.className)}>
             {iconNames[name]}
         </span>
     );
@@ -55,6 +55,12 @@ const shapeSegment = (
 const shapeRectangle = (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 16">
         <path d="M19,3v10H-3.5V3H19 M19,2H-3.5c-0.6,0-1,0.4-1,1v10c0,0.6,0.4,1,1,1H19c0.6,0,1-0.4,1-1V3C20,2.4,19.6,2,19,2L19,2z" />
+    </svg>
+);
+
+const shapeCalculator = (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 16">
+        <path d="M9.85,3c7.35,0,9.32,2.17,10.15,3l-7,7H-3.5V3h13.35M9.85,2H-3.5c-.55,0-1,.45-1,1v10c0,.55.45,1,1,1H13c.27,0,.52-.11.71-.29l7-7c.39-.39.39-1.02,0-1.41l-.06-.06c-.96-.97-3.21-3.23-10.79-3.23h0Z" />
     </svg>
 );
 
@@ -127,6 +133,7 @@ const iconNames = {
     shapeDiamond,
     shapeSegment,
     shapeRectangle,
+    shapeCalculator,
     shapePill,
     square,
 };

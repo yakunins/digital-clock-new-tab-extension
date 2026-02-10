@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type HasScrollbar = "true" | "false" | "unknown";
 type MeasurementEventType = string | undefined;
@@ -15,7 +15,7 @@ export const useHasScrollbar = (
     const [hasScrollbar, setHasScrollbar] = useState<HasScrollbar>(initial);
     const [eventType, setEventType] = useState<MeasurementEventType>();
 
-    let initialResizeHandled = false;
+    const initialResizeHandled = useRef(false);
 
     const checkScrollbar = (eventType?: string) => {
         if (!ref.current) {
@@ -29,8 +29,8 @@ export const useHasScrollbar = (
 
         const resultStr = result ? "true" : "false";
 
-        if (!initialResizeHandled && eventType === "resize") {
-            initialResizeHandled = true;
+        if (!initialResizeHandled.current && eventType === "resize") {
+            initialResizeHandled.current = true;
             setHasScrollbar(resultStr);
         } else {
             setEventType(eventType);
