@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { Digit, BlinkingDigit, Blinker } from 'react-led-digit';
+import { Digit, BlinkingDigit, Blinker, type DigitProps } from 'react-led-digit';
 import { SettingsStore as Settings } from '../';
 import { getTimeString, getLocale } from '../../utils';
 import { Innout } from '../../components-shared';
@@ -38,7 +38,7 @@ export const Clock = observer(
 
         const shape = ['natural', 'diamond'].includes(Settings.segmentShape)
             ? 'default'
-            : (Settings.segmentShape as Digit['shape']);
+            : (Settings.segmentShape as DigitProps['shape']);
         const cornerCutoff =
             Settings.segmentShape === 'natural'
                 ? `calc(${fix(thickness)}em * .25)`
@@ -59,7 +59,7 @@ export const Clock = observer(
             opacityOff: Settings.hideGhostSegments ? 0 : 0.05,
             cornerCutoff: cornerCutoff,
             spacing,
-        } as Digit['segmentStyle'];
+        } as DigitProps['segmentStyle'];
 
         const clockStyle = {
             '--thickness': segmentStyle?.thickness,
@@ -92,7 +92,7 @@ export const Clock = observer(
                         return (
                             <Digit
                                 key={idx}
-                                value={char as Digit['value']}
+                                value={char as DigitProps['value']}
                                 shape={shape}
                                 off={leadingZeroOff(idx, char)}
                                 segmentStyle={segmentStyle}
