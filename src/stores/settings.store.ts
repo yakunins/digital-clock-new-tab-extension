@@ -21,6 +21,7 @@ type Settings = {
     segmentThickness: number;
     segmentShape: 'diamond' | 'natural' | 'rect' | 'pill' | 'calculator';
     status?: string;
+    hideGhostSegments: boolean;
     timeShift: number;
     storeId: string; // multiple stores handling
     origin: 'unknown' | 'tab' | 'popup' | 'options';
@@ -68,6 +69,7 @@ const initial: Settings = {
     segmentLength: 30,
     segmentThickness: 40,
     segmentShape: 'diamond',
+    hideGhostSegments: false,
     timeShift: 0,
 
     storeId: getId(),
@@ -85,6 +87,7 @@ const reset: Partial<Settings> = {
     segmentLength: initial.segmentLength,
     segmentShape: initial.segmentShape,
     segmentThickness: initial.segmentThickness,
+    hideGhostSegments: initial.hideGhostSegments,
     timeShift: initial.timeShift,
 };
 
@@ -99,6 +102,7 @@ class ExtensionSettingsStore implements SettingsStore {
     segmentLength = initial.segmentLength;
     segmentThickness = initial.segmentThickness;
     segmentShape = initial.segmentShape;
+    hideGhostSegments = initial.hideGhostSegments;
     timeShift = initial.timeShift;
     skyBackgroundTime = new Date();
     storageReady = false;
@@ -120,6 +124,7 @@ class ExtensionSettingsStore implements SettingsStore {
             fixedColors: observable,
             favicon: observable,
             hasChanges: computed,
+            hideGhostSegments: observable,
             segmentLength: observable,
             segmentThickness: observable,
             segmentShape: observable,
@@ -132,6 +137,7 @@ class ExtensionSettingsStore implements SettingsStore {
             setDateStyle: action,
             setFixedColors: action,
             setFavicon: action,
+            setHideGhostSegments: action,
             setLength: action,
             setThickness: action,
             setShape: action,
@@ -167,6 +173,9 @@ class ExtensionSettingsStore implements SettingsStore {
             this.storage
                 .get({ fixedColors: this.fixedColors })
                 .then((res) => this.setFixedColors(res, false)),
+            this.storage
+                .get({ hideGhostSegments: this.hideGhostSegments })
+                .then((res) => this.setHideGhostSegments(res, false)),
             this.storage
                 .get({ segmentLength: this.segmentLength })
                 .then((res) => this.setLength(res, false)),
@@ -235,6 +244,8 @@ class ExtensionSettingsStore implements SettingsStore {
             if (key === 'fixedColors' && this.colorSchema !== 'random')
                 this.setFixedColors(val, false);
             if (key === 'favicon') this.setFavicon(val, false);
+            if (key === 'hideGhostSegments')
+                this.setHideGhostSegments(val, false);
             if (key === 'segmentLength') this.setLength(val, false);
             if (key === 'segmentShape') this.setShape(val, false);
             if (key === 'segmentThickness') this.setThickness(val, false);
@@ -321,6 +332,19 @@ class ExtensionSettingsStore implements SettingsStore {
         this.dateStyle = val;
         if (useStorage)
             this.storage.debouncedSet({ dateStyle: this.dateStyle });
+    }
+
+    setHideGhostSegments(
+        val: Settings['hideGhostSegments'],
+        useStorage = true,
+    ) {
+        const v = toBoolean(val);
+        if (this.hideGhostSegments === v) return;
+        this.hideGhostSegments = v;
+        if (useStorage)
+            this.storage.debouncedSet({
+                hideGhostSegments: this.hideGhostSegments,
+            });
     }
 
     setTimeShift(val: Settings['timeShift'], useStorage = true) {

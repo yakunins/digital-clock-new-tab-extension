@@ -63,6 +63,15 @@ export const SettingsForm = observer(
             [],
         );
 
+        const hideGhostSegmentsChange = useCallback(
+            (e: React.ChangeEvent<HTMLInputElement>) => {
+                Settings.setHideGhostSegments(
+                    e.target.checked as Settings['hideGhostSegments'],
+                );
+            },
+            [],
+        );
+
         const lengthChange = useCallback<
             Exclude<Slider['onChange'], undefined>
         >((next: number) => {
@@ -204,6 +213,11 @@ export const SettingsForm = observer(
                             children="Clock Leading Zero"
                             defaultValue={Settings.clockLeadingZero}
                             onChange={clockLeadingZeroChange}
+                        />
+                        <Checkbox
+                            children="Hide Ghost Segments"
+                            defaultValue={Settings.hideGhostSegments}
+                            onChange={hideGhostSegmentsChange}
                         />
                     </div>
                 </Collapsible>

@@ -56,7 +56,7 @@ export const Clock = observer(
         const segmentStyle = {
             thickness: `max(${fix(thickness)}em, 2px)`,
             length: `max(${fix(length)}em, ${fix(thickness)}em, 4px)`,
-            opacityOff: 0.075,
+            opacityOff: Settings.hideGhostSegments ? 0 : 0.05,
             cornerCutoff: cornerCutoff,
             spacing,
         } as Digit['segmentStyle'];
