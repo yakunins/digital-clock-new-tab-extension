@@ -25,6 +25,7 @@ type Settings = {
     storeId: string; // multiple stores handling
     origin: 'unknown' | 'tab' | 'popup' | 'options';
     isActive: boolean; // store belongs to last active tab
+    storageReady: boolean;
 };
 
 export type SettingsStore = Settings & {
@@ -72,6 +73,7 @@ const initial: Settings = {
     storeId: getId(),
     origin: 'unknown',
     isActive: true,
+    storageReady: false,
 };
 const reset: Partial<Settings> = {
     clockType: initial.clockType,
@@ -99,6 +101,7 @@ class ExtensionSettingsStore implements SettingsStore {
     segmentShape = initial.segmentShape;
     timeShift = initial.timeShift;
     skyBackgroundTime = new Date();
+    storageReady = false;
 
     storeId = initial.storeId; // handling different SettingsStores per newtab.html, popup.html and options.html
     origin = initial.origin;
@@ -133,6 +136,7 @@ class ExtensionSettingsStore implements SettingsStore {
             setThickness: action,
             setShape: action,
             setTimeShift: action,
+            storageReady: observable,
             status: computed,
             reset: action,
         });
@@ -141,39 +145,43 @@ class ExtensionSettingsStore implements SettingsStore {
             this.updateSkyBackground();
         }, config.skyUpdatePeriod);
 
-        this.storage
-            .get({ clockType: this.clockType })
-            .then((res) => this.setClockType(res, false));
-        this.storage
-            .get({ clockLeadingZero: this.clockLeadingZero })
-            .then((res) => this.setClockLeadingZero(res, false));
-        this.storage
-            .get({ colorSchema: this.colorSchema })
-            .then((res) => this.setColorSchema(res, false));
-        this.storage
-            .get({ css: this.css })
-            .then((res) => this.setCss(res, false));
-        this.storage
-            .get({ dateStyle: this.dateStyle })
-            .then((res) => this.setDateStyle(res, false));
-        this.storage
-            .get({ favicon: this.favicon })
-            .then((res) => this.setFavicon(res, false));
-        this.storage
-            .get({ fixedColors: this.fixedColors })
-            .then((res) => this.setFixedColors(res, false));
-        this.storage
-            .get({ segmentLength: this.segmentLength })
-            .then((res) => this.setLength(res, false));
-        this.storage
-            .get({ segmentThickness: this.segmentThickness })
-            .then((res) => this.setThickness(res, false));
-        this.storage
-            .get({ segmentShape: this.segmentShape })
-            .then((res) => this.setShape(res, false));
-        this.storage
-            .get({ timeShift: this.timeShift })
-            .then((res) => this.setTimeShift(res, false));
+        Promise.all([
+            this.storage
+                .get({ clockType: this.clockType })
+                .then((res) => this.setClockType(res, false)),
+            this.storage
+                .get({ clockLeadingZero: this.clockLeadingZero })
+                .then((res) => this.setClockLeadingZero(res, false)),
+            this.storage
+                .get({ colorSchema: this.colorSchema })
+                .then((res) => this.setColorSchema(res, false)),
+            this.storage
+                .get({ css: this.css })
+                .then((res) => this.setCss(res, false)),
+            this.storage
+                .get({ dateStyle: this.dateStyle })
+                .then((res) => this.setDateStyle(res, false)),
+            this.storage
+                .get({ favicon: this.favicon })
+                .then((res) => this.setFavicon(res, false)),
+            this.storage
+                .get({ fixedColors: this.fixedColors })
+                .then((res) => this.setFixedColors(res, false)),
+            this.storage
+                .get({ segmentLength: this.segmentLength })
+                .then((res) => this.setLength(res, false)),
+            this.storage
+                .get({ segmentThickness: this.segmentThickness })
+                .then((res) => this.setThickness(res, false)),
+            this.storage
+                .get({ segmentShape: this.segmentShape })
+                .then((res) => this.setShape(res, false)),
+            this.storage
+                .get({ timeShift: this.timeShift })
+                .then((res) => this.setTimeShift(res, false)),
+        ]).then(() => {
+            this.storageReady = true;
+        });
 
         // listen for changes from other tabs
         this.storage.addListener(this.handleStorageChange.bind(this));

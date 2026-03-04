@@ -48,9 +48,10 @@ const BackgroundFillStyle = observer(() => {
         }
     }
 
-    // Persist sky colors for cross-tab sync
+    // Persist sky colors for cross-tab sync (guard with storageReady to avoid
+    // overwriting saved fixedColors before the stored colorSchema has loaded)
     useEffect(() => {
-        if (Settings.colorSchema === "sky") {
+        if (Settings.storageReady && Settings.colorSchema === "sky") {
             Settings.setFixedColors(JSON.stringify(colors), true);
         }
     });
