@@ -5,3 +5,4 @@ export * from "./useOpacityTracker";
 export * from "./usePosition";
 export * from "./useSessionState";
 export * from "./useSize";
+export * from "./useStepAnimation";

@@ -30,11 +30,11 @@ export const RadioButton = memo(
                     ref={inputRef}
                     tabIndex={!checked ? -1 : undefined}
                     type="radio"
-                    readOnly
                     id={id}
                     value={value}
                     checked={checked}
                     name={name}
+                    onChange={() => {}}
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                 />

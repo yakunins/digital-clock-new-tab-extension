@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { cx } from "../../utils";
@@ -49,8 +49,9 @@ export const Tooltip = ({
     ...rest
 }: Tooltip) => {
     const anchor = useRef<HTMLDivElement>(null!);
-    const ship = useRef<HTMLDivElement>(null!);
+    const tooltipRef = useRef<HTMLDivElement>(null!);
     const t = useRef<ReturnType<typeof setTimeout>>(-1);
+    const tooltipId = useId();
 
     const { width, height } = useSize(anchor);
     const { top, left } = usePosition(anchor);
@@ -79,7 +80,7 @@ export const Tooltip = ({
         t.current = setTimeout(() => setHidden(false), delay[0]);
     };
     const handleAutoFlip = () => {
-        if (isOutside(ship, autoFlipDistance)) {
+        if (isOutside(tooltipRef, autoFlipDistance)) {
             const oppositeDirection = getReverse(direction);
             setDir(oppositeDirection);
         }
@@ -97,7 +98,7 @@ export const Tooltip = ({
 
     useEffect(() => {
         const a = anchor?.current;
-        const s = ship?.current;
+        const s = tooltipRef?.current;
         if (useHover) {
             a?.addEventListener("mouseover", show);
             a?.addEventListener("mouseout", hide);
@@ -129,34 +130,19 @@ export const Tooltip = ({
     }, [focusWithin, useFocus]);
 
     useEffect(() => {
-        if (anchor?.current && ship?.current)
-            ship.current.style.setProperty("--width", `${width}px`);
-    }, [width]);
-    useEffect(() => {
-        if (anchor?.current && ship?.current)
-            ship.current.style.setProperty("--height", `${height}px`);
-    }, [height]);
-    useEffect(() => {
-        if (anchor?.current && ship?.current)
-            ship.current.style.setProperty("--top", `${top}px`);
-    }, [top]);
-    useEffect(() => {
-        if (anchor?.current && ship?.current)
-            ship.current.style.setProperty("--left", `${left}px`);
-    }, [left]);
+        const el = tooltipRef?.current;
+        if (!anchor?.current || !el) return;
+        el.style.setProperty("--width", `${width}px`);
+        el.style.setProperty("--height", `${height}px`);
+        el.style.setProperty("--top", `${top}px`);
+        el.style.setProperty("--left", `${left}px`);
+        el.style.setProperty("--offset", offset);
+        el.style.setProperty("--opacity", `${opacity}`);
+    }, [width, height, top, left, offset, opacity]);
 
     useEffect(() => {
-        if (anchor?.current && ship?.current)
-            ship.current.style.setProperty("--offset", offset);
-    }, [offset]);
-
-    useEffect(() => {
-        if (anchor?.current && ship?.current)
-            ship.current.style.setProperty("--opacity", `${opacity}`);
-    }, [opacity]);
-
-    useEffect(() => {
-        if (!autoFlip || hidden || !anchor?.current || !ship?.current) return;
+        if (!autoFlip || hidden || !anchor?.current || !tooltipRef?.current)
+            return;
         handleAutoFlip();
     }, [autoFlip, direction, hidden, top, left, width, height]);
 
@@ -171,14 +157,17 @@ export const Tooltip = ({
                     rest.className
                 )}
                 tabIndex={hasFocusable ? undefined : useFocus ? 0 : -1}
+                aria-describedby={tooltipId}
             >
                 {children}
             </div>
             {createPortal(
-                <div ref={ship} className="tooltip-ship">
+                <div ref={tooltipRef} className="tooltip-ship">
                     <Innout out={hidden}>
                         <div
                             {...rest}
+                            id={tooltipId}
+                            role="tooltip"
                             className={cx("tooltip", dir, rest.className)}
                         >
                             {text}

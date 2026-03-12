@@ -1,9 +1,11 @@
 module.exports = {
     roots: ["src"],
     preset: "ts-jest",
-    extensionsToTreatAsEsm: [".ts"],
+    testEnvironment: "jsdom",
+    extensionsToTreatAsEsm: [".ts", ".tsx"],
+    testPathIgnorePatterns: ["__mocks__"],
     transform: {
-        "^.+\\.ts$": [
+        "^.+\\.tsx?$": [
             "ts-jest",
             {
                 useESM: true,
@@ -11,4 +13,8 @@ module.exports = {
             },
         ],
     },
+    moduleNameMapper: {
+        "\\.css$": "<rootDir>/src/__tests__/__mocks__/styleMock.js",
+    },
+    transformIgnorePatterns: ["node_modules/(?!nanoid)"],
 };

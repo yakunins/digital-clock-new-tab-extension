@@ -61,7 +61,7 @@ export const Radio = memo(
         }, [value, width]);
 
         useEffect(() => {
-            setValue(defaultValue!);
+            if (defaultValue !== undefined) setValue(defaultValue);
         }, [defaultValue]);
 
         return (
@@ -76,7 +76,7 @@ export const Radio = memo(
                         className={cx("radio-options", getCheckedClassName())}
                         ref={container}
                     >
-                        <div className="checked-indicator" />
+                        <div className="checked-indicator" aria-hidden="true" />
                         {options
                             .map((i, idx) => {
                                 return {
@@ -87,7 +87,7 @@ export const Radio = memo(
                                 };
                             })
                             .map((optionProps, idx) => (
-                                <RadioButton {...optionProps} key={idx} />
+                                <RadioButton {...optionProps} key={optionProps.value} />
                             ))}
                     </div>
                 </div>

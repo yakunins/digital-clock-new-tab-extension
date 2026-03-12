@@ -61,4 +61,4 @@ export const Collapsible = ({
     );
 };
 
-const icon = <Icon name="chevronDown" />;
+const icon = <Icon name="chevronDown" aria-hidden="true" />;

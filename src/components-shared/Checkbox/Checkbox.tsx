@@ -16,7 +16,7 @@ export interface Checkbox
 
 export const Checkbox = memo(
     ({ children, defaultValue, name, onChange, ...rest }: Checkbox) => {
-        const [isChecked, setChecked] = useState(defaultValue);
+        const [isChecked, setChecked] = useState(defaultValue ?? false);
         const [isFocused, setFocused] = useState(false);
 
         const inputRef = useRef<HTMLInputElement>(null!);
@@ -28,22 +28,17 @@ export const Checkbox = memo(
             onChange?.(e);
         };
 
-        const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.key === "Enter" || e.key === "Space") {
-                inputRef?.current?.click();
-            }
-        };
-
         useEffect(() => {
             isFocused && inputRef?.current?.focus();
         }, [isFocused]);
 
         useEffect(() => {
-            setChecked(defaultValue);
+            setChecked(defaultValue ?? false);
         }, [defaultValue]);
 
         return (
             <div
+                role="none"
                 className={cx(
                     "checkbox",
                     { checked: isChecked },
@@ -60,7 +55,6 @@ export const Checkbox = memo(
                     checked={isChecked}
                     name={name}
                     onChange={handleChange}
-                    onKeyDown={handleKeyDown}
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                 />
