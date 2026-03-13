@@ -1,3 +1,23 @@
+/**
+ * SettingsForm — the main settings UI rendered inside the dropdown (tab page)
+ * and the standalone options/popup pages.
+ *
+ * Structure:
+ *   Wraps all controls in an MobX `observer` so any SettingsStore observable change
+ *   triggers a re-render. Each control is wired to its store setter via a stable
+ *   `useCallback` (never re-created), keeping React Aria's internal state consistent.
+ *
+ * Notable interactions:
+ *   - "Random" background: clicking the already-selected "random" radio re-rolls
+ *     colors (tracked by `randomSchemaClickCounter`). Enter key on the radio does
+ *     the same via `schemaChangeKeyDown` → `schemaChangeClick` delegation.
+ *   - Time Shift slider: the store works in minutes (multiples of 15), but the slider
+ *     works in quarter-hour units (±48). The `outputFormatter` converts that to a
+ *     ±H:MM display string.
+ *   - `origin` prop is forwarded to the store on mount so the store knows whether it
+ *     lives in a tab, popup, or options page (affects active-store arbitration).
+ *   - "Reset to defaults" is disabled via `Settings.hasChanges` computed.
+ */
 import React, { useCallback, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react';
 import { SettingsStore as Settings } from '../../stores/settings.store';

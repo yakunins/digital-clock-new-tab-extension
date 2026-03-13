@@ -1,3 +1,32 @@
+/**
+ * Settings Store — singleton MobX store that owns every user-facing preference.
+ *
+ * Lifecycle:
+ *   1. Constructor hydrates each field from browser storage (Chrome/Firefox/localStorage)
+ *      via parallel `storage.get()` calls, then flips `storageReady` so the UI renders.
+ *   2. A `storage.addListener` subscription keeps this store in sync with changes
+ *      made by other tabs/popups/options pages.
+ *   3. Every setter follows the pattern: guard against no-op → update observable →
+ *      optionally debounced-write back to storage (skipped when the change came *from*
+ *      storage, indicated by `useStorage = false`).
+ *
+ * Cross-tab coordination:
+ *   - Each instance gets a unique `storeId` (nanoid). The `lastActiveStore` key in
+ *     storage tracks which tab is "active" — only the active tab writes `fixedColors`
+ *     when `colorSchema === 'random'`, preventing write conflicts.
+ *   - `handleStorageChange` processes `colorSchema` first so that dependent guards
+ *     (e.g. fixedColors skips writes while random) see the updated value.
+ *
+ * Special cases:
+ *   - `setColorSchema`: leaving "random" triggers an atomic write of both schema
+ *     and fixedColors so other tabs receive a consistent pair.
+ *   - `setFixedColors`: validates JSON (must be a 4-element array of hex strings)
+ *     and only writes to storage when this store is the active one.
+ *   - `skyBackgroundTime` is refreshed on a 5 s interval and whenever timeShift changes;
+ *     it drives the sky gradient background via MobX reactivity.
+ *   - `toBoolean` helper handles string "true"/"false" from storage since localStorage
+ *     and some browsers serialize booleans as strings.
+ */
 import { makeObservable, observable, computed, action } from 'mobx';
 import { getLocaleAmpm } from '../utils';
 import { getId } from '../utils';

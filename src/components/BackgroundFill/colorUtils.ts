@@ -1,3 +1,26 @@
+/**
+ * Color conversion and manipulation utilities.
+ *
+ * Conversion pipeline:
+ *   HEX ↔ RGB ↔ HSB (Hue-Saturation-Brightness, a.k.a. HSV)
+ *
+ *   hex2rgb  — parses "#RGB" (3-digit) and "#RRGGBB" (6-digit) into [r, g, b] (0–255).
+ *   rgb2hsb  — standard algorithm: finds min/max channel, derives hue from the dominant
+ *              channel's delta ratio, saturation = delta/max, brightness = max.
+ *              Output ranges: h ∈ [0, 360], s ∈ [0, 100], b ∈ [0, 100].
+ *   hsb2rgb  — parametric formula using a helper k(n) = (n + h/60) mod 6 to compute
+ *              each channel in one pass (avoids the classic 6-sector switch).
+ *   rgb2hex  — clamps each channel to 0–255, pads to 2-digit hex.
+ *
+ * Color manipulation (used by BackgroundFill for sky/random/fixed palettes):
+ *   mixHexColors  — linear interpolation in RGB space with a 0–1 weight.
+ *   saturateColor — multiplies HSB saturation by `val`, clamps to [0, 100].
+ *   lightenColor  — multiplies HSB brightness by `val`, clamps to [0, 100].
+ *   saturateFourColors — maps `saturateColor` over the 4-color palette tuple.
+ *
+ * `round(n, precision)` is a small helper that rounds to a given step size
+ * (default 0.01) to avoid floating-point noise in HSB values.
+ */
 export type FourHex = [string, string, string, string];
 export type Troyka = [number, number, number];
 export type Color = {

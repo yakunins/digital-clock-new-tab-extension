@@ -1,3 +1,38 @@
+/**
+ * Tooltip — accessible, portal-rendered tooltip with auto-flip and multi-trigger support.
+ *
+ * Rendering:
+ *   The anchor `<div>` stays in-flow; the tooltip bubble is rendered into a
+ *   `createPortal(…, document.body)` so it escapes overflow:hidden ancestors.
+ *   CSS variables (`--top`, `--left`, `--width`, `--height`, `--offset`, `--opacity`)
+ *   are set on the portal wrapper and consumed by `tooltip.css` for positioning.
+ *
+ * Trigger modes (all combinable):
+ *   - `useHover`: mouseover/mouseout on both anchor and bubble (so the tooltip
+ *     stays visible when hovering the bubble itself). `useStopMove` resets the
+ *     show timer on every mousemove to prevent the tooltip from appearing while
+ *     the cursor is still moving.
+ *   - `useFocus`: driven by `useFocusWithin(anchor)` — shows on any focusable
+ *     descendant receiving focus. `useHasFocusable` adds `tabIndex=0` to the
+ *     anchor when no focusable child exists.
+ *   - `useClick`: a simple click-to-show (no built-in click-to-dismiss).
+ *
+ * Visibility lifecycle:
+ *   Show/hide are always debounced via `delay = [showMs, hideMs]`. The `Innout`
+ *   component wrapping the bubble handles CSS enter/exit animations so the tooltip
+ *   fades in/out before being removed from the DOM.
+ *
+ * Auto-flip:
+ *   After the bubble becomes visible, `handleAutoFlip` measures its distance to
+ *   the viewport edges. If any edge is closer than `autoFlipDistance` (default 150 px),
+ *   the effective direction is reversed (e.g. top → bottom). This only runs once
+ *   per show (when `hidden` flips to false) and resets on prop-level `direction` change.
+ *
+ * Touch handling:
+ *   `TouchMouseEvent.sourceCapabilities.firesTouchEvents` is checked to ignore
+ *   synthetic mouse events that browsers fire after touch — prevents double-trigger
+ *   on mobile.
+ */
 import React, { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 

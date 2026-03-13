@@ -1,3 +1,29 @@
+/**
+ * Storage abstraction — unified async API over three backends:
+ *
+ *   1. chrome.storage.sync  (Chrome / Edge extensions)
+ *   2. browser.storage.sync (Firefox / Safari extensions via WebExtensions)
+ *   3. localStorage         (plain web page fallback, e.g. during development)
+ *
+ * Detection order (`storageName` IIFE):
+ *   Checks `chrome.storage.sync`, then `browser.storage.sync`, then falls back
+ *   to localStorage. Determined once at module load.
+ *
+ * API surface (returned by `storage(debouncePeriod)`):
+ *   - `get<V>({ key: default })` → Promise<V>: reads a single key; returns the
+ *     default if the key is missing. localStorage values pass through `parseDigits`
+ *     to restore numbers/booleans that were serialized as strings.
+ *   - `set(obj)`: writes one or more key-value pairs.
+ *   - `addListener(cb)`: subscribes to cross-tab changes. For localStorage this
+ *     adapts the native `StorageEvent` into the Chrome-style `{ key: { oldValue, newValue } }`
+ *     shape so the settings store can use a single handler.
+ *   - `debouncedSet`: same as `set` but debounced by `debouncePeriod` ms (default 100).
+ *     Rapid-fire writes (e.g. dragging a slider) are coalesced into one storage call.
+ *
+ * Note: `chromeStorageGet` / `browserStorageGet` wrap the callback-based browser
+ * APIs in Promises. `runtime.lastError` is checked inside the callback to convert
+ * Chrome-style errors into rejections.
+ */
 import { debouncedCallback, parseDigits } from "../utils";
 
 declare const browser: typeof chrome;
